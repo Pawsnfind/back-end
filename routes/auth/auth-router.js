@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/', checkAuth, async (req, res) => {
 // if checkAuth fails, status 401
-res.status(200).json(req.body);
+res.status(200).json({ message: 'Login Successful' });
 })
 
 module.exports=router;
