@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Animals = require('../models/animals/animals.js');
+const AnimalFollows = require('../models/animal_follows/animal_follows.js');
 
 
 router.get('/', (req, res) => {
@@ -20,6 +21,29 @@ router.get('/:id', (req, res) => {
     })
     .catch( error => {
         res.status(500).json({ message: "Error getting animals", error: error.toString()})
+
+    })
+})
+
+router.get('/getFollows/animal/:id', (req, res) => {
+    AnimalFollows.getByAnimalId(req.params.id)
+    .then(follows => {
+        res.status(200).json(follows)
+
+    })
+    .catch (error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+
+    })
+})
+
+router.get('/getFollows/:animal/:user', (req, res) => {
+    AnimalFollows.getByIds(req.params.animal, req.params.user)
+    .then(follow => {
+        res.status(200).json(follow)
+    })
+    .catch (error => {
+        res.status(500).json({ message: "Error getting animal follow match", error: error.toString()})
 
     })
 })
