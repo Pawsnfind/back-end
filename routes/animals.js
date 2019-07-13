@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Animals = require('../models/animals.js');
+const Animals = require('../models/animals/animals.js');
 
 
 router.get('/', (req, res) => {
@@ -9,6 +9,18 @@ router.get('/', (req, res) => {
     })
     .catch( error => {
         res.status(500).json({ message: "Error getting animals", error: error.toString()})
+    })
+})
+
+router.get('/:id', (req, res) => {
+    Animals.getById(req.params.id)
+    .then(animal => {
+        res.status(200).json(animal)
+
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+
     })
 })
 
