@@ -1,13 +1,13 @@
 
-exports.seed = function(knex, Promise) {
-  // Deletes ALL existing entries
-  return knex('table_name').del()
+exports.seed = async function(knex, Promise) {
+  await knex('coat_length').del()
+  await knex.raw('ALTER SEQUENCE coat_length_id_seq RESTART WITH 1')  
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
+      return knex('coat_length').insert([
+        {coat_length: 'Short'},
+        {coat_length: 'Medium'},
+        {coat_length: 'Long'}
       ]);
     });
 };

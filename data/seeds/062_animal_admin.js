@@ -1,13 +1,14 @@
 
-exports.seed = function(knex, Promise) {
+exports.seed = async function(knex, Promise) {
+  await knex('animal_admin').del()
+  await knex.raw('ALTER SEQUENCE animal_admin_id_seq RESTART WITH 1')  
   // Deletes ALL existing entries
-  return knex('table_name').del()
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
+      return knex('animal_admin').insert([
+        {shelter_user_id: 1, animal_id: 1, notes: 'Vet check on 7/3/2019, good health' },
+        {shelter_user_id: 6, animal_id: 6, notes: 'New foster family will step in on 8/1/2019' },
+        {shelter_user_id: 9, animal_id: 9, notes: 'Additional litter box training might be required' }
       ]);
     });
 };

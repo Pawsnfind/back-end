@@ -1,13 +1,14 @@
 
-exports.seed = function(knex, Promise) {
-  // Deletes ALL existing entries
-  return knex('table_name').del()
+exports.seed = async function(knex, Promise) {
+  await knex('ages').del()
+  await knex.raw('ALTER SEQUENCE ages_id_seq RESTART WITH 1')  
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
+      return knex('ages').insert([
+        {age: 'Baby'},
+        {age: 'Young'},
+        {age: 'Adult'},
+        {age: 'Senior'}
       ]);
     });
 };

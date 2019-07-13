@@ -1,13 +1,14 @@
 
-exports.seed = function(knex, Promise) {
+exports.seed = async function(knex, Promise) {
+  await knex('roles').del()
+  await knex.raw('ALTER SEQUENCE roles_id_seq RESTART WITH 1')  
   // Deletes ALL existing entries
-  return knex('table_name').del()
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
+      return knex('roles').insert([
+        {role: 'admin'}, //super
+        {role: 'volunteer'},  //view only
+        {role: 'staff'} //can admin animals and applications
       ]);
     });
 };
