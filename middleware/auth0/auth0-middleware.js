@@ -11,8 +11,7 @@ const checkAuth = jwt({
         jwksRequestsPerMinute: 5,
         jwksUri: process.env.jwksUri
     }),
-    audience: process.env.audience,
-    issuer: process.env.issuer,
+ 
     algorithms: ['RS256']
 });
 
