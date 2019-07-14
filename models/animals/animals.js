@@ -30,6 +30,8 @@ function getById(id) {
                 return null;
             }
         })
+    } else {
+        return null;
     }
 }
 
