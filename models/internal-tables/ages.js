@@ -13,7 +13,7 @@ function getAll() {
     return db('ages')
 }
 
-function getById() {
+function getById(id) {
     return db('ages')
     .where({ id })
     .first()

@@ -32,7 +32,7 @@ function add(state) {
 
 function remove(id) {
     return db('states')
-    .where({id})
+    .where({ id })
     .del()
 } 
 
