@@ -1,7 +1,7 @@
 const db = require('../data/dbConfig.js')
 module.exports = {
    getAllShelters,
-   getByShelter,
+   searchShelter,
    getById,
    addShelter,
    updateShelter,
@@ -12,23 +12,23 @@ function getAllShelters() {
    return db('shelters')
 }
 
-function getAllSheltersInfo(){
+// function getAllSheltersInfo(){
   
-}
+// }
 
-function getByShelter(filter) {
+function searchShelter(filter) {
    return db('shelters')
    .where(filter)
 }
 
-function getById (id) {
+function getById(id) {
    return db('shelters')
    .where({ id })
    .first()
 }
 //still need to do id
 
-function addShelter (shelter) {
+function addShelter(shelter) {
    return db('shelters')
    .insert(shelter, 'id')
    .then( ([id]) => getById(id))
@@ -41,7 +41,7 @@ function updateShelter(id, change) {
    .then(updatedShelter => updatedShelter ? getById(id) : null )
 }
 
-function deleteShelter (id) {
+function deleteShelter(id) {
    return db('shelters')
    .where({ id })
    .del();
