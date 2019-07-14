@@ -37,8 +37,10 @@ function add(follow) {
     
 }
 
-function remove(follow) {
+function remove(animalId, userId) {
     return db('animal_follows')
-    .where({id})
+    .where({
+        animal_id : animalId,
+        user_id : userId})
     .del();
 }
