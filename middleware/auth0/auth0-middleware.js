@@ -4,6 +4,7 @@ const jwt = require('express-jwt');
 const jwtAuthz = require('express-jwt-authz');
 const jwksRsa = require('jwks-rsa');
 
+// if checkAuth fails, status 401
 const checkAuth = jwt({ 
     secret: jwksRsa.expressJwtSecret({
         cache: true,
