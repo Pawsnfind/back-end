@@ -5,7 +5,8 @@ module.exports = {
     getDonationbyId,
     getDonationsByShelter,
     getAllDonations,
-    UpdateDonation,
+    addDonation,
+    updateDonation,
 }
 
 function getAllDonations() {
@@ -43,7 +44,13 @@ function getDonationsByShelter(id) {
     .where({ 'donations.shelter_id' : id })
 }
 
-function UpdateDonation(id, change) {
+function addDonation(donation) {
+    return db('donations')
+    .insert(donation, 'id')
+    .then( ([id]) => getDonationbyId(id))
+}
+
+function updateDonation(id, change) {
     return db('donations')
     .where({ id })
     .update(change)
