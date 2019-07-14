@@ -24,9 +24,9 @@ function getBy(filter) {
     .where(filter)
 }
 
-function add(state) {
+function add(size) {
     return db('size')
-    .insert(state, 'id')
+    .insert(size, 'id')
     .then(([id]) => getById(id))
 }
 

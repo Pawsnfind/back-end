@@ -24,9 +24,9 @@ function getBy(filter) {
     .where(filter)
 }
 
-function add(state) {
+function add(role) {
     return db('roles')
-    .insert(state, 'id')
+    .insert(role, 'id')
     .then(([id]) => getById(id))
 }
 
