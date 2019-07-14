@@ -30,20 +30,16 @@ function getById(id) {
                 return null;
             }
         })
-
-
     }
 }
 
 function getAnimalMetaById(id) {
-    let query = db
+    return db
     .select('animal_meta.description', 'animal_meta.color', 'animal_meta.health', 'size.size')
     .from('animal_meta')
     .innerJoin('size', 'animal_meta.size_id', 'size.id')
     .where('animal_meta.id', id)
     .first()
-
-    return query;
 }
 
 /*
