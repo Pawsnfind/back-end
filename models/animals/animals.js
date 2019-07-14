@@ -9,6 +9,49 @@ module.exports = {
     add
 }
 
+function getById(id) {
+    let query = db
+    .select('animals.name', 'species.species', 'shelters.shelter')
+    .from('animals')
+    .innerJoin('species', 'animals.species_id' , 'species.id')
+    .innerJoin('shelters', 'animals.shelter_id', 'shelters.id')
+    
+    if(id) {
+        query.where('animals.id', id).first();
+        const promises = [query, getAnimalMetaById(id)]
+
+        return Promise.all(promises).then(results =>  {
+            let [animal, meta] = results;
+
+            if(animal) {
+                animal.meta = meta;
+                return animal;
+            } else {
+                return null;
+            }
+        })
+
+
+    }
+}
+
+function getAnimalMetaById(id) {
+    let query = db
+    .select('description', 'color', 'health')
+    .from('animal_meta')
+    .where({ id })
+    .first()
+
+    return query;
+}
+
+/*
+function getAnimalMetaById(id) {
+    return db('animal_meta')
+    .where({ id })
+    .first()
+} */
+
 function getAll() {
     return db('animals');
 }
@@ -25,11 +68,13 @@ function update(id, change) {
     .then( updatedAnimal => updatedAnimal? getById(id) : null)
 }
 
+/*
 function getById(id) {
     return db('animals')
     .where({id})
     .first()
 }
+*/
 
 function remove(id) {
     return db('animals')
