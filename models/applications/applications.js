@@ -5,8 +5,9 @@ module.exports = {
     getAll,
     getById,
     getBy, //filter
-    //getByShelterId,
-    //getByUserId,
+    getByShelterId,
+    getByUserId,
+    getByAnimalId,
     add,
     remove,
     update
@@ -50,69 +51,57 @@ function getById(id) {
 
 function getApplicationNotes(application_id) {
     if(application_id) {
-        let query = db
+        return db
         .select('application_admin.notes', 'application_admin.shelter_user_id as by', 'application_admin.created_at')
         .from('application_admin')
         .innerJoin('shelter_users', 'application_admin.shelter_user_id', 'shelter_users.id')
         .where('application_admin.application_id', application_id)
-        
-        let promises = [query, getShelterUserName(query.by)]
-
-        return Promise.all(promises).then( results => {
-            let [notes, username] = results
-
-            notes.by = username
-            return notes
-        })
-
-        /*
-        let shelterUserName = db
-        .select('name')
-        .from('user_meta')
-        .where('shelter_user_id', query.by)
-        .first()
-        
-        query.by = shelterUserName
-
-        return query*/
-        
-    } else {
-        return null
-    }
-    
-}
-
-
-function getShelterUserName(shelter_user_id) {
-    if(shelter_user_id) {
-        return db
-        .select('name')
-        .from('user_meta')
-        .where({shelter_user_id})
-        .first()
+         
     } else {
         return null
     }
 }
 
-
-/*
-function getById(id) {
-    return db('applications')
-    .where({ id })
-    .first()
+function getByUserId(id) {
+    return db
+    .select('applications.id', 'animals.name as animal name', 'shelters.shelter', 'application_status.application_status')
+    .from('applications')
+    .innerJoin('animals', 'applications.animal_id', 'animals.id')
+    .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
+    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .where('applications.user_id', id)
 }
-*/
+
+function getByShelterId(id) {
+    return db
+    .select('applications.id', 'animals.name as animal name', 'users.email', 'application_status.application_status')
+    .from('applications')
+    .innerJoin('animals', 'applications.animal_id', 'animals.id')
+    .innerJoin('users', 'applications.user_id', 'users.id')
+    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .where('applications.shelter_id', id)
+}
+
+function getByAnimalId(id) {
+    return db
+    .select('applications.id', 'users.email', 'application_status.application_status')
+    .from('applications')
+    .innerJoin('animals', 'applications.animal_id', 'animals.id')
+    .innerJoin('users', 'applications.user_id', 'users.id')
+    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .where('applications.animal_id', id)
+}
 
 function getBy(filter) {
     return db('applications')
     .where(filter)
 }
 
+//initial stage of filling out application, only returning id is required
 function add(application) {
     return db('applications')
     .insert(application, 'id')
-    .then( ([id]) => getById(id))
+   // .then( ([id]) => getById(id))
 }
 
 function update(id, change) {

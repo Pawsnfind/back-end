@@ -3,6 +3,7 @@ const db = require('../../data/dbConfig')
 module.exports = {
     getById,
     getBy, // filter
+    getByApplicationId,
     add,
     remove,
     update
@@ -12,6 +13,11 @@ function getById(id) {
     return db('application_admin')
     .where({ id })
     .first()
+}
+
+function getByApplicationId(id) {
+    return db('application_admin')
+    .where('application_id', id)
 }
 
 function getBy(filter) {
