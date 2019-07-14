@@ -41,3 +41,4 @@ function update(id, change) {
     .where({id})
     .update(change)
     .then(updatedStatus => updatedStatus ? updatedStatus : null)
+}
