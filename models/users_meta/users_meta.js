@@ -5,6 +5,9 @@ module.exports={
     getUserMetaByUserId,
     getUserMetaByStateId,
     getUserMetaByShelterUserId,
+    getUserMetaByPhoneNumber,
+    getUserMetaByZip,
+    getUserMetaByCity,
     createUserMeta,
     updateUserMeta,
     deleteUserMeta,
@@ -20,6 +23,8 @@ function getUserMetaByUserId(user_id) {
     .where({ user_id })
 }
 
+
+
 function getUserMetaByStateId(state_id) {
     return db('user_meta')
     .where({ state_id })
@@ -28,6 +33,21 @@ function getUserMetaByStateId(state_id) {
 function getUserMetaByShelterUserId(shelter_user_id) {
     return db('user_meta')
     .where({ shelter_user_id })
+}
+
+function getUserMetaByPhoneNumber(phone_number) {
+    return db('user_meta')
+    .where({ phone_number })
+}
+
+function getUserMetaByZip(zip) {
+    return db('user_meta')
+    .where({ zip })
+}
+
+function getUserMetaByCity(city) {
+    return db('user_meta')
+    .where({ city })
 }
 
 function createUserMeta(user_meta) {

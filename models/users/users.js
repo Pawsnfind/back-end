@@ -37,7 +37,7 @@ function getUserByUsername(username) {
     .select('users.sub_id', 'users.email', 'users.username', 'users.created_at', 'user_meta.*')
     .from('users')
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    .where({ username: users.username })
+    .where({ username })
 }
 
 function getUserByEmail(email) {
@@ -45,7 +45,7 @@ function getUserByEmail(email) {
     .select('users.sub_id', 'users.email', 'users.username', 'users.created_at', 'user_meta.*')
     .from('users')
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    .where({ email: users.email  })
+    .where({ email })
 }
 
 function getUserBySubId(sub_id) {
