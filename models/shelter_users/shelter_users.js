@@ -36,8 +36,11 @@ module.exports = {
  }
  
 
- function deleteShelterUsers(id) {
+ function deleteShelterUsers(shelterId,roleId) {
     return db('shelter_users')
-    .where({ id })
+    .where({
+        'shelter_id':shelterId,
+        'role_id':roleId
+    })
     .del();
  }
