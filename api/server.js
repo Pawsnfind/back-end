@@ -4,10 +4,23 @@ const cors = require('cors')
 
 const server = express();
 
+const animalRouter = require('../routes/animals.js')
+const applicationRouter = require('../routes/applications.js')
+const donationRouter = require('../routes/donations.js')
+const shelterRouter = require('../routes/shelters.js')
+const subscriptionRouter = require('../routes/subscriptions.js')
+const userRouter = require('../routes/users.js')
 
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+
+server.use('/api/animals', animalRouter)
+server.use('/api/applications', applicationRouter)
+server.use('/api/donations', donationRouter)
+server.use('/api/shelters', shelterRouter)
+server.use('/api/subscriptions', subscriptionRouter)
+server.use('/api/user', userRouter)
 
 
 server.get('/', (req, res) => {

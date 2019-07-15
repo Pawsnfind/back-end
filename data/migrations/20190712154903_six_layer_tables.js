@@ -112,6 +112,8 @@ exports.up = function(knex, Promise) {
             .inTable('users')
             .onDelete('RESTRICT')
             .onUpdate('CASCADE')
+        tbl.timestamp('created_at', { precision: 6 })
+            .defaultTo(knex.fn.now(6));
     })
     .createTable('user_meta', tbl => {
         tbl.increments();

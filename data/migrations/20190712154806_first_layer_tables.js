@@ -43,6 +43,8 @@ exports.up = function(knex, Promise) {
             tbl.string('sub_id', 256)
                 .notNullable()
                 .unique()
+            tbl.string('username', 256)
+                .notNullable()
             tbl.timestamp('created_at', { precision: 6 })
                 .defaultTo(knex.fn.now(6));
         })

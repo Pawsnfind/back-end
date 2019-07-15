@@ -17,6 +17,9 @@ exports.up = function(knex, Promise) {
         .inTable('subscriptions')
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
+    tbl.boolean('is_active')
+        .notNullable()
+        .defaultTo(true)
     tbl.timestamp('created_at', { precision: 6 })
         .defaultTo(knex.fn.now(6));
     tbl.date('expiration_date')
@@ -75,6 +78,8 @@ exports.up = function(knex, Promise) {
         .inTable('shelters')
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
+    tbl.string('username')
+        .notNullable()
     tbl.timestamp('created_at', { precision: 6 })
         .defaultTo(knex.fn.now(6));
   })

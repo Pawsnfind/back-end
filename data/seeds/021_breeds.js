@@ -6,16 +6,16 @@ exports.seed = async function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('breeds').insert([
-        {breed: 'Affenpinscher', species_id:1},
-        {breed: 'bbbb', species_id:1},
-        {breed: 'cccc', species_id:1},
-        {breed: 'dddd', species_id:1},
-        {breed: 'eeee', species_id:1},
-        {breed: 'ffff', species_id:2},
-        {breed: 'gggg', species_id:2},
-        {breed: 'hhhh', species_id:2},
-        {breed: 'iiii', species_id:2},
-        {breed: 'jjjj', species_id:2}
+        {breed: 'Labrador Retrievers', species_id:1},
+        {breed: 'German Shepherd', species_id:1},
+        {breed: 'Golden Retrievers', species_id:1},
+        {breed: 'French Bulldogs', species_id:1},
+        {breed: 'Bulldogs', species_id:1},
+        {breed: 'Abyssinian', species_id:2},
+        {breed: 'American Bobtail', species_id:2},
+        {breed: 'American Curl', species_id:2},
+        {breed: 'American Shorthair', species_id:2},
+        {breed: 'American Wirehair', species_id:2}
 
 
       ]);

@@ -6,16 +6,17 @@ exports.seed = async function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('shelter_users').insert([
-        {role_id: 1, shelter_id:1},
-        {role_id: 1, shelter_id:2},
-        {role_id: 1, shelter_id:3},
-        {role_id: 1, shelter_id:4},
-        {role_id: 1, shelter_id:5},
-        {role_id: 1, shelter_id:6},
-        {role_id: 1, shelter_id:7},
-        {role_id: 1, shelter_id:8},
-        {role_id: 1, shelter_id:9},
-        {role_id: 1, shelter_id:10}
+        {role_id: 1, shelter_id:1, username: 'abcabc'},
+        {role_id: 1, shelter_id:2, username: 'trialtrial'},
+        {role_id: 1, shelter_id:3, username: '123123'},
+        {role_id: 1, shelter_id:4, username: 'test12test12'},
+        {role_id: 1, shelter_id:5, username: 'hung'},
+        {role_id: 1, shelter_id:6, username: 'lenna'},
+        {role_id: 1, shelter_id:7, username: 'chris'},
+        {role_id: 1, shelter_id:8, username: 'sarah'},
+        {role_id: 1, shelter_id:9, username: 'james'},
+        {role_id: 1, shelter_id:10, username: 'aruna'}
       ]);
     });
 };
+
