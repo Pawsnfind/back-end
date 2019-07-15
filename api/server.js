@@ -5,7 +5,7 @@ const cors = require('cors')
 const server = express();
 
 const animalRoute = require('../routes/animals.js')
-const shelterRoute = require('../routes/shelters.js')
+const shelterRoute = require('../routes/shelters/shelters.js')
 
 server.use(helmet());
 server.use(express.json());

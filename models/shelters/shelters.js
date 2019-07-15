@@ -1,4 +1,4 @@
-const db = require('../data/dbConfig.js')
+const db = require('../../data/dbConfig.js')
 module.exports = {
    getAllShelters,
    searchShelter,
@@ -8,16 +8,19 @@ module.exports = {
    deleteShelter,
 }
 
+//get all the info from shelters table
 function getAllShelters() {
    return db('shelters')
 }
 
 
-
+//search the shelter table
 function searchShelter(filter) {
    return db('shelters')
    .where(filter)
 }
+
+//get shelter name, location and contact
 
 function getById(id){
     let query = db
@@ -49,6 +52,8 @@ function getById(id){
     }
 }
 
+//get shelter location and the contact for that location
+
 function getShelterLocation(id){
     let locationQuery =  db
     .select('shelter_locations.nickname','shelter_locations.street_address',
@@ -79,6 +84,8 @@ function getShelterLocation(id){
     }
 }
 
+//get the contact for a specific location
+
 function getShelterLocationsContact(id){
     return db
     .select('shelter_contacts.name')
@@ -87,6 +94,7 @@ function getShelterLocationsContact(id){
     .where({'shelter_locations.shelter_contact_id': id})
 }
 
+//get the users following the shelters
 function getShelterFollows(id){
     return db
     .select('users.username')
@@ -97,13 +105,14 @@ function getShelterFollows(id){
     
 }
 
-
+//add a new shelter
 function addShelter(shelter) {
    return db('shelters')
    .insert(shelter, 'id')
    .then( ([id]) => getById(id))
 }
 
+//update shelter table
 function updateShelter(id, change) {
    return db('shelters')
    .where({ id })
@@ -111,6 +120,7 @@ function updateShelter(id, change) {
    .then(updatedShelter => updatedShelter ? getById(id) : null )
 }
 
+//delete shelter table
 function deleteShelter(id) {
    return db('shelters')
    .where({ id })
