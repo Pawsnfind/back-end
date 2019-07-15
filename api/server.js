@@ -20,7 +20,7 @@ server.use('/api/applications', applicationRouter)
 server.use('/api/donations', donationRouter)
 server.use('/api/shelters', shelterRouter)
 server.use('/api/subscriptions', subscriptionRouter)
-server.use('/api/user', userRouter)
+server.use('/api/users', userRouter)
 
 
 server.get('/', (req, res) => {

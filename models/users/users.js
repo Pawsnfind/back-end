@@ -14,7 +14,7 @@ module.exports={
 
 function getUsers() {
     return db 
-    .select('users.sub_id', 'users.email', 'users.created_at', 'user_meta.*')
+    .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.*')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
 }
