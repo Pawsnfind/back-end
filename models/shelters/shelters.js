@@ -26,14 +26,26 @@ function getById(id){
     let query = db
     .select('shelters.shelter','shelter_contacts.name')
     .from('shelters')
-    .innerJoin('shelter_contacts','shelters.main_contact_id','shelter_contacts.id')
+    .innerJoin('shelter_contacts','shelters.shelter_contact_id','shelter_contacts.id')
     
 
     if(id){
         query.where('shelters.id', id).first()
         const promises = [query, getShelterLocation(id),getShelterFollows(id)]
-
+        // const promises = [query, getShelterLocation(id)]
         return Promise.all(promises)
+        // .then(results => {
+        //     let [shelter,location] = results;
+
+        //     if(shelter){
+        //         shelter.location = location
+                
+        //         return shelter
+        //     }
+        //     else {
+        //         return null
+        //     }
+        // })
         .then(results => {
             let [shelter,location,follows] = results;
 
@@ -57,10 +69,9 @@ function getById(id){
 function getShelterLocation(id){
     let locationQuery =  db
     .select('shelter_locations.nickname','shelter_locations.street_address',
-    'shelter_locations.city','shelter_locations.state','states.state')
+    'shelter_locations.city','states.state')
     .from('shelter_locations')    
     .innerJoin('states','shelter_locations.state_id','states.id')
-    .where({'shelter_location.shelter_id':id})
 
     if(id){
         locationQuery.where('shelter_locations.id',id).first()
@@ -97,11 +108,11 @@ function getShelterLocationsContact(id){
 //get the users following the shelters
 function getShelterFollows(id){
     return db
-    .select('users.username')
-    .from('shelters_follows')
+    .select('users.email')
+    .from('shelter_follows')
     .innerJoin('shelters','shelters.id','shelter_follows.shelter_id')
     .innerJoin('users','shelter_follows.user_id','users.id')
-    .where({'shelters_follows.shelter_id': id})
+    .where({'shelter_follows.shelter_id': id})
     
 }
 
