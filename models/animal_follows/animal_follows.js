@@ -32,9 +32,7 @@ function getByUserId(id) {
 
 function add(follow) {
     return db('animal_follows')
-    .insert(follow, 'id')
-    .then (([id]) => getByIds(id))
-    
+    .insert(follow)
 }
 
 function remove(animalId, userId) {

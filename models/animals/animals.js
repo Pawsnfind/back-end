@@ -22,13 +22,15 @@ function getById(id) {
 
     if(id) {
         query.where('animals.id', id).first();
-        const promises = [query, getAnimalMetaById(id)]
+        const promises = [query, getAnimalMetaById(id), getNotesByAnimalId(id), getAnimalFollowsById(id)]
 
         return Promise.all(promises).then(results =>  {
-            let [animal, meta] = results;
+            let [animal, meta, notes, followers] = results;
 
             if(animal) {
                 animal.meta = meta;
+                animal.notes = notes;
+                animal.followers = followers;
                 animal.meta = animalToBody(animal.meta);
                 return animal
             } else {
@@ -38,6 +40,23 @@ function getById(id) {
     } else {
         return null;
     }
+}
+
+//get animal followers by animal id
+function getAnimalFollowsById(id) {
+    return db
+    .select('users.email')
+    .from('animal_follows')
+    .innerJoin('users', 'animal_follows.user_id', 'users.id')
+    .innerJoin('animals', 'animal_follows.animal_id', 'animals.id')
+    .where('animal_follows.animal_id', id)
+}
+
+function getNotesByAnimalId(id) {
+    return db
+    .select('id', 'notes', 'shelter_user_id', 'created_at')
+    .from('animal_admin')
+    .where('animal_id', id)
 }
 
 //get animal meta by animal id

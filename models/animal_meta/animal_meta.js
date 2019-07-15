@@ -3,9 +3,23 @@ const db = require ('../../data/dbConfig')
 module.export = {
     getById,
     getBy,
+    getByAnimalId,
     remove,
     update,
     add
+}
+
+//get by animal id
+function getByAnimalId(id) {
+    return db
+    .select('animal_meta.id', 'animal_meta.animal_id', 'breeds.breed', 'animal_meta.is_mixed', 'ages.age','size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.coat_length', 'animal_meta.is_male as sex', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
+    .from('animal_meta')
+    .innerJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
+    .innerJoin('ages', 'animal_meta.age_id', 'ages.id')
+    .innerJoin('size', 'animal_meta.size_id', 'size.id')
+    .innerJoin('coat_length', 'animal_meta.coat_length_id', 'coat_length.id')
+    .where('animal_meta.animal_id', id)
+    .first()
 }
 
 function getBy(filter) {
@@ -13,10 +27,18 @@ function getBy(filter) {
     .where(filter)
 }
 
+//get by animal meta id
 function getById(id) {
-    return db('animal_meta')
-    .where({ id })
+    return db
+    .select('animal_meta.id', 'animal_meta.animal_id', 'breeds.breed', 'animal_meta.is_mixed', 'ages.age','size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.coat_length', 'animal_meta.is_male as sex', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
+    .from('animal_meta')
+    .innerJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
+    .innerJoin('ages', 'animal_meta.age_id', 'ages.id')
+    .innerJoin('size', 'animal_meta.size_id', 'size.id')
+    .innerJoin('coat_length', 'animal_meta.coat_length_id', 'coat_length.id')
+    .where('animal_meta.id', id)
     .first()
+}
 }
 
 function remove(id) {
@@ -29,12 +51,12 @@ function update(id, change) {
     return db('animal_meta')
     .where({ id })
     .update(change)
-    .then(updateAnimal => updateAnimal? getById(id) : null)
+    .then(updateAnimalMeta => updateAnimalMeta? getById(id) : null)
 }
 
-function add(animal) {
+function add(animal_meta) {
     return db('animal_meta')
-    .insert(animal, 'id')
-    .then (([id]) => getById(id))
+    .insert(animal_meta, 'id')
+    //.then (([id]) => getById(id))
 }
 

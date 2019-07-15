@@ -3,9 +3,15 @@ const db = require('../../data/dbConfig')
 module.exports = {
     getById,
     getBy,
+    getNotesByAnimalId,
     add,
     remove,
     update
+}
+
+function getNotesByAnimalId(id) {
+    return db('animal_admin')
+    .where('animal_id', id)
 }
 
 function getById(id) {
