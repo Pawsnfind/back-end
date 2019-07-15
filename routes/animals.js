@@ -48,5 +48,16 @@ router.get('/getFollows/:animal/:user', (req, res) => {
     })
 })
 
+router.get('/shelter/:id', (req, res) => {
+    Animals.getAnimalsByShelterId(req.params.id)
+    .then(animals => {
+        res.status(200).json(animals)
+    })
+    .catch (error => {
+        res.status(500).json({ message: "Error getting animal follow match", error: error.toString()})
+
+    })
+})
+
 
 module.exports = router;

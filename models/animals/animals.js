@@ -4,6 +4,7 @@ module.exports = {
     getAll,
     getById,
     getBy,
+    getAnimalsByShelterId,
     remove,
     update,
     add
@@ -18,7 +19,6 @@ function getById(id) {
     .innerJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
     .innerJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
     .innerJoin('pictures', 'animals.profile_img_id', 'pictures.id')
-    .innerJoin('animal_meta', 'animals.id', 'animal_meta.animal_id')
 
     if(id) {
         query.where('animals.id', id).first();
@@ -51,19 +51,41 @@ function getAnimalMetaById(id) {
     .innerJoin('coat_length', 'animal_meta.coat_length_id', 'coat_length.id')
     .where('animal_meta.animal_id', id)
     .first()
-     return meta;
+    return meta;
 }
 
  function animalToBody(meta) {
    const result = {
        ...meta, 
-       sex: boolToSex(meta.sex)
+       sex: boolToSex(meta.sex),
+       is_mixed: boolToString(meta.is_mixed),
+       is_house_trained: boolToString(meta.is_house_trained),
+       is_neutered_spayed: boolToString(meta.is_neutered_spayed),
+       is_good_with_kids: boolToString(meta.is_good_with_kids),
+       is_good_with_dogs: boolToString(meta.is_good_with_dogs),
+       is_good_with_cats: boolToString(meta.is_good_with_cats),
+       is_vaccinated: boolToString(meta.is_vaccinated)
    }
     return result;
 }
 
 function boolToSex(bool) {
     return bool === true ? "Male" : "Female";
+}
+
+function boolToString(bool) {
+    return bool === true? "Yes" : "No"
+}
+
+function getAnimalsByShelterId(id) {
+    return db
+    .select('animals.id', 'animals.name', 'species.species', 'animal_status.animal_status', 'shelter_locations.nickname', 'pictures.img_url')
+    .from('animals')
+    .innerJoin('species', 'animals.species_id' , 'species.id')
+    .innerJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
+    .innerJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
+    .innerJoin('pictures', 'animals.profile_img_id', 'pictures.id')
+    .where('animals.shelter_id', id)
 }
 
 function getAll() {
@@ -91,5 +113,5 @@ function remove(id) {
 function add(animal) {
     return db('animals')
     .insert(animal, 'id')
-    .then (([id]) => getById(id))  
+    //.then (([id]) => getById(id))  
 }
