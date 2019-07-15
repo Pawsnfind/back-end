@@ -42,12 +42,12 @@ router.put("/animals_status/:id", (req, res) => {
 });
 
 router.delete("/animals_status/:id", (req, res) => {
-  Animals_status.remove(req.params)
-    .then(Count => {
+  Animals_status.remove(req.params.id)
+    .then(count => {
       res.status(200).json({ message: `${count} record(s) has been deleted` });
     })
     .catch(error => {
-      res.status(500).json({ error: `Can not delete this record` });
+      res.status(500).json({ error: `Can not delete this status` });
     });
 });
 
