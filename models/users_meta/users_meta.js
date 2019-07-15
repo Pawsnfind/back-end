@@ -23,8 +23,6 @@ function getUserMetaByUserId(user_id) {
     .where({ user_id })
 }
 
-
-
 function getUserMetaByStateId(state_id) {
     return db('user_meta')
     .where({ state_id })
