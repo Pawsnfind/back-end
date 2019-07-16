@@ -52,7 +52,7 @@ function getById(id) {
 function getApplicationNotes(application_id) {
     if(application_id) {
         return db
-        .select('application_admin.notes', 'application_admin.shelter_user_id as by', 'application_admin.created_at')
+        .select('application_admin.notes', 'shelter_users.username as by', 'application_admin.created_at')
         .from('application_admin')
         .innerJoin('shelter_users', 'application_admin.shelter_user_id', 'shelter_users.id')
         .where('application_admin.application_id', application_id)
@@ -73,13 +73,18 @@ function getByUserId(id) {
 }
 
 function getByShelterId(id) {
-    return db
-    .select('applications.id', 'animals.name as animal name', 'users.email', 'application_status.application_status')
-    .from('applications')
-    .innerJoin('animals', 'applications.animal_id', 'animals.id')
-    .innerJoin('users', 'applications.user_id', 'users.id')
-    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
-    .where('applications.shelter_id', id)
+    if(id) {
+        return db
+        .select('applications.id', 'animals.name as animal name', 'users.email', 'application_status.application_status')
+        .from('applications')
+        .innerJoin('animals', 'applications.animal_id', 'animals.id')
+        .innerJoin('users', 'applications.user_id', 'users.id')
+        .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+        .where('applications.shelter_id', id)
+    } else {
+        return null
+    }
+    
 }
 
 function getByAnimalId(id) {
