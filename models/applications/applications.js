@@ -107,6 +107,7 @@ function getBy(filter) {
 function add(application) {
     return db('applications')
     .insert(application, 'id')
+
    // .then( ([id]) => getById(id))
 }
 
