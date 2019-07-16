@@ -20,7 +20,6 @@ function searchShelter(filter) {
         .where(filter)
 }
 
-// function getEachShelter
 
 //get shelter name, location and contact
 
@@ -56,52 +55,14 @@ function getById(id) {
 //get shelter location and the contact for that location
 
 function getShelterLocation(shelterId) {
-    let locationQuery = db
+    return db
         .select('shelter_locations.nickname', 'shelter_locations.street_address',
-            'shelter_locations.city', 'states.state','shelter_locations.shelter_contact_id')
+            'shelter_locations.city', 'states.state','shelter_locations.shelter_contact_id','shelter_contacts.name')
         .from('shelter_locations')
         .innerJoin('states', 'shelter_locations.state_id', 'states.id')
+        .innerJoin('shelter_contacts','shelter_locations.shelter_contact_id','shelter_contacts.id')
         .where('shelter_locations.shelter_id', shelterId)
 
-    if (shelterId) {
-        
-        const promises = [locationQuery, getAllLocationContacts(locationQuery)]
-
-        return Promise.all(promises)
-            .then(results => {
-                let [locationQuery, newLocations] = results
-                locationQuery.contact = newLocations
-                if (locationQuery) {
-                   
-                    return locationQuery
-                    
-                }
-                else {
-                    return null
-                }
-            })
-    }
-    else {
-        return null
-    }
-}
-
- function getAllLocationContacts(locationQuery) {
-    let newLocationQuery =   locationQuery.map(location => (
-    location.contact = getShelterLocationsContact(location.shelter_contact_id)
-    // {...location, contact:getShelterLocationsContact(location.shelter_contact_id)}
-    ))
-    return newLocationQuery;
-}
-
-//get the contact for a specific location
-
-function getShelterLocationsContact(id) {
-    return db
-        .select('shelter_contacts.name')
-        .from('shelter_locations')
-        .innerJoin('shelter_contacts', 'shelter_locations.shelter_contact_id', 'shelter_contacts.id')
-        .where({ 'shelter_locations.shelter_contact_id': id })
 }
 
 //get the users following the shelters
