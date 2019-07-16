@@ -135,79 +135,159 @@ router.post('/:id/location', (req, res) => {
                         res.status(200).json(id)
                     })
                     .catch(error => {
-                        res.status(500).json({ message: "Error adding shelter location", error: error.toString() })
+                        res.status(500).json({ message: "shelter location :Error adding shelter location", error: error.toString() })
                     })
 
             }
 
             else {
-                res.status(404).json({ message: "Not able to add a new shelter location", error: error.toString() })
+                res.status(404).json({ message: "shelter location :Not able to add a new shelter location", error: error.toString() })
             }
 
         })
 
         .catch(error => {
-            res.status(500).json({ message: 'add route: shelter id does not exist', error: error.toString() })
+            res.status(500).json({ message: 'shelter location :add route: shelter id does not exist', error: error.toString() })
         })
 
 })
 
 //update a shelter location for a shelter
-router.put('/:id/location/:locationId', (req,res) => {
+router.put('/:id/location/:locationId', (req, res) => {
     Shelters.getById(req.params.id)
-    .then(shelter => {
-        if(shelter.id){
-            const shelterLoc = {
-                shelter_id: req.params.id,
-                nickname: req.body.nickname,
-                street_address: req.body.street_address,
-                city: req.body.city,
-                state_id: req.body.state_id,
-                zipcode: req.body.zipcode,
-                phone_number: req.body.phone_number,
-                shelter_contact_id: req.body.shelter_contact_id
-            }
+        .then(shelter => {
+            if (shelter.id) {
+                const shelterLoc = {
+                    shelter_id: req.params.id,
+                    nickname: req.body.nickname,
+                    street_address: req.body.street_address,
+                    city: req.body.city,
+                    state_id: req.body.state_id,
+                    zipcode: req.body.zipcode,
+                    phone_number: req.body.phone_number,
+                    shelter_contact_id: req.body.shelter_contact_id
+                }
 
-            ShelterLocation.updateShelterLocations(req.params.locationId,shelterLoc)
-            .then(id => {
-                console.log('updated shelter location ', id)
-                res.status(200).json(id)
-            })
-            .catch(error => {
-                res.status(500).json({ message: "Error updating shelter location", error: error.toString() })
-            })
-        }
-    })
-    .catch(error => {
-            res.status(500).json({ message: 'update route: shelter id does not exist', error: error.toString() })
+                ShelterLocation.updateShelterLocations(req.params.locationId, shelterLoc)
+                    .then(id => {
+                        console.log('updated shelter location ', id)
+                        res.status(200).json(id)
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: "shelter location :Error updating shelter location", error: error.toString() })
+                    })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'shelter location :update route: shelter id does not exist', error: error.toString() })
         })
 })
 
 //delete the location for a specific shelter
-router.delete('/:id/location/:locationId', (req,res) => {
+router.delete('/:id/location/:locationId', (req, res) => {
     Shelters.getById(req.params.id)
-    .then(shelter => {
-        if(shelter.id){
-        ShelterLocation.deleteShelterLocations(req.params.locationId)
-        .then(count => {
-            if(count > 0) {
-                res.status(200).json({ message: `${count} record has been deleted`})
+        .then(shelter => {
+            if (shelter.id) {
+                ShelterLocation.deleteShelterLocations(req.params.locationId)
+                    .then(count => {
+                        if (count > 0) {
+                            res.status(200).json({ message: `${count} record has been deleted` })
+                        }
+                        else {
+                            res.status(404).json({ message: 'shelter location delete route: location id does not exist' })
+
+                        }
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: 'shelter location : delete route: error', error: error.toString() })
+                    })
+            }
+
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'shelter location: delete route: shelter id does not exist', error: error.toString() })
+        })
+})
+
+//add a shelter contact for a specific shelter
+router.post('/:id/contact', (req, res) => {
+    Shelters.getById(req.params.id)
+        .then(shelter => {
+            if (shelter.id) {
+                const shelterCon = {
+                    shelter_id:req.params.id,
+                    name: req.body.name,
+                    email: req.body.email,
+                    phone: req.body.phone
+                }
+                ShelterContacts.addShelterContacts(shelterCon)
+                .then(id => {
+                    console.log('shelter contact ', id)
+                    res.status(200).json(id)
+                })
+                .catch(error => {
+                    res.status(500).json({ message: "shelter contact add route: Error adding shelter contact", error: error.toString() })
+                })
             }
             else {
-                res.status(404).json({ message: 'location id does not exist'})
-
+                res.status(404).json({ message: "shelter contact add route: Not able to add a new shelter contact", error: error.toString() })
             }
         })
         .catch(error => {
-            res.status(500).json({ message: 'delete route: error', error: error.toString() })
+            res.status(500).json({ message: 'shelter contact add route: shelter id does not exist', error: error.toString() })
         })
-    }
+})
 
+//update a shelter contact for a specific shelter
+router.put('/:id/contact/:contactId', (req, res) => {
+    Shelters.getById(req.params.id)
+    .then(shelter => {
+        if(shelter.id){
+            const shelterCon = {
+                shelter_id:req.params.id,
+                name: req.body.name,
+                email: req.body.email,
+                phone: req.body.phone
+            }
+
+            ShelterContacts.updateShelterContacts(req.params.contactId,shelterCon)
+            .then(id => {
+                console.log('shelter contact ', id)
+                res.status(200).json(id)
+            })
+            .catch(error => {
+                res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
+            })
+        }
     })
     .catch(error => {
-        res.status(500).json({ message: 'delete route: shelter id does not exist', error: error.toString() })
+        res.status(500).json({ message: 'shelter contact :update route: shelter id does not exist', error: error.toString() })
     })
 })
 
+//delete a shelter contact for a specific shelter
+router.delete('/:id/contact/:contactId', (req, res) => {
+    Shelters.getById(req.params.id)
+    .then(shelter => {
+        if(shelter.id){
+            ShelterContacts.deleteShelterContacts(req.params.contactId)
+            .then(count => {
+                if (count > 0) {
+                    res.status(200).json({ message: `${count} record has been deleted` })
+                }
+                else {
+                    res.status(404).json({ message: 'shelter contact delete route: contact id does not exist' })
 
-    module.exports = router;
+                }
+            })
+            .catch(error => {
+                res.status(500).json({ message: 'shelter contact : delete route: error', error: error.toString() })
+            })
+        }
+    })
+    .catch(error => {
+        res.status(500).json({ message: 'shelter contact :delete route: shelter id does not exist', error: error.toString() })
+    })
+})
+
+module.exports = router;
