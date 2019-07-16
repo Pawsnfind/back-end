@@ -54,36 +54,17 @@ function getById(id) {
 //get shelter location and the contact for that location
 
 function getShelterLocation(id) {
-    let locationQuery = db
+    return db
         .select('shelter_locations.nickname', 'shelter_locations.street_address',
-            'shelter_locations.city', 'states.state')
+            'shelter_locations.city', 'states.state', 'shelter_contacts.name')
         .from('shelter_locations')
         .innerJoin('states', 'shelter_locations.state_id', 'states.id')
-
-    if (id) {
-        locationQuery.where('shelter_locations.id', id).first()
-        const promises = [locationQuery, getShelterLocationsContact(id)]
-
-        return Promise.all(promises)
-            .then(results => {
-                let [location, contact] = results
-
-                if (location) {
-                    location.contact = contact
-                    return location
-                }
-                else {
-                    return null
-                }
-            })
-    }
-    else {
-        return null
-    }
+        .innerJoin('shelter_contacts', 'shelter_locations.shelter_contact_id', 'shelter_contacts.id')
+        .where('shelter_locations.shelter_id', id)
 }
 
 //get the contact for a specific location
-
+/*
 function getShelterLocationsContact(id) {
     return db
         .select('shelter_contacts.name')
@@ -91,7 +72,7 @@ function getShelterLocationsContact(id) {
         .innerJoin('shelter_contacts', 'shelter_locations.shelter_contact_id', 'shelter_contacts.id')
         .where({ 'shelter_locations.shelter_contact_id': id })
 }
-
+*/
 //get the users following the shelters
 function getShelterFollows(id) {
     return db
