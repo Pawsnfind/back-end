@@ -53,7 +53,6 @@ router.get('/sub/:sub_id', (req, res) => {
     })
 })
 
-
 // ******** ADDS USER TO PG DATABASE, BUT RES DOES NOT RETURN NEWLY CREATED USER, WHY? ********
 router.post('/', (req, res) => {
     Users.createUser(req.body)
