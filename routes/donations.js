@@ -59,7 +59,7 @@ router.post('/', (req, res) => {
         res.status(201).json({ message: "Successfully donated", donation})
     })
     .catch(err => {
-        res.status(500).json({ message: "Error getting donation", err: err.toString() })
+        res.status(500).json({ message: "Error donating", err: err.toString() })
     })
     
 })
@@ -71,10 +71,10 @@ router.put('/:id', (req, res ) => {
     
     Donations.updateDonation(id, { user_id, shelter_id, amount } )
     .then(donation => {
-        res.status(201).json({ message: "Successfully updated", donation})
+        res.status(200).json({ message: "Successfully updated", donation})
     })
     .catch(err => {
-        res.status(500).json({ message: "Error getting donation", err: err.toString() })
+        res.status(500).json({ message: "Error getting updated", err: err.toString() })
     })
 
 })
