@@ -50,18 +50,18 @@ function getUserMetaByCity(city) {
 
 function createUserMeta(user_meta) {
     return db('user_meta')
-    .insert(user, 'id')
+    .insert(user_meta, 'id')
     .then( ([id]) => getUserMetaById(id))
 }
 
-function updateUserMeta(user_meta, user_id) {
+function updateUserMeta(id, user_meta) {
     return db('user_meta')
-    .where({ user_id })
+    .where({ id })
     .update(user_meta)
 }
 
-function deleteUserMeta(user_id){
-    return db('users_meta')
-    .where({ user_id })
+function deleteUserMeta(id){
+    return db('user_meta')
+    .where({ id })
     .del()
 }

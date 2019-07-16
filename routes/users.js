@@ -13,7 +13,6 @@ router.get('/', (req, res) => {
     })
 })
 
-
 router.get('/:user_id', (req, res) => {
     Users.getUserById(req.params.user_id)
     .then( user => {
@@ -54,11 +53,13 @@ router.get('/sub/:sub_id', (req, res) => {
     })
 })
 
+
+// ******** ADDS USER TO PG DATABASE, BUT RES DOES NOT RETURN NEWLY CREATED USER, WHY? ********
 router.post('/', (req, res) => {
     Users.createUser(req.body)
-    .then(user => {
-        if (user) {
-            res.status(200).json(user)
+    .then(newUser => {
+        if (newUser) {
+            res.status(200).json(newUser)
         }
         else {
             res.status(400).json({ message: 'Incomplete entry' })
@@ -70,23 +71,23 @@ router.post('/', (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    const { email, username } = req.body
+    const { email, username, sub_id } = req.body
     
-    if (!email || !username ) {
-        res.status(400).json({ errorMessage: "Please provide user's email and username" })
+    if (!email || !username || !sub_id ) {
+        res.status(400).json({ errorMessage: "Please provide user's email and username and sub_id" })
     }
 
     Users.updateUser(req.params.id, req.body)
-    .then(account => {
-        if (account) {
-            res.status(200).json(account)
+    .then(user => {
+        if (user) {
+            res.status(200).json(user)
         }
         else {
             res.status(404).json({ message: "User not found" })
         }
     })
     .catch (error => {
-        res.status(500).json({ error: "Error updating user" })
+        res.status(500).json({ error: error.toString() })
     })
 })
 
@@ -101,17 +102,12 @@ router.delete('/:id', (req, res) => {
         }
     })
     .catch (error => {
-        res.status(500).json({ error: "Error deleting account" })
+        res.status(500).json({ error: error.toString() })
     })
 })
 
 
 // user_meta routes
-
-// getUserMetaByPhoneNumber,
-// getUserMetaByZip,
-// getUserMetaByCity,
-
 
 router.get('/meta/:id', (req, res) => {
     UserMetas.getUserMetaById(req.params.id)
@@ -119,47 +115,67 @@ router.get('/meta/:id', (req, res) => {
         res.status(200).json(meta)
     })
     .catch( error => {
-        res.status(500).json({ message: "Error getting user meta", error: error.toString()})
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
     })
 })
 
-router.get('/meta/:user_id', (req, res) => {
+router.get('/meta/uid/:user_id', (req, res) => {
     UserMetas.getUserMetaByUserId(req.params.user_id)
     .then( meta => {
         res.status(200).json(meta)
     })
     .catch( error => {
-        res.status(500).json({ message: "Error getting user meta", error: error.toString()})
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
     })
 })
 
-router.get('/meta/:state_id', (req, res) => {
+router.get('/meta/state/:state_id', (req, res) => {
     UserMetas.getUserMetaByStateId(req.params.state_id)
     .then( meta => {
         res.status(200).json(meta)
     })
     .catch( error => {
-        res.status(500).json({ message: "Error getting user meta", error: error.toString()})
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
     })
 })
 
-router.get('/meta/:shelter_user_id', (req, res) => {
+router.get('/meta/suid/:shelter_user_id', (req, res) => {
     UserMetas.getUserMetaByUserId(req.params.shelter_user_id)
     .then( meta => {
         res.status(200).json(meta)
     })
     .catch( error => {
-        res.status(500).json({ message: "Error getting user meta", error: error.toString()})
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
     })
 })
 
-router.get('/meta/:user_id', (req, res) => {
-    UserMetas.getUserMetaByUserId(req.params.user_id)
+router.get('/meta/num/:phone_number', (req, res) => {
+    UserMetas.getUserMetaByPhoneNumber(req.params.phone_number)
     .then( meta => {
         res.status(200).json(meta)
     })
     .catch( error => {
-        res.status(500).json({ message: "Error getting user meta", error: error.toString()})
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
+    })
+})
+
+router.get('/meta/zip/:zip', (req, res) => {
+    UserMetas.getUserMetaByZip(req.params.zip)
+    .then( meta => {
+        res.status(200).json(meta)
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
+    })
+})
+
+router.get('/meta/city/:city', (req, res) => {
+    UserMetas.getUserMetaByCity(req.params.city)
+    .then( meta => {
+        res.status(200).json(meta)
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting user meta", error: error.toString() })
     })
 })
 

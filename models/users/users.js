@@ -63,7 +63,7 @@ function createUser(user) {
     .then( ([id]) => getUserById(id))
 }
 
-function updateUser(user, id) {
+function updateUser(id, user) {
     return db('users')
     .where({ id })
     .update(user)
