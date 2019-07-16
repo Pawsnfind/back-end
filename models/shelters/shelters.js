@@ -61,15 +61,16 @@ function getShelterLocation(shelterId) {
             'shelter_locations.city', 'states.state','shelter_locations.shelter_contact_id')
         .from('shelter_locations')
         .innerJoin('states', 'shelter_locations.state_id', 'states.id')
+        .where('shelter_locations.shelter_id', shelterId)
 
     if (shelterId) {
-        locationQuery.where('shelter_locations.shelter_id', shelterId)
+        
         const promises = [locationQuery, getAllLocationContacts(locationQuery)]
 
         return Promise.all(promises)
             .then(results => {
                 let [locationQuery, newLocations] = results
-
+                locationQuery.contact = newLocations
                 if (locationQuery) {
                    
                     return locationQuery
@@ -86,9 +87,10 @@ function getShelterLocation(shelterId) {
 }
 
  function getAllLocationContacts(locationQuery) {
-    let newLocationQuery =   locationQuery.map(location => {
+    let newLocationQuery =   locationQuery.map(location => (
     location.contact = getShelterLocationsContact(location.shelter_contact_id)
-    })
+    // {...location, contact:getShelterLocationsContact(location.shelter_contact_id)}
+    ))
     return newLocationQuery;
 }
 
