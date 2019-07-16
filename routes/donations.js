@@ -24,7 +24,7 @@ router.get('/:id', (req, res)=> {
     })
 })
 
-router.get('/user/:id', (req, res)=> {
+router.get('/:id/user', (req, res)=> {
 
     const { id } = req.params;
 
@@ -37,7 +37,7 @@ router.get('/user/:id', (req, res)=> {
     })
 })
 
-router.get('/shelter/:id', (req, res)=> {
+router.get('/:id/shelter', (req, res)=> {
 
     const { id } = req.params;
 

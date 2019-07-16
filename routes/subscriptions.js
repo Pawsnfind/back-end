@@ -23,7 +23,7 @@ router.get('/:id', (req, res) => {
      })
 })
 
-router.get('/shelter/:id', (req, res) => {
+router.get('/:id/shelter', (req, res) => {
     const { id } = req.params;
 
     Subscription.getSubscriptionbyShelter(id)
@@ -36,7 +36,7 @@ router.get('/shelter/:id', (req, res) => {
 
 })
 
-router.get('/level/:id', (req ,res) =>{
+router.get('/:id/level', (req ,res) =>{
     const { id } = req.params;
 
     Subscription.getSubscriptionbyLevel(id)
