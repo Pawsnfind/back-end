@@ -4,6 +4,7 @@ const db = require('../../data/dbConfig');
 module.exports={
     getUsers,
     getUserById,
+    getBy,
     getUserByUsername,
     getUserByEmail,
     getUserBySubId,
@@ -19,12 +20,12 @@ function getUsers() {
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
 }
 
-function getUserById(id) {
+function getUserById(user_id) {
     return db 
     .select('users.sub_id', 'users.email', 'users.created_at', 'user_meta.*')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    .where({ id })
+    .where({ user_id })
 }
 
 function getBy(filter) {
@@ -59,7 +60,7 @@ function getUserBySubId(sub_id) {
 function createUser(user) {
     return db('users')
     .insert(user, 'id')
-    .then( ([id]) => getUsersById(id))
+    .then( ([id]) => getUserById(id))
 }
 
 function updateUser(user, id) {
