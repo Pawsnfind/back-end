@@ -55,14 +55,16 @@ router.get('/sub/:sub_id', (req, res) => {
 
 // ******** ADDS USER TO PG DATABASE, BUT RES DOES NOT RETURN NEWLY CREATED USER, WHY? ********
 router.post('/', (req, res) => {
+    const { email, sub_id, username } = req.body;
+
     Users.createUser(req.body)
-    .then(newUser => {
-        if (newUser) {
-            res.status(200).json(newUser)
-        }
-        else {
-            res.status(400).json({ message: 'Incomplete entry' })
-        }
+    .then(user => {
+        // if (user) {
+            res.status(200).json(user)
+        // }
+        // else {
+        //     res.status(400).json({ message: 'Incomplete entry' })
+        // }
     })
     .catch(error => {
         res.status(500).json({ message: "Error creating user", error: error.toString() })

@@ -55,7 +55,10 @@ function getUserMetaByCity(city) {
 function createUserMeta(user_meta) {
     return db('user_meta')
     .insert(user_meta, 'id')
-    .then( ([id]) => getUserMetaById(id))
+    .returning('*')
+    .then( (results) => {
+        return results[0]
+    })
 }
 
 function updateUserMeta(id, user_meta) {
