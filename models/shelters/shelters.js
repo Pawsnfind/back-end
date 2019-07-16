@@ -25,7 +25,7 @@ function searchShelter(filter) {
 
 function getById(id) {
     let query = db
-        .select('shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
+        .select('shelters.id','shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
         .from('shelters')
         .innerJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
 
