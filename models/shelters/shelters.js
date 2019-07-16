@@ -20,11 +20,13 @@ function searchShelter(filter) {
         .where(filter)
 }
 
+// function getEachShelter
+
 //get shelter name, location and contact
 
 function getById(id) {
     let query = db
-        .select('shelters.shelter', 'shelter_contacts.name')
+        .select('shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
         .from('shelters')
         .innerJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
 
@@ -53,24 +55,25 @@ function getById(id) {
 
 //get shelter location and the contact for that location
 
-function getShelterLocation(id) {
+function getShelterLocation(shelterId) {
     let locationQuery = db
         .select('shelter_locations.nickname', 'shelter_locations.street_address',
-            'shelter_locations.city', 'states.state')
+            'shelter_locations.city', 'states.state','shelter_locations.shelter_contact_id')
         .from('shelter_locations')
         .innerJoin('states', 'shelter_locations.state_id', 'states.id')
 
-    if (id) {
-        locationQuery.where('shelter_locations.id', id).first()
-        const promises = [locationQuery, getShelterLocationsContact(id)]
+    if (shelterId) {
+        locationQuery.where('shelter_locations.shelter_id', shelterId)
+        const promises = [locationQuery, getAllLocationContacts(locationQuery)]
 
         return Promise.all(promises)
             .then(results => {
-                let [location, contact] = results
+                let [locationQuery, newLocations] = results
 
-                if (location) {
-                    location.contact = contact
-                    return location
+                if (locationQuery) {
+                   
+                    return locationQuery
+                    
                 }
                 else {
                     return null
@@ -80,6 +83,13 @@ function getShelterLocation(id) {
     else {
         return null
     }
+}
+
+ function getAllLocationContacts(locationQuery) {
+    let newLocationQuery =   locationQuery.map(location => {
+    location.contact = getShelterLocationsContact(location.shelter_contact_id)
+    })
+    return newLocationQuery;
 }
 
 //get the contact for a specific location
@@ -95,7 +105,7 @@ function getShelterLocationsContact(id) {
 //get the users following the shelters
 function getShelterFollows(id) {
     return db
-        .select('users.email')
+        .select('users.username')
         .from('shelter_follows')
         .innerJoin('shelters', 'shelters.id', 'shelter_follows.shelter_id')
         .innerJoin('users', 'shelter_follows.user_id', 'users.id')

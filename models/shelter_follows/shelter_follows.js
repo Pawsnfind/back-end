@@ -2,7 +2,7 @@ const db = require('../../data/dbConfig.js')
 module.exports = {
     getByShelterId,
     getByUserId,
-    getByShelterUserId,
+    getFollowsByIds,
     addShelterFollows,
     deleteShelterFollows,
  }
@@ -19,14 +19,27 @@ module.exports = {
     .where('user_id',id)
  }
  
- function getByShelterUserId(shelterId,userId) {
-    return db('shelter_follows')
-    .where({
-        'shelter_id':shelterId,
-        'user_id':userId
-    })
+//  function getByShelterUsersId(shelterId,userId) {
+//     return db('shelter_follows')
+//     .where({
+//         'shelter_id':shelterId,
+//         'user_id':userId
+//     })
    
- }
+//  }
+
+
+function getFollowsByIds(shelterId,userId){
+   return db
+   .select('shelter_follows.user_id','users.username')
+   .from('shelter_follows')
+   .innerJoin('users','shelter_follows.user_id','users.id')
+   .where({
+              'shelter_id':shelterId,
+              'user_id':userId
+          })
+   .first()       
+}
  
  
  function addShelterFollows(follow) {
