@@ -13,15 +13,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', validateApplicationId, (req, res) => {
-
    res.status(200).json(req.application)
-
-})
-
-
-router.get('/shelter', (req,res) => {
-    res.status(500).json({ message: "no shelter id provided", error: error.toString()})    
-
 })
 
 router.get('/shelter/:id', validateShelterId ,(req, res) => {
@@ -33,17 +25,19 @@ router.get('/shelter/:id', validateShelterId ,(req, res) => {
         res.status(500).json({ message: "Error getting applications", error: error.toString()})    })
 })
 
-
-
-/*
 router.get('/user/:id', validateUserId, (req, res) => {
-
+    App.getByUserId(req.params.id)
+    .then(applications => {
+        res.status(200).json(applications)
+    })
+    .catch(error => {
+        res.status(500).json({ message: "Error getting applications", error: error.toString()})    })
 })
-*/
+
 //middleware 
 
 function validateApplicationId(req, res, next) {
-    if(req.params.id) {
+    if(req.params.id && req.params.id !== "shelter" && req.params.id !== "user") {
         App.getById(req.params.id) 
         .then( application => {
             if(application) {
@@ -54,7 +48,8 @@ function validateApplicationId(req, res, next) {
             }
         })
     } else {
-        res.status(500).json({ message: "no application id provided"})
+        const subRoute = req.params.id === "shelter" ? "shelter" : req.params.id === "user" ? "user" : null
+        res.status(500).json({ message: `no ${subRoute} id provided`})
     }
 }
 
@@ -74,13 +69,22 @@ function validateShelterId(req, res, next) {
     } else {
         res.status(500).json({ message: "no shelter id", error: error.toString()})    
     }
-    
- 
 }
-/*
-function validateUserId(req, res, next) {
-    if(req.params.id)
 
-}*/
+function validateUserId(req, res, next) {
+    if(req.params.id) {
+        User.getUserById(req.params.id) 
+        .then( user => {
+            if(user) {
+                next();
+            } else {
+                res.status(404).json({ message: "No user by that user id"})
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Error getting valid shelter with application", error: error.toString()})    })
+    }
+
+}
 
 module.exports = router;

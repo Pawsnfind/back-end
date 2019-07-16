@@ -24,7 +24,7 @@ function getUserById(id) {
     .select('users.sub_id', 'users.email', 'users.created_at', 'user_meta.*')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    .where({ id })
+    .where('users.id', id)
 }
 
 function getBy(filter) {
