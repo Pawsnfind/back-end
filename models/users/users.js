@@ -64,10 +64,11 @@ function getUserBySubId(sub_id) {
 function createUser(user) {
     return db('users')
     .insert(user)
+
     .returning('*')
-    .then( (results) => {
-        return results[0]
-    })
+    .then( (results) => results[0])
+
+    // .then( ([id]) => getUserById(id) )
 }
 
 function updateUser(id, user) {
