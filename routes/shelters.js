@@ -31,7 +31,7 @@ router.get('/', (req,res) => {
 
 //get all shelter contacts
 router.get('/:id/contacts',(req,res) => {
-    ShelterContacts.getAllShelterContacts()
+    ShelterContacts.getContactByShelterId(req.params.id)
     .then(contacts => {
         res.status(200).json(contacts)
     })
@@ -53,7 +53,7 @@ router.get('/contacts/:id', (req,res) => {
 
 //get all shelter locations
 router.get('/:id/locations', (req,res) => {
-    ShelterLocation.getAllShelterLocations()
+    ShelterLocation.getLocationByShelterId(req.params.id)
     .then(locations => {
         res.status(200).json(locations)
     })
@@ -74,8 +74,8 @@ router.get('/locations/:id', (req,res) => {
 })
 
 //get all a specific shelter user based on their role id
-router.get(':id/users', (req,res) => {
-    ShelterUsers.getByShelterRoleId(req.params.shelterId,req.params.roleId)
+router.get('/:id/users', (req,res) => {
+    ShelterUsers.getUsersByShelterId(req.params.id)
     .then(users => {
         res.status(200).json(users)
     })
@@ -98,7 +98,7 @@ router.get('/follows/:shelterId/:userId', (req,res) => {
 
 //get the match for all the users who follows a specific shelter
 router.get('/:id/follows', (req,res) => {
-    ShelterFollows.getByShelterId(req.params.id)
+    ShelterFollows.getUsersByShelterId(req.params.id)
     .then(follows => {
         res.status(200).json(follows)
     })

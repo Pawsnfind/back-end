@@ -3,6 +3,7 @@ module.exports = {
     getAllShelterContacts,
     searchShelterContacts,
     getByShelterContactId,
+    getContactByShelterId,
     addShelterContacts,
     updateShelterContacts,
     deleteShelterContacts,
@@ -23,6 +24,16 @@ module.exports = {
     return db('shelter_contacts')
     .where({ id })
     .first()
+ }
+
+ function getContactByShelterId(id) {
+   return db
+   .select('shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')   
+   .from('shelter_contacts')
+   .where({ 
+      'shelter_id':id
+    })
+   
  }
 
  
