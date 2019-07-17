@@ -1,7 +1,6 @@
 const db = require('../../data/dbConfig');
 
 module.exports={
-    getCompleteUserMetaById,
     getUserMetaById,
     getUserMetaByUserId,
     getUserMetaByStateId,
@@ -15,42 +14,67 @@ module.exports={
 }
 
 function getUserMetaById(id) {
-    return db('user_meta') 
-    .where({ id })
-    .first()
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id' )
+    .where('user_meta.id', id)
+
 }
 
 function getUserMetaByUserId(user_id) {
-    return db('user_meta')
-    .where({ user_id })
-    .first()
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
+    .where('user_meta.user_id', user_id)
 }
 
 function getUserMetaByStateId(state_id) {
-    return db('user_meta')
-    .where({ state_id })
-    .first()
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
+    .where('user_meta.state_id', state_id)
 }
 
 function getUserMetaByShelterUserId(shelter_user_id) {
-    return db('user_meta')
-    .where({ shelter_user_id })
-    .first()
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
+    .where('user_meta.shelter_user_id', shelter_user_id)
 }
 
 function getUserMetaByPhoneNumber(phone_number) {
-    return db('user_meta')
-    .where({ phone_number })
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
+    .where('user_meta.phone_number', phone_number)
 }
 
 function getUserMetaByZip(zip) {
-    return db('user_meta')
-    .where({ zip })
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
+    .where('user_meta.zip', zip)
 }
 
 function getUserMetaByCity(city) {
-    return db('user_meta')
-    .where({ city })
+    return db
+    .select('user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .from('user_meta')
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
+    .where('user_meta.city', city)
 }
 
 function createUserMeta(user_meta) {

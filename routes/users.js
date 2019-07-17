@@ -131,16 +131,6 @@ router.delete('/:id', (req, res) => {
 
 // user_meta routes
 
-router.get('/meta/:id/complete', (req, res) => {
-    UserMetas.getCompleteUserMetaById(req.params.id)
-    .then( metas => {
-        res.status(200).json(metas)
-    })
-    .catch( error => {
-        res.status(500).json({ message: "Error getting user", error: error.toString() })
-    })
-})
-
 router.get('/meta/:id', (req, res) => {
     UserMetas.getUserMetaById(req.params.id)
     .then( meta => {

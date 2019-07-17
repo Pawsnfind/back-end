@@ -14,38 +14,12 @@ module.exports={
     removeUser,
 }
 
-// function getUsers() {
-//     return db 
-//     .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.*')
-//     .from('users') 
-//     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    
-// }
-
-// TRYING TO GET COMPLETE USER DATA FOR ALL USERS
 function getUsers() {
     return db 
     .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.*')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
     
-    const promises = [query, ]
-
-    return Promise.all(promises).then( results => {
-        let [user, states, donations, animal_follows, shelter_follows ] = results
-
-        if (user) {
-            user.states= states;
-            user.donations = donations;
-            user.animal_follows = animal_follows;
-            user.shelter_follows = shelter_follows;
-
-            return user
-        }
-        else {
-            return null;
-        }
-    })
 }
 
 function getUserById(user_id) {
@@ -153,7 +127,6 @@ function getUserBySubId(sub_id) {
 function createUser(user) {
     return db('users')
     .insert(user)
-
     .returning('*')
     .then( (results) => results[0])
 
