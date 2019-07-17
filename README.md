@@ -34,11 +34,11 @@ To get the server running locally:
 
 #### Organization Routes
 
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
+| Method | Endpoint                | Access Control | Description                                  |Required               |
+| ------ | ----------------------- | -------------- | -------------------------------------------- |-----------------------|
+| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |       Nonsense        |
+| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |                       |
+| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |                       |
 
 #### User Routes
 
