@@ -1,6 +1,7 @@
 const db = require('../../data/dbConfig');
 
 module.exports={
+    getCompleteUserMetaById,
     getUserMetaById,
     getUserMetaByUserId,
     getUserMetaByStateId,

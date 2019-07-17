@@ -14,12 +14,38 @@ module.exports={
     removeUser,
 }
 
+// function getUsers() {
+//     return db 
+//     .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.*')
+//     .from('users') 
+//     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
+    
+// }
+
+// TRYING TO GET COMPLETE USER DATA FOR ALL USERS
 function getUsers() {
-    let query = db 
+    return db 
     .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.*')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
     
+    const promises = [query, ]
+
+    return Promise.all(promises).then( results => {
+        let [user, states, donations, animal_follows, shelter_follows ] = results
+
+        if (user) {
+            user.states= states;
+            user.donations = donations;
+            user.animal_follows = animal_follows;
+            user.shelter_follows = shelter_follows;
+
+            return user
+        }
+        else {
+            return null;
+        }
+    })
 }
 
 function getUserById(user_id) {
@@ -36,7 +62,7 @@ function getCompleteUserDataById(id) {
     .select('users.email', 'users.username', 'users.sub_id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip')
     .from('users')
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    .where( "users.id", id)
+    .where( 'users.id', id)
     .first()
 
     const promises = [query, getUserState(id), getUserDonations(id), getAnimalFollows(id), getShelterFollows(id)]
@@ -58,7 +84,7 @@ function getCompleteUserDataById(id) {
     })
 }
 
-// HELPERS ***********
+// ******** HELPERS **********
 function getUserState(id) {
     return db
     .select('states.state')
