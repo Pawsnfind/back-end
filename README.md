@@ -32,15 +32,15 @@ To get the server running locally:
 
 🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
 
-#### Organization Routes
+#### User Routes
 
 | Method | Endpoint                | Access Control | Description                                  |Required               |
 | ------ | ----------------------- | -------------- | -------------------------------------------- |-----------------------|
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |       Nonsense        |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |                       |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |                       |
+| GET    | `/api/users`            | ?              | Returns all users in system.                 |       Nonsense        |
+| GET    | `/api/users/:id/`.      | ?              | Returns a user.                              |                       |
+| DELETE | `/organizations/:orgId` | ?              | Delete an organization.                      |                       |
 
-#### User Routes
+#### User Meta Routes
 
 | Method | Endpoint                | Access Control      | Description                                        |
 | ------ | ----------------------- | ------------------- | -------------------------------------------------- |
