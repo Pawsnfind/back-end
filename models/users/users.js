@@ -20,7 +20,7 @@ function getUsers() {
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
-    .innerJoin('states', 'user_meta.state_id', 'states.id' )
+    .innerJoin('states', 'user_meta.state_id', 'states.id')
     
 }
 

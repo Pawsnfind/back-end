@@ -130,7 +130,6 @@ router.delete('/:id', (req, res) => {
 
 
 // user_meta routes
-
 router.get('/meta/:id', (req, res) => {
     UserMetas.getUserMetaById(req.params.id)
     .then( meta => {
@@ -141,7 +140,7 @@ router.get('/meta/:id', (req, res) => {
     })
 })
 
-router.get('/meta/uid/:user_id', (req, res) => {
+router.get('/:user_id/meta', (req, res) => {
     UserMetas.getUserMetaByUserId(req.params.user_id)
     .then( meta => {
         res.status(200).json(meta)
