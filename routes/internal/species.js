@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Species = require("../../models/internal-tables/species");
 
 router.get("/", (req, res) => {

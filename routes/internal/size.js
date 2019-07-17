@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Size = require('../../models/internal-tables/size')
 
 router.get('/size', (req, res) => {

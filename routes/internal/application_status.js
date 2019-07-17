@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Application_status = require("../../models/internal-tables/application_status");
 
 router.get("/application_status", (req, res) => {

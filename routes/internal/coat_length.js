@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Coat_length = require("../../models/internal-tables/coat_length");
 
 router.get("/coat_length", (req, res) => {

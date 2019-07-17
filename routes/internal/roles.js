@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Roles = require("../../models/internal-tables/roles");
 
 router.get("/roles", (req, res) => {
