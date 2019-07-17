@@ -34,7 +34,7 @@ To get the server running locally:
 
 #### User Routes
 
-| Method | Endpoint                | Access Control | Description                                  |Required               |
+| Method | Endpoint                | Access Control | Description                                  | Required               |
 | ------ | ----------------------- | -------------- | -------------------------------------------- |-----------------------|
 | GET    | `/api/users`            | ?              | Returns all users in system.                 |       Nonsense        |
 | GET    | `/api/users/:id/`.      | ?              | Returns a user.                              |                       |
