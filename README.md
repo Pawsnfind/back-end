@@ -30,26 +30,35 @@ To get the server running locally:
 
 ## 2️⃣ Endpoints
 
-🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
-
-#### Organization Routes
-
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
+🚫This is a placeholder, replace the endpoints, access control, and descriptioin to match your project
 
 #### User Routes
 
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/users/current`        | all users           | Returns info for the logged in user.               |
-| GET    | `/users/org/:userId`    | owners, supervisors | Returns all users for an organization.             |
-| GET    | `/users/:userId`        | owners, supervisors | Returns info for a single user.                    |
-| POST   | `/users/register/owner` | none                | Creates a new user as owner of a new organization. |
-| PUT    | `/users/:userId`        | owners, supervisors |                                                    |
-| DELETE | `/users/:userId`        | owners, supervisors |                                                    |
+| Method | Endpoint                | Access Control | Description                                  | Required                      |
+| ------ | ----------------------- | -------------- | -------------------------------------------- | ----------------------------- |
+| GET    | `/api/users`            | ?              | Returns all users in system.                 |                               |
+| GET    | `/api/users/:id`        | ?              | Returns a user given an user id.             | user_id                       |
+| GET    | `/api/users/:username`  | ?              | Returns a user given a username.             | username                      |
+| GET    | `/api/users/:email`     | ?              | Returns a user given an email.               | email                         |
+| GET    | `/api/users/:sub_id`    | ?              | Returns a user given a sub id.               | sub_id                        |
+| POST   | `/api/users/`           | ?              | Add a new user.                              | email, sub_id, username       |
+| PUT    | `/api/users/:id`        | ?              | Update a user's information.                 | user_id                       |
+| DELETE | `/api/users/:id`        | ?              | Delete a user.                               | user_id                       |
+
+#### User Meta Routes
+
+| Method | Endpoint                              | Access Control | Description                                 | Required                |
+| ------ | ------------------------------------- | ------------   | ------------------------------------------- | ----------------------- |
+| GET    | `api/users/meta/:id`                  | ?              | Returns user meta given id.                 | id                      |
+| GET    | `api/users/:user_id/meta`             | ?              | Returns user meta given user id.            | user_id                 |
+| GET    | `api/users/meta/state/:state_id`      | ?              | Returns user metas given state id.          | state_id                |
+| GET    | `api/users/meta/suid/:shelter_user_id`| ?              | Returns user metas given shelter user id.   | shelter_user_id         |
+| GET    | `api/users/meta/num/:phone_number`    | ?              | Returns user metas given phone number.      | phone_number            |
+| GET    | `api/users/meta/zip/:zip`             | ?              | Returns user metas given zip code.          | zip                     |
+| GET    | `api/users/meta/city/:city`           | ?              | Returns user metas given city.              | city                    |
+| POST   | `/api/users/meta`                     | ?              | Creates a new user meta.                    | user_id, shelter_user_id|
+| PUT    | `/api/users/meta/:id`                 | ?              | Updates a user meta.                        | user_meta_id            |
+| DELETE | `/api/users/meta/:id`                 | ?              | Deletes a user meta.                        | user_meta_id            |
 
 # Data Model
 

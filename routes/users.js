@@ -161,7 +161,7 @@ router.get('/meta/state/:state_id', (req, res) => {
 })
 
 router.get('/meta/suid/:shelter_user_id', (req, res) => {
-    UserMetas.getUserMetaByUserId(req.params.shelter_user_id)
+    UserMetas.getUserMetaByShelterUserId(req.params.shelter_user_id)
     .then( meta => {
         res.status(200).json(meta)
     })
