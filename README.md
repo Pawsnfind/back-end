@@ -37,10 +37,10 @@ To get the server running locally:
 | Method | Endpoint                | Access Control | Description                                  | Required              |
 | ------ | ----------------------- | -------------- | -------------------------------------------- |-----------------------|
 | GET    | `/api/users`            | ?              | Returns all users in system.                 |       Nonsense        |
-| GET    | `/api/users/:id`      | ?              | Returns a user.                              |                       |
-| POST | `/api/users/:id` | ?              | Delete an organization.                      |                       |
-| PUT | `/api/users/:id` | ?              | Delete an organization.                      |                       |
-| DELETE | `/api/users/:id` | ?              | Delete an organization.                      |                       |
+| GET    | `/api/users/:id`        | ?              | Returns a specified user given a user's id   |   user                |
+| POST   | `/api/users/`           | ?              | Delete an organization.                      |                       |
+| PUT    | `/api/users/:id`        | ?              | Delete an organization.                      |                       |
+| DELETE | `/api/users/:id`        | ?              | Delete an organization.                      |                       |
 
 #### User Meta Routes
 
@@ -92,7 +92,7 @@ To get the server running locally:
 }
 ```
 
-## 2️⃣ Actions
+## 2️⃣ Models
 
 🚫 This is an example, replace this with the actions that pertain to your backend
 
