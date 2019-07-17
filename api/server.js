@@ -10,6 +10,7 @@ const donationRouter = require('../routes/donations.js')
 const shelterRouter = require('../routes/shelters.js')
 const subscriptionRouter = require('../routes/subscriptions.js')
 const userRouter = require('../routes/users.js')
+const internalAge = require('../routes/internal/ages.js')
 
 server.use(helmet());
 server.use(express.json());
@@ -21,6 +22,7 @@ server.use('/api/donations', donationRouter)
 server.use('/api/shelters', shelterRouter)
 server.use('/api/subscriptions', subscriptionRouter)
 server.use('/api/users', userRouter)
+server.use('/api/internal/paws/ages', internalAge)
 
 
 server.get('/', (req, res) => {

@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Animals_status = require("../../models/internal-tables/animals_status");
 
 router.get("/animals_status", (req, res) => {
@@ -34,7 +34,7 @@ router.post("/animals_status", (req, res) => {
 router.put("/animals_status/:id", (req, res) => {
   Animals_status.update(req.params.id, req.body)
     .then(status => {
-      res.status(200).json(status);
+      res.status(200).json({ message: `${status} record(s) has been updated` });
     })
     .catch(error => {
       res.status(500).json({ error: `Can not update status` });

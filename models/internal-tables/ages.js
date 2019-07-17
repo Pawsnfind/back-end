@@ -27,7 +27,7 @@ function getBy(filter) {
 function add(age){
     return db('ages')
     .insert(age, 'id')
-    .then(([id]) => getById(id))
+    //.then(([id]) => getById(id))
 }
 
 function remove(id){

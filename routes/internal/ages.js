@@ -1,7 +1,7 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const Age = require("../../models/internal-tables/ages");
 
-router.get("/ages", (req, res) => {
+router.get("/", (req, res) => {
   Age.getAll()
     .then(ages => {
       res.status(200).json(ages);
@@ -11,7 +11,7 @@ router.get("/ages", (req, res) => {
     });
 });
 
-router.get("/ages/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   Age.getById(req.params.id)
     .then(age => {
       res.status(200).json(age);
@@ -21,8 +21,8 @@ router.get("/ages/:id", (req, res) => {
     });
 });
 
-router.post("/ages", (req, res) => {
-  Age.add(req.body.age)
+router.post("/", (req, res) => {
+  Age.add(req.body)
     .then(age => {
       res.status(200).json(age);
     })
@@ -31,7 +31,7 @@ router.post("/ages", (req, res) => {
     });
 });
 
-router.delete("/ages/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   Age.remove(req.params.id)
     .then(count => {
       res.status(200).json({ message: `${count} record(s) has been deleted` });
@@ -41,14 +41,18 @@ router.delete("/ages/:id", (req, res) => {
     });
 });
 
-router.put("/ages/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   Age.update(req.params.id, req.body)
     .then(age => {
-      res.status(200).json(age);
+      res.status(200).json({ message: `${age} record(s) has been updated` });
     })
     .catch(error => {
       res.status(500).json({ error: `Can not update age` });
     });
 });
+
+// Middleware
+
+
 
 module.exports = router;
