@@ -5,6 +5,9 @@ module.exports = {
     getById,
     getBy,
     getAnimalsByShelterId,
+    getAnimalMetaById,
+    getAnimalFollowsById,
+    getNotesByAnimalId,
     remove,
     update,
     add
@@ -26,12 +29,12 @@ function getById(id) {
 
         return Promise.all(promises).then(results =>  {
             let [animal, meta, notes, followers] = results;
-
             if(animal) {
                 animal.meta = meta;
                 animal.notes = notes;
                 animal.followers = followers;
                 animal.meta = animalToBody(animal.meta);
+                
                 return animal
             } else {
                 return null;
@@ -61,6 +64,7 @@ function getNotesByAnimalId(id) {
 
 //get animal meta by animal id
 function getAnimalMetaById(id) {
+    console.log(id)
     let meta = db
     .select('breeds.breed', 'animal_meta.is_mixed', 'ages.age','size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.coat_length', 'animal_meta.is_male as sex', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
     .from('animal_meta')
@@ -73,10 +77,10 @@ function getAnimalMetaById(id) {
     return meta;
 }
 
- function animalToBody(meta) {
+ function animalToBody(meta ={}) {
    const result = {
-       ...meta, 
-       sex: boolToSex(meta.sex),
+       ...meta,
+       is_male: boolToSex(meta.is_male),
        is_mixed: boolToString(meta.is_mixed),
        is_house_trained: boolToString(meta.is_house_trained),
        is_neutered_spayed: boolToString(meta.is_neutered_spayed),
@@ -85,15 +89,18 @@ function getAnimalMetaById(id) {
        is_good_with_cats: boolToString(meta.is_good_with_cats),
        is_vaccinated: boolToString(meta.is_vaccinated)
    }
+
     return result;
 }
 
 function boolToSex(bool) {
+    // if (bool === undefined) { return null }
     return bool === true ? "Male" : "Female";
 }
 
 function boolToString(bool) {
-    return bool === true? "Yes" : "No"
+    // if (bool === undefined) { return null }
+    return bool === true ? "Yes" : "No"
 }
 
 function getAnimalsByShelterId(id) {
@@ -132,5 +139,5 @@ function remove(id) {
 function add(animal) {
     return db('animals')
     .insert(animal, 'id')
-    //.then (([id]) => getById(id))  
+    // .then (([id]) => getById(id))  
 }

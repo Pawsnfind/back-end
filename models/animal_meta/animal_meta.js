@@ -1,12 +1,13 @@
 const db = require ('../../data/dbConfig')
 
-module.export = {
+module.exports = {
     getById,
     getBy,
     getByAnimalId,
     remove,
     update,
-    add
+    add, 
+    removeByAnimalId
 }
 
 //get by animal id
@@ -39,11 +40,11 @@ function getById(id) {
     .where('animal_meta.id', id)
     .first()
 }
-}
+
 
 function remove(id) {
     return db('animal_meta')
-    .where({ id })
+    .where({ animal_id })
     .del()
 }
 
@@ -58,5 +59,11 @@ function add(animal_meta) {
     return db('animal_meta')
     .insert(animal_meta, 'id')
     //.then (([id]) => getById(id))
+}
+
+function removeByAnimalId(animal_id) {
+    return db('animal_meta')
+    .where({animal_id: animal_id})
+    .del()
 }
 

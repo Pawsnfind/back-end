@@ -15,7 +15,7 @@ function getNotesByAnimalId(id) {
 }
 
 function getById(id) {
-    return db('animals_admin')
+    return db('animal_admin')
     .where ({ id })
     .first()
 }
