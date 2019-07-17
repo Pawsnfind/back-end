@@ -6,7 +6,8 @@ module.exports = {
     getByApplicationId,
     add,
     remove,
-    update
+    update,
+    findMatch
 }
 
 function getById(id) {
@@ -42,4 +43,13 @@ function update(id, change) {
     .where({ id })
     .update(change)
     .then(updatedNote => updatedNote ? getById(id) : null)
+}
+
+function findMatch(applicationId,adminId){
+    return db('application_admin')
+    .where({
+        application_id:applicationId,
+        id:adminId
+    })
+    .first()
 }
