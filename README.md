@@ -30,15 +30,17 @@ To get the server running locally:
 
 ## 2️⃣ Endpoints
 
-🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
+🚫This is a placeholder, replace the endpoints, access control, and descriptioin to match your project
 
 #### User Routes
 
-| Method | Endpoint                | Access Control | Description                                  | Required               |
+| Method | Endpoint                | Access Control | Description                                  | Required              |
 | ------ | ----------------------- | -------------- | -------------------------------------------- |-----------------------|
 | GET    | `/api/users`            | ?              | Returns all users in system.                 |       Nonsense        |
-| GET    | `/api/users/:id/`.      | ?              | Returns a user.                              |                       |
-| DELETE | `/organizations/:orgId` | ?              | Delete an organization.                      |                       |
+| GET    | `/api/users/:id`      | ?              | Returns a user.                              |                       |
+| POST | `/api/users/:id` | ?              | Delete an organization.                      |                       |
+| PUT | `/api/users/:id` | ?              | Delete an organization.                      |                       |
+| DELETE | `/api/users/:id` | ?              | Delete an organization.                      |                       |
 
 #### User Meta Routes
 
