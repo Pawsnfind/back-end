@@ -81,6 +81,11 @@ router.get('/shelter/:id', (req, res) => {
     })
 })
 
+//get specific animal by animal id and animal meta id
+// router.get('/:animalId/meta/metaId', (req, res) => {
+//     AnimalMeta.getByAnimalMetaId(req.params.id, req.params.userId)
+//     .then(animal)
+// })
 
 //get followers of animal by animal id
 router.get('/:id/follows', (req, res) => {
@@ -126,28 +131,11 @@ router.get('/:id/admin', (req, res) => {
     })
 })
 
-//delete animal
-router.delete('/:id', deleteAnimal, (req, res) => {
-    AnimalMeta.getById(req.params.id)
-        .then(id => {
-            if(id.animal_id === req.params.id) {
-                AnimalMeta.remove(req.params.id)
-            } else {
-                res.status(404).json ({
-                    message: 'That animal does not exist'
-                })
-            }
-        }) 
-        .catch ( error => {
-            res.status(500).json({ message: "Error deleting animal", error: error.toString()})
-        })
-})
 
-//middleware for delete animal
 
-function deleteAnimal (req, res, next) {
+router.delete('/:id/meta/:metaId', getMatch, deleteAnimal, (req, res) => {
     Animals.remove(req.params.id)
-        .then (count => {
+        .then(count => {
             if(count > 0) {
                 res.status(200).json({ message: 'deleted'})
                 next()
@@ -156,9 +144,49 @@ function deleteAnimal (req, res, next) {
             }
         })
         .catch (error => {
+            res.status(500).json({message: 'Error deleting animal', error: error.toString()})
+        })
+})
+
+function getMatch (req, res, next) {
+    Animals.findMatch(req.params.id, req.params.metaId)
+    .then(match => {
+        if(match) {
+            next()
+        } else {
+            res.status(404).json({message: 'No match found'})
+        }
+    })
+    .catch (error => {
+        res.status(500).json({message: "Error accessing database", error: error.toString()})
+    })
+}
+
+
+function deleteAnimal (req, res, next) {
+    Animals.getById(req.params.id)
+        .then(animal => {
+            if (animal) {
+                AnimalMeta.remove(req.params.metaId)
+                .then (count => {
+                    if(count > 0) {
+                        res.status(200).json({ message: 'deleted'})
+                        next()
+                    } else {
+                        res.status(400).json({message: "animal with the ID is not found"})
+                    }
+                })
+            } else {
+                res.status(404).json ({ message: 'Animal does not exist'})
+            }
+        })
+        .catch (error => {
             res.status(500).json({message: "Error deleting animal", error: error.toString()})
         })
 }
+
+
+//update animal 
 
 router.put('/:id/meta/:metaId', updateAnimal, (req, res) => {
     const animal_meta = {

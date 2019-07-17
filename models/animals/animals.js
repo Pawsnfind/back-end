@@ -10,7 +10,8 @@ module.exports = {
     getNotesByAnimalId,
     remove,
     update,
-    add
+    add, 
+    findMatch
 }
 
 function getById(id) {
@@ -94,12 +95,12 @@ function getAnimalMetaById(id) {
 }
 
 function boolToSex(bool) {
-    // if (bool === undefined) { return null }
+    if (bool === undefined) { return null }
     return bool === true ? "Male" : "Female";
 }
 
 function boolToString(bool) {
-    // if (bool === undefined) { return null }
+    if (bool === undefined) { return null }
     return bool === true ? "Yes" : "No"
 }
 
@@ -140,4 +141,15 @@ function add(animal) {
     return db('animals')
     .insert(animal, 'id')
     // .then (([id]) => getById(id))  
+}
+
+function findMatch(animalId, metaId) {
+    return db('animal_meta')
+    .where({ 
+        animal_id: animalId,
+        id: metaId  
+    })
+    .first()
+
+    
 }

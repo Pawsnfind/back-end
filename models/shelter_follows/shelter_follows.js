@@ -5,6 +5,7 @@ module.exports = {
     getByShelterUserId,
     addShelterFollows,
     deleteShelterFollows,
+    
  }
  
  function getByShelterId(id) {

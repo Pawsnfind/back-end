@@ -8,6 +8,7 @@ module.exports = {
     update,
     add, 
     removeByAnimalId
+
 }
 
 //get by animal id
@@ -44,7 +45,7 @@ function getById(id) {
 
 function remove(id) {
     return db('animal_meta')
-    .where({ animal_id })
+    .where({ id })
     .del()
 }
 
@@ -63,7 +64,7 @@ function add(animal_meta) {
 
 function removeByAnimalId(animal_id) {
     return db('animal_meta')
-    .where({animal_id: animal_id})
+    .where({animal_id})
     .del()
 }
 
