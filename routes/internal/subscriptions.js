@@ -42,7 +42,7 @@ router.delete("/:id", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  Subscriptions.update(req.params.id, req.body)
+  Subscriptions.update(req.params.id, req.body.subscription, req.body.subscription_duration_mo, req.body.price)
     .then(subscription => {
       res.status(200).json({ message: `${subscription} record(s) has been updated successfully` });
     })

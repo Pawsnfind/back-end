@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", verifyAgeId, (req, res) => {
+router.get("/:id", (req, res) => {
   Age.getById(req.params.id)
     .then(age => {
       res.status(200).json(age);
@@ -31,7 +31,7 @@ router.post("/", (req, res) => {
     });
 });
 
-router.delete("/:id", verifyAgeId, (req, res) => {
+router.delete("/:id", (req, res) => {
   Age.remove(req.params.id)
     .then(count => {
       res.status(200).json({ message: `${count} record(s) has been deleted` });
@@ -41,7 +41,7 @@ router.delete("/:id", verifyAgeId, (req, res) => {
     });
 });
 
-router.put("/:id", verifyAgeId, (req, res) => {
+router.put("/:id", (req, res) => {
   Age.update(req.params.id, req.body)
     .then(age => {
       res.status(200).json({ message: `${age} record(s) has been updated` });
@@ -52,20 +52,7 @@ router.put("/:id", verifyAgeId, (req, res) => {
 });
 
 // Middleware
-function verifyAgeId(req, res, next) {
-  if (req.params.id) {
-    Age.getById(req.params.id) 
-    .then(age => {
-      if (age) {
-        next()
-      } else {
-        res.status(404).json({ message: `No record found with this id`})
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ error: `Can not access database`})
-    })
-  }
-}
+
+
 
 module.exports = router;
