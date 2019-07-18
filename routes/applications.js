@@ -152,6 +152,7 @@ router.put('/:id/status', validateApplicationId, (req,res) => {
 
 })
 
+//add a new application
 router.post('/', addApplication, (req, res) => {
     const application_meta = {
         application_id: req.body.application_id,
