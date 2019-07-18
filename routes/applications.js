@@ -17,33 +17,40 @@ router.get('/', (req, res) => {
 
 //get an application
 router.get('/:id', validateApplicationId, (req,res) => {
-    App.getById(req.params.id)
-        .then(application => {
-            res.status(200).json(application)
-        })
-        .catch(error => {
-            res.status(500).json({ message: "Error getting applications", error: error.toString() })
-        })
+    
+            res.status(200).json(req.application)
+        
 })
 
 //get notes by application id
 router.get('/:id/notes', validateApplicationId, (req, res) => {
     AppAdmin.getByApplicationId(req.params.id)
-        .then(application => {
-            res.status(200).json(application)
+        .then(notes => {
+            res.status(200).json(notes)
         })
         .catch(error => {
             res.status(500).json({ message: "Error getting applications", error: error.toString() })
         })
 
+})
+
+//get notes by application id
+router.get('/notes/:id', validateNoteId, (req,res) => {
+    AppAdmin.getById(req.params.id)
+    .then(note => {
+        res.status(200).json(note)
+    })
+    .catch(error => {
+        res.status(500).json({ message: "Error getting applications", error: error.toString() })
+    })
 })
 
 //get notes by an applications, admin id
 router.get('/:id/admin/:adminId', getMatch, (req, res) => {
 
     AppAdmin.getById(req.params.adminId)
-        .then(application => {
-            res.status(200).json(application)
+        .then(notes => {
+            res.status(200).json(notes)
         })
         .catch(error => {
             res.status(500).json({ message: "Error getting applications", error: error.toString() })
@@ -73,11 +80,11 @@ router.get('/user/:id', validateUserId, (req, res) => {
 })
 
 //post notes for an application
-router.post('/:id', validateApplicationId, (req, res) => {
+router.post('/note', validateApplicationId, (req, res) => {
 
     const application_admin = {
         notes: req.body.notes,
-        application_id: req.params.id,
+        application_id: req.body.application_id,
         shelter_user_id: req.body.shelter_user_id
     }
 
@@ -91,16 +98,16 @@ router.post('/:id', validateApplicationId, (req, res) => {
 })
 
 //update notes for an application
-router.put('/:id/note/:noteId',validateApplicationId, (req,res)=> {
+router.put('/note/:id',validateNoteId, (req,res)=> {
     
 
     const application_admin = {
         notes: req.body.notes,
-        application_id: req.params.id,
+        application_id: req.body.application_id,
         shelter_user_id: req.body.shelter_user_id
     }
 
-    AppAdmin.update(req.params.noteId, application_admin)
+    AppAdmin.update(req.params.id, application_admin)
     .then(updated => {
         res.status(200).json(updated)
     })
@@ -110,14 +117,14 @@ router.put('/:id/note/:noteId',validateApplicationId, (req,res)=> {
 })
 
 //delete notes for an application
-router.delete('/:id/note/:noteId', validateApplicationId, (req,res) => {
-    AppAdmin.remove(req.params.noteId)
+router.delete('/note/:id', validateNoteId, (req,res) => {
+    AppAdmin.remove(req.params.id)
     .then(count => {
         if(count>0){
             res.status(200).json({message:`Deleted ${count} row`})
         }
         else {
-            res.status(404).json({message:`Note ID ${req.params.noteId} not found`})
+            res.status(404).json({message:`Note ID ${req.params.id} not found`})
 
         }
     })
@@ -185,39 +192,38 @@ router.post('/', addApplication, (req, res) => {
             res.status(500).json({ message: "Error getting applications", error: error.toString() })
         })
 })
-/*
-    if (application_meta.application_id &&
-        application_meta.name &&
-        application_meta.street_address &&
-        application_meta.city &&
-        application_meta.state_id &&
-        application_meta.zip &&
-        application_meta.home_phone &&
-        application_meta.email &&
-        application_meta.is_over_18 &&
-        application_meta.is_homeowner &&
-        application_meta.is_in_agreement &&
-        application_meta.is_homevisit_allowed &&
-        application_meta.is_fenced &&
-        application_meta.ref_name_1 &&
-        application_meta.ref_phone_1 &&
-        application_meta.ref_relationship_1 &&
-        application_meta.ref_name_2 &&
-        application_meta.ref_phone_2 &&
-        application_meta.ref_relationship_2 &&
-        application_meta.is_declaration ) {
-            AppMeta.add(application_meta)
-            .then( id => {
-                res.status(201).json(id)
-            })
-            .catch( error => {
-                res.status(500).json({ message: "Error getting applications", error: error.toString()})
-            })
-        } else {
-            res.status(400).json({message: "please enter all required META field"})
-        }
 
-    })*/
+    // if (req.body.application_id &&
+    //     req.body.name &&
+    //     req.body.street_address &&
+    //     req.body.city &&
+    //     req.body.state_id &&
+    //     req.body.zip &&
+    //     req.body.home_phone &&
+    //     req.body.email &&
+    //     req.body.is_over_18 &&
+    //     req.body.is_homeowner &&
+    //     req.body.is_in_agreement &&
+    //     req.body.is_homevisit_allowed &&
+    //     req.body.is_fenced &&
+    //     req.body.ref_name_1 &&
+    //     req.body.ref_phone_1 &&
+    //     req.body.ref_relationship_1 &&
+    //     req.body.ref_name_2 &&
+    //     req.body.ref_phone_2 &&
+    //     req.body.is_declaration ) {
+    //         AppMeta.add(application_meta)
+    //         .then( id => {
+    //             res.status(201).json(id)
+    //         })
+    //         .catch( error => {
+    //             res.status(500).json({ message: "Error getting applications", error: error.toString()})
+    //         })
+    //     } else {
+    //         res.status(400).json({message: "please enter all required META field"})
+    //     }
+
+    // })
 
 
 
@@ -296,6 +302,23 @@ function validateUserId(req, res, next) {
             })
     }
 
+}
+
+function validateNoteId(req,res,next){
+    if(req.params.id){
+        AppAdmin.getById(req.params.id)
+        .then(note => {
+            if(note){
+                next()
+            }
+            else {
+                res.status(404).json({ message: "Note does not exists" })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Error getting valid note for the application", error: error.toString() })
+        })
+    }
 }
 
 
