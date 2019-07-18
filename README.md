@@ -51,70 +51,78 @@ To get the server running locally:
 | PUT    | `/users/:userId`        | owners, supervisors |                                                    |
 | DELETE | `/users/:userId`        | owners, supervisors |                                                    |
 
+
+#### Donations
+
+| Method | Endpoint                    | Access Control              | Description                                        |
+| ------ | --------------------------- | --------------------------- | ---------------------------------------------------|
+| GET    | `/api/donations/`           | owner                       | Returns all donations                              |
+| GET    | `/api/donations/:id`        | owner shelter operator      | Returns donations by id                            |
+| GET    | `/api/donations/:id/user`   | owner, adopters             | Returns donations by user                          |
+| GET    | `/api/donations/:id/shelter`| owner, shelter operators    | Returns donations for shelter                      |
+| POST   | `/api/donations/`           | adopters                    | Makes a new donation                               |
+| PUT    | `/api/donations/:id`        | owners                      | Update existing donation                           |   
+
+
+| Method | Endpoint                        | Access Control              | Description                                        |
+| ------ | ------------------------------- | --------------------------- | ---------------------------------------------------|
+| GET    | `/api/subscriptions/`           | owner                       | Returns all subscriptions                          |
+| GET    | `/api/subscriptions/:id`        | owner shelter operator      | Returns subscriptions by id                        |
+| GET    | `/api/subscriptions/:id/shelter`| owner, shelter operator     | Returns subscription for shelter                   |
+| GET    | `/api/subscriptions/:id/level`  | owner                       | Returns subscriptions by level                     |
+| POST   | `/api/subscriptions/`           | shelter                     | Makes a new subscription                           |
+| PUT    | `/api/subscriptions/:id`        | owners                      | Update existing donation                           |      
+
 # Data Model
 
 🚫This is just an example. Replace this with your data model
 
-#### 2️⃣ ORGANIZATIONS
+#### 2️⃣ SUBSCRIPTIONS
 
 ---
 
 ```
+
 {
-  id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
+"id": UUID,
+"shelter_id": STRING,
+"subscription_id": STRING,
+"is_active": BOOLEAN,
+"created_at": "TIMESTAMP",
+"expiration_date": "TIMESTAMP"
 }
+
 ```
 
-#### USERS
+#### DONATIONS
 
 ---
 
 ```
 {
-  id: UUID
-  organization_id: UUID foreign key in ORGANIZATIONS table
-  first_name: STRING
-  last_name: STRING
-  role: STRING [ 'owner', 'supervisor', 'employee' ]
-  email: STRING
-  phone: STRING
-  cal_visit: BOOLEAN
-  emp_visit: BOOLEAN
-  emailpref: BOOLEAN
-  phonepref: BOOLEAN
+"id": UUID,
+"user_id": INTEGER,
+"shelter_id": INTEGER,
+"amount": DECIMAL,
+"created_at": TIMESTAMP
 }
 ```
 
 ## 2️⃣ Actions
 
-🚫 This is an example, replace this with the actions that pertain to your backend
-
-`getOrgs()` -> Returns all organizations
-
-`getOrg(orgId)` -> Returns a single organization by ID
-
-`addOrg(org)` -> Returns the created org
-
-`updateOrg(orgId)` -> Update an organization by ID
-
-`deleteOrg(orgId)` -> Delete an organization by ID
-<br>
-<br>
-<br>
-`getUsers(orgId)` -> if no param all users
-
-`getUser(userId)` -> Returns a single user by user ID
-
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
-
-`updateUser(userId, changes object)` -> Updates a single user by ID.
-
-`deleteUser(userId)` -> deletes everything dependent on the user
+`getDonationsByUser(id)` -- returns donation by user id
+`getDonationbyId(id)` - return donation by donation id
+`getDonationsByShelter(id)` - return donation by shelter id
+`getAllDonations`
+`addDonation(donation)` - add donation by input field
+`updateDonation(id,change)` - update donation by id
+<br><br><br>
+`getAllSubscriptions`
+`getSubscriptionbyID(id)` -- returns donation by id
+`getSubscriptionbyShelter(id)` -- returns donaiton by shelter id
+`getSubscriptionbyLevel(id)`- get subscriptions by subscription id
+`addSubscription(subscription)` - add subscription
+`updateSubscription(id, change)` - update subscription
 
 ## 3️⃣ Environment Variables
 
