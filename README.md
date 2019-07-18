@@ -63,13 +63,6 @@ To get the server running locally:
 | GET    | `/api/animals/follows/:animalId/:userId` | owners      | Returns follower of an animal by animal id and the user by user id        | animal_id, user_id
 
 
-#### Animal Meta Routes
-
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/api/animals/:id`      | all users           | Returns an animals meta information given the meta id | id
-
-
 #### Animal Admin Routes
 
 | Method | Endpoint                | Access Control | Description                                  | Required |
