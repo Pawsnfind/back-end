@@ -16,20 +16,21 @@ module.exports={
 
 function getUsers() {
     return db 
-    .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
-    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelters.shelter')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
+    .innerJoin('shelters', 'user_meta.shelter_user_id', 'shelters.id')
     .innerJoin('states', 'user_meta.state_id', 'states.id')
-    
 }
 
 function getUserById(user_id) {
     return db 
-    .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
-    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelters.shelter')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
+    .innerJoin('shelters', 'user_meta.shelter_user_id', 'shelters.id')
     .innerJoin('states', 'user_meta.state_id', 'states.id' )
     .where( "users.id", user_id )
     .first()
@@ -37,22 +38,23 @@ function getUserById(user_id) {
 
 function getCompleteUserDataById(id) {
     let query = db
-    .select('users.email', 'users.username', 'users.sub_id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip')
+    .select('users.id', 'users.email', 'users.username', 'users.sub_id', 'users.created_at', 'user_meta.shelter_user_id', 'shelters.shelter', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state')
     .from('users')
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
+    .innerJoin('shelters', 'user_meta.shelter_user_id', 'shelters.id')
+    .innerJoin('states', 'user_meta.state_id', 'states.id' )
     .where( 'users.id', id)
     .first()
 
-    const promises = [query, getUserState(id), getUserDonations(id), getAnimalFollows(id), getShelterFollows(id)]
+    const promises = [query, getUserDonations(id), getAnimalFollows(id), getShelterFollows(id)]
 
     return Promise.all(promises).then( results => {
-        let [ user, states, donations, animal_follows, shelter_follows ] = results
+        let [ user, donations, animal_follows, shelter_follows ] = results
 
         if (user) {
-            user.states= states;
             user.donations = donations;
             user.animal_follows = animal_follows;
-            user.shelter_follows = shelter_follows;
+            user.shelter_follows = shelter_follows; 
 
             return user
         }
@@ -63,12 +65,13 @@ function getCompleteUserDataById(id) {
 }
 
 // ******** HELPERS **********
-function getUserState(id) {
-    return db
-    .select('states.state')
-    .from('states')
-    .where('states.id', id)
-}
+
+// function getUserState(id) {
+//     return db
+//     .select('states.state')
+//     .from('states')
+//     .where('states.id', id)
+// }
 
 function getUserDonations(user_id) {
     return db 
@@ -103,34 +106,37 @@ function getBy(filter) {
 
 function getUserByUsername(username) {
     return db
-    .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
-    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelters.shelter')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
     .innerJoin('states', 'user_meta.state_id', 'states.id' )
-    .where( "users.username", username )
+    .innerJoin('shelters', 'user_meta.shelter_user_id', 'shelters.id')
+    .where( 'users.username', username )
     .first()
 }
 
 function getUserByEmail(email) {
     return db
-    .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
-    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelters.shelter')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
     .innerJoin('states', 'user_meta.state_id', 'states.id' )
-    .where( "users.email", email )
+    .innerJoin('shelters', 'user_meta.shelter_user_id', 'shelters.id')
+    .where( 'users.email', email )
     .first()
 }
 
 function getUserBySubId(sub_id) {
     return db
-    .select('users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
-    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'user_meta.shelter_user_id', 'states.state')
+    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelters.shelter')
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
     .innerJoin('states', 'user_meta.state_id', 'states.id' )
-    .where( "users_sub_id", sub_id )
+    .innerJoin('shelters', 'user_meta.shelter_user_id', 'shelters.id')
+    .where( 'users.sub_id', sub_id )
     .first()
 }
 
