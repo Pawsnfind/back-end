@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", verifyId, (req, res) => {
+router.get("/:id", (req, res) => {
   Subscriptions.getById(req.params.id)
     .then(subscription => {
       res.status(200).json(subscription);
@@ -21,59 +21,35 @@ router.get("/:id", verifyId, (req, res) => {
     });
 });
 
-router.post("/", verifyInput, (req, res) => {
-  Subscriptions.add(req.body)
-    .then(sub => {
-      res.status(200).json(sub);
+router.post("/", (req, res) => {
+  Subscriptions.add(req.body.subscription, req.body.subscription_duration_mo, req.body.price)
+    .then(subscription => {
+      res.status(200).json(subscription);
     })
     .catch(error => {
-      res.status(500).json({ message: `Can not add subscription`, error: error.toString()});
+      res.status(500).json({ error: `Can not add subscription` });
     });
 });
 
-router.delete("/:id", verifyId, (req, res) => {
+router.delete("/:id", (req, res) => {
   Subscriptions.remove(req.params.id)
     .then(count => {
-      res.status(200).json({ message: `${count} record successfully deleted` });
+      res.status(200).json({ message: `${count} record(s) has been deleted` });
     })
     .catch(error => {
       res.status(500).json({ error: `Can not delete subscription` });
     });
 });
 
-router.put("/:id", verifyId, (req, res) => {
+router.put("/:id", (req, res) => {
   Subscriptions.update(req.params.id, req.body)
     .then(subscription => {
-      res.status(200).json({ message: `${subscription} record successfully updated successfully` });
+      res.status(200).json({ message: `${subscription} record(s) has been updated successfully` });
     })
     .catch(error => {
       res.status(500).json({ error: `Can not update subscription` });
     });
 });
 
-// Middleware
-function verifyId(req, res, next) {
-    if (req.params.id) {
-      Subscriptions.getById(req.params.id) 
-      .then(subscription => {
-        if (subscription) {
-          next()
-        } else {
-          res.status(404).json({ message: `No record found with this id`})
-        }
-      })
-      .catch(error => {
-        res.status(500).json({ error: `Can not access database`})
-      })
-    }
-  }
-
-  function verifyInput(req, res, next) {
-    if(req.body.subscription && req.body.subscription_duration_mo && req.body.price) {
-      next()
-    } else {
-      res.status(400).json({ error: `Please provide valid input`})
-    }
-  } 
 module.exports = router;
 

@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const Animal_status = require("../../models/internal-tables/animal_status");
+const Animals_status = require("../../models/internal-tables/animals_status");
 
-router.get("/", (req, res) => {
-  Animal_status.getAll()
+router.get("/animals_status", (req, res) => {
+  Animals_status.getAll()
     .then(status => {
       res.status(200).json(status);
     })
@@ -11,8 +11,8 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", verifyId, (req, res) => {
-  Animal_status.getById(req.params.id)
+router.get("/animals_status/:id", (req, res) => {
+  Animals_status.getById(req.params.id)
     .then(status => {
       res.status(200).json(status);
     })
@@ -21,8 +21,8 @@ router.get("/:id", verifyId, (req, res) => {
     });
 });
 
-router.post("/", verifyInput, (req, res) => {
-  Animal_status.add(req.body)
+router.post("/animals_status", (req, res) => {
+  Animals_status.add(req.body)
     .then(status => {
       res.status(200).json(status);
     })
@@ -31,48 +31,24 @@ router.post("/", verifyInput, (req, res) => {
     });
 });
 
-router.put("/:id", verifyId, (req, res) => {
-  Animal_status.update(req.params.id, req.body)
+router.put("/animals_status/:id", (req, res) => {
+  Animals_status.update(req.params.id, req.body)
     .then(status => {
-      res.status(200).json({ message: `${status} record successfully updated` });
+      res.status(200).json({ message: `${status} record(s) has been updated` });
     })
     .catch(error => {
       res.status(500).json({ error: `Can not update status` });
     });
 });
 
-router.delete("/:id", verifyId, (req, res) => {
-  Animal_status.remove(req.params.id)
+router.delete("/animals_status/:id", (req, res) => {
+  Animals_status.remove(req.params.id)
     .then(count => {
-      res.status(200).json({ message: `${count} record successfully deleted` });
+      res.status(200).json({ message: `${count} record(s) has been deleted` });
     })
     .catch(error => {
       res.status(500).json({ error: `Can not delete this status` });
     });
 });
 
-// Middleware
-function verifyId(req, res, next) {
-  if (req.params.id) {
-    Animal_status.getById(req.params.id) 
-    .then(status => {
-      if (status) {
-        next()
-      } else {
-        res.status(404).json({ message: `No record found with this id`})
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ error: `Can not access database`})
-    })
-  }
-}
-
-function verifyInput(req, res, next) {
-  if(req.body.animal_status) {
-    next()
-  } else {
-    res.status(400).json({ error: `Please provide valid input`})
-  }
-}
 module.exports = router;
