@@ -150,6 +150,5 @@ function findMatch(animalId, metaId) {
         id: metaId  
     })
     .first()
-
-    
 }
+

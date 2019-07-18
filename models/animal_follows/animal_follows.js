@@ -3,7 +3,7 @@ const db = require ('../../data/dbConfig')
 
 module.exports = {
     getByAnimalId,
-    getByUserId,
+    getByUserId, //should have in users route
     getByIds,
     add, 
     remove

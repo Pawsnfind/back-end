@@ -19,7 +19,6 @@ router.get('/', (req, res) => {
 
 // gets specific animal by ID
 router.get('/:id', (req, res) => {
-
     Animals.getById(req.params.id)
     .then(animal => {
         if (animal) {
@@ -44,7 +43,7 @@ router.get('/:id/meta', (req, res) => {
         }
     })
     .catch(error => {
-        res.status(500).json(error)
+        res.status(500).json({ message: 'Error getting animal meta', error: error.toString()})
     })
 })
 
@@ -81,11 +80,17 @@ router.get('/shelter/:id', (req, res) => {
     })
 })
 
-//get specific animal by animal id and animal meta id
-// router.get('/:animalId/meta/metaId', (req, res) => {
-//     AnimalMeta.getByAnimalMetaId(req.params.id, req.params.userId)
-//     .then(animal)
-// })
+
+//get specific animal meta info by meta id
+router.get('/meta/:id', (req, res) => {
+    AnimalMeta.getById(req.params.id)
+    .then(animal => {
+        res.status(200).json(animal)
+    })
+    .catch(error => {
+        res.status(500).json({message: `Error getting animal with ID ${req.params.id} `})
+    })
+})
 
 //get followers of animal by animal id
 router.get('/:id/follows', (req, res) => {
@@ -131,8 +136,85 @@ router.get('/:id/admin', (req, res) => {
     })
 })
 
+//Post animal admin notes
+router.post('/:id/admin', (req, res) => {
+    Animals.getById(req.params.id)
+        .then(animal => {
+            if(animal.id) {
+                const adminNote = {
+                    notes: req.body.notes,
+                    animal_id: req.body.animal_id,
+                    shelter_user_id: req.body.shelter_user_id
+                }
+                AnimalAdmin.add(adminNote)
+                .then(id => {
+                    res.status(200).json(id)
+                })
+                .catch(error => {
+                    res.status(500).json({message: 'Error adding admin note', error: error.toString() })
+                })
+            } else {
+                res.status(404).json({message: 'Animal with that Id does not exist'})
+            }
+        })
+        .catch(error => {
+            res.status(500).json({message: 'Error', error: error.toString() })
+        })
+})
 
+//Delete animal admin notes
+router.delete('/:id/admin/:adminId', (req, res) => {
+    Animals.getById(req.params.id)
+        .then(animal => {
+            if(animal.id) {
+                AnimalAdmin.remove(req.params.adminId)
+                .then(count => {
+                    if(count > 0) {
+                        res.status(200).json({message: `Admin note with Id ${req.params.id} has been deleted`})
+                    } else {
+                        res.status(404).json({message: `Admin note with Id ${req.params.id} does not exist`})
+                    }
+                })
+                .catch (error => {
+                    res.status(500).json({message: `Error deleting admin note with Id ${req.params.id}`, error: error.toString() })
+                })
+            } else {
+                res.status(400).json({message: 'Animal with that Id is not found'})
+            }
+        })
+        .catch(error => {
+            res.status(500).json({message: 'Error deleting admin note'})
+        })
+})
 
+//Update animal admin note
+router.put('/:id/admin/:adminId', (req, res) => {
+    Animals.getById(req.params.id)
+        .then(animal => {
+            if(animal.id) {
+                const adminNote = {
+                    notes: req.body.notes,
+                    animal_id: req.body.animal_id,
+                    shelter_user_id: req.body.shelter_user_id
+                }
+                AnimalAdmin.update(req.params.adminId, adminNote)
+                .then(updated => {
+                    res.status(200).json(updated)
+                })
+                .catch(error => {
+                    res.status(500).json({message: 'Error updating admin note', error: error.toString() })
+                })
+            } else {
+                res.status(404).json({message: 'Admin note with that Id does not exist'})
+            }
+        })
+        .catch(error => {
+            res.status(500).json({message: 'Error updating admin note', error: error.toString() })
+        })
+})
+
+//Delete Route
+//This will delete animal from the animals table after going through middleware to find a match and deleting from animal meta table first.
 router.delete('/:id/meta/:metaId', getMatch, deleteAnimal, (req, res) => {
     Animals.remove(req.params.id)
         .then(count => {
@@ -148,6 +230,7 @@ router.delete('/:id/meta/:metaId', getMatch, deleteAnimal, (req, res) => {
         })
 })
 
+//Middleware to verify that there is animalId and metaId match
 function getMatch (req, res, next) {
     Animals.findMatch(req.params.id, req.params.metaId)
     .then(match => {
@@ -162,7 +245,8 @@ function getMatch (req, res, next) {
     })
 }
 
-
+//Middleware to delete animal
+//this will verify if the animal id exists and if it does, it will remove the animal from the animal meta table
 function deleteAnimal (req, res, next) {
     Animals.getById(req.params.id)
         .then(animal => {
@@ -185,9 +269,8 @@ function deleteAnimal (req, res, next) {
         })
 }
 
-
 //update animal 
-
+//after middleware, it will then update the animal meta table
 router.put('/:id/meta/:metaId', updateAnimal, (req, res) => {
     const animal_meta = {
         animal_id : req.body.animal_id,
@@ -218,7 +301,7 @@ router.put('/:id/meta/:metaId', updateAnimal, (req, res) => {
 })
 
 //middleware for update animal
-
+//this will update the animals table first before getting to the Animal Meta table to update
 function updateAnimal (req, res, next) {
     const animal = {
         name : req.body.name, 
@@ -239,9 +322,8 @@ function updateAnimal (req, res, next) {
         })
 }
 
-
-
 //Post animal
+//After going through middleware, it will check if all required fields are given and add the animal info to the animal meta table
 router.post('/', addAnimal, (req, res) => {
     const animal_meta = {
         animal_id : req.body.animal_id,
@@ -261,7 +343,6 @@ router.post('/', addAnimal, (req, res) => {
         is_vaccinated : req.body.is_vaccinated,
         description : req.body.description
     }
-    
     if  (req.body.animal_id &&
         req.body.breed_id &&
         req.body.is_mixed &&
@@ -297,11 +378,8 @@ router.post('/', addAnimal, (req, res) => {
         }
 })
 
-
-
-
 //middleware to add animal
-
+//It will check if all required fields are given and if it is will add the animal to the Animals table
 function addAnimal(req, res, next) {
     const animal = {
         name : req.body.name, 
@@ -329,11 +407,5 @@ function addAnimal(req, res, next) {
             res.status(400).json({message: "add animal: please enter all required animal field"})
         }
 }
-
-
-
-
-
-
 
 module.exports = router;
