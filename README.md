@@ -52,16 +52,6 @@ To get the server running locally:
 | PUT    | `/api/shelters/:id/contact/:contactId`     | ?              | Update a contact of a shelter.                        |  shelter_id,contact_id   |
 | DELETE | `/api/shelters/:id/contact/:contactId`     | ?              | Delete a shelter contact for a shelter.               |  shelter_id,contact_id   |
 
-#### User Routes
-
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/users/current`        | all users           | Returns info for the logged in user.               |
-| GET    | `/users/org/:userId`    | owners, supervisors | Returns all users for an organization.             |
-| GET    | `/users/:userId`        | owners, supervisors | Returns info for a single user.                    |
-| POST   | `/users/register/owner` | none                | Creates a new user as owner of a new organization. |
-| PUT    | `/users/:userId`        | owners, supervisors |                                                    |
-| DELETE | `/users/:userId`        | owners, supervisors |                                                    |
 
 # Data Model
 
