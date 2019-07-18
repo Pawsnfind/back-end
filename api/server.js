@@ -33,6 +33,7 @@ server.use("/api/donations", donationRouter);
 server.use("/api/shelters", shelterRouter);
 server.use("/api/subscriptions", subscriptionRouter);
 server.use("/api/users", userRouter);
+
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);
 server.use("/api/internal/paws/animal_status", iAnimalStatusRouter);

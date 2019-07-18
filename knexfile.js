@@ -4,7 +4,13 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: 'postgres://127.0.0.1/pawsnfind',
+    //connection: 'postgres://127.0.0.1/pawsnfind',
+    connection: {
+      host: '127.0.0.1',
+      database: 'pawsnfind',
+      user: 'postgres',
+      password: 'Danny123'
+    },
     useNullAsDefault: true,
     migrations: {
       directory: './data/migrations',
