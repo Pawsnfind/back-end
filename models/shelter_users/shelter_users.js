@@ -10,7 +10,7 @@ module.exports = {
  
  function getUsersByShelterId(id) {
     return db
-    .select('shelter_users.shelter_id','shelter_users.username','shelter_users.user_id')
+    .select('shelter_users.id','shelter_users.shelter_id','shelter_users.username','shelter_users.user_id')
     .from('shelter_users')
     .where({
        'shelter_id':id

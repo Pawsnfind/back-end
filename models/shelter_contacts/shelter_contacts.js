@@ -28,7 +28,7 @@ module.exports = {
 
  function getContactByShelterId(id) {
    return db
-   .select('shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')   
+   .select('shelter_contacts.shelter_id','shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')   
    .from('shelter_contacts')
    .where({ 
       'shelter_id':id
