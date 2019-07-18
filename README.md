@@ -4,7 +4,7 @@
 
 # API Documentation
 
-#### 1️⃣ Backend delpoyed at [Heroku](https://prod-pawsnfind.herokuapp.com) <br>
+#### 1️⃣ Backend deployed at [Heroku](https://prod-pawsnfind.herokuapp.com) <br>
 
 ## 1️⃣ Getting started
 
@@ -83,7 +83,7 @@ To get the server running locally:
   street_address: STRING
   city: STRING
   state_id: UUID foreign key in STATES table
-  zip: INTEGER
+  zip: STRING
   shelter_user_id: UUID foreign key in SHELTER_USERS table
 }
 ```
