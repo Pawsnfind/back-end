@@ -32,89 +32,154 @@ To get the server running locally:
 
 🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
 
-#### Organization Routes
+#### Application Routes
 
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
+| Method | Endpoint                               | Description                                          |  Required                        |
+| ------ | ---------------------------------------| -----------------------------------------------------|--------------------------------- |         
+| GET    | `/api/applications/`                   | Returns all the applications.                        |                                  |
+| GET    | `/api/applications/:id`                | Returns an applications by ID                        |   application_id                 |
+| GET    | `/api/applications/:id/notes`          | Return all the application notes by application ID.  |   application_id                 |
+| GET    | `/api/applications/notes/:id`          | Returns an application note by note Id.              |  note_id                         |
+| GET    | `/api/applications/:id/admin/:adminId` | Return all the notes created by shelter admin ID.    |   application_id,shelterAdmin_id |
+| GET    | `/api/applications/shelter/:id`        | Returns all the applications by shelter Id.          |    shelter_id                    |        
+| GET    | `/api/applications/user/:id`           | Returns all the applications by user Id              |     user_id                      |
+| POST   | `/api/applications/note`               | Add a note for an application                        |                                  |
+| PUT    | `/api/applications/note/:id`           | Update a note for an application .                   |   note_id                        |
+| DELETE | `/api/applications/note/:id`           | Delete a note for an application .                   |    note_id                       |
+| PUT    | `/api/applications/:id/status`         | Update an application status by application ID.      |  application_id                  |
+| POST   | `/api/applications/`                   | Add an application.                                  |                                  |
 
-#### User Routes
-
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/users/current`        | all users           | Returns info for the logged in user.               |
-| GET    | `/users/org/:userId`    | owners, supervisors | Returns all users for an organization.             |
-| GET    | `/users/:userId`        | owners, supervisors | Returns info for a single user.                    |
-| POST   | `/users/register/owner` | none                | Creates a new user as owner of a new organization. |
-| PUT    | `/users/:userId`        | owners, supervisors |                                                    |
-| DELETE | `/users/:userId`        | owners, supervisors |                                                    |
 
 # Data Model
 
 🚫This is just an example. Replace this with your data model
 
-#### 2️⃣ ORGANIZATIONS
+#### 2️⃣ APPLICATIONS
 
 ---
 
 ```
 {
-  id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
+  id: INTEGER
+  animal_id: STRING
+  shelter_id: INTEGER
+  application_status_id: INTEGER
+  user_id:INTEGER
+  created_at: TIMESTAMP
+ 
 }
 ```
 
-#### USERS
+#### USER
 
 ---
 
 ```
-{
-  id: UUID
-  organization_id: UUID foreign key in ORGANIZATIONS table
-  first_name: STRING
-  last_name: STRING
-  role: STRING [ 'owner', 'supervisor', 'employee' ]
+{  
+  id: INTEGER
   email: STRING
-  phone: STRING
-  cal_visit: BOOLEAN
-  emp_visit: BOOLEAN
-  emailpref: BOOLEAN
-  phonepref: BOOLEAN
+  sub_id: STRING
+  username: STRING
+  created_at: TIMESTAMP  
 }
 ```
 
-## 2️⃣ Actions
+####  APPLICATION_META
+
+---
+
+```
+{
+    id:  INTEGER
+    application_id: INTEGER foreign key in APPLICATIONS table
+    name: STRING
+    street_address: STRING
+    city: STRING
+    state_id: INTEGER
+    zip: STRING
+    home_phone: STRING
+    email: STRING
+    cell_phone: STRING
+    is_over_18: BOOLEAN
+    is_homeowner: BOOLEAN
+    is_in_agreement: BOOLEAN
+    is_homevisit_allowed: BOOLEAN
+    is_fenced: BOOLEAN
+    ref_name_1: STRING
+    ref_phone_1: STRING
+    ref_relationship_1: STRING
+    ref_name_2: STRING
+    ref_phone_2: STRING
+    ref_relationship_2: STRING
+    is_declaration: BOOLEAN
+}
+```
+
+#### APPLICATION_ADMIN
+
+---
+
+```
+{ 
+  id: INTEGER
+  notes: STRING 
+  application_id: INTEGER foreign key in APPLICATIONS table
+  shelter_user_id: INTEGER
+  created_at: TIMESTAMP  
+}
+```
+
+
+## 2️⃣ Models
 
 🚫 This is an example, replace this with the actions that pertain to your backend
 
-`getOrgs()` -> Returns all organizations
+`getAll()` -> Returns all applications
 
-`getOrg(orgId)` -> Returns a single organization by ID
+`getById(application_id)` -> Returns a single application by ID
 
-`addOrg(org)` -> Returns the created org
+`getBy(filter)` -> search through application by keyword
 
-`updateOrg(orgId)` -> Update an organization by ID
+`getByShelterId(shelter_id)` -> Returns all application by Shelter ID
 
-`deleteOrg(orgId)` -> Delete an organization by ID
+`getByUserId(user_id)` -> Returns an application by user ID
+
+`getByAnimalId(animal_id)` -> Returns a single application by animal ID
+
+`add(application object)` -> Create a new applications
+
+`update(application_id,application object)` -> Update an application by ID
+
+`remove(application_id)` -> Delete an application_id by ID
 <br>
 <br>
 <br>
-`getUsers(orgId)` -> if no param all users
+`getById(application_metaId)` -> Returns a single application meta by application meta ID
 
-`getUser(userId)` -> Returns a single user by user ID
+`getBy(filter)` -> search through application meta by keyword
 
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
+`add(application meta object)` --> Creates a new application meta 
 
-`updateUser(userId, changes object)` -> Updates a single user by ID.
+`update(application_metaId, changes object)` -> Updates the application meta.
 
-`deleteUser(userId)` -> deletes everything dependent on the user
+`remove(application_metaId)` -> deletes the application meta
+<br>
+<br>
+<br>
+`getById(application_adminId)` -> Returns a single application admin by application admin ID
+
+`getBy(filter)` -> search through application admin by keyword
+
+`getByApplicationId(application_id)` -> Returns a single application admin by application ID
+
+`add(note object)` --> Creates a new application note 
+
+`update(application_adminId, changes object)` -> Updates the application note by note ID.
+
+`remove(application_adminId)` -> deletes the application note bu note ID
+
+`findMatch(application_Id,application_adminId)` -> find a match by application ID and application admin ID
+
 
 ## 3️⃣ Environment Variables
 
