@@ -1,49 +1,43 @@
-🚫 Note: All lines that start with 🚫 are instructions and should be deleted before this is posted to your portfolio. This is intended to be a guideline. Feel free to add your own flare to it.
-
 🚫 The numbers 1️⃣ through 3️⃣ next to each item represent the week that part of the docs needs to be comepleted by.  Make sure to delete the numbers by the end of Labs.
 
 🚫 Each student has a required minimum number of meaningful PRs each week per the rubric.  Contributing to docs does NOT count as a PR to meet your weekly requirements.
 
 # API Documentation
 
-#### 1️⃣ Backend delpoyed at [🚫name service here](🚫add URL here) <br>
+#### 1️⃣ Backend delpoyed at [Heroku](https://prod-pawsnfind.herokuapp.com) <br>
 
 ## 1️⃣ Getting started
 
 To get the server running locally:
 
-🚫 adjust these scripts to match your project
-
 - Clone this repo
-- **yarn install** to install all required dependencies
-- **yarn server** to start the local server
-- **yarn test** to start server using testing environment
+- **npm install** to install all required dependencies
+- **npm run server** to start the local server
+- **npm run test** to start server using testing environment
 
 ### Backend framework goes here
 
 🚫 Why did you choose this framework?
 
--    Point One
--    Point Two
--    Point Three
--    Point Four
+- NodeJS with express framework
+- knex for database connection 
+
 
 ## 2️⃣ Endpoints
-
-🚫This is a placeholder, replace the endpoints, access control, and descriptioin to match your project
 
 #### User Routes
 
 | Method | Endpoint                | Access Control | Description                                  | Required                      |
 | ------ | ----------------------- | -------------- | -------------------------------------------- | ----------------------------- |
 | GET    | `/api/users`            | ?              | Returns all users in system.                 |                               |
-| GET    | `/api/users/:id`        | ?              | Returns a user given an user id.             | user_id                       |
+| GET    | `/api/users/:id`        | ?              | Returns a user given an user id.             | id                            | 
+| GET    | `/api/users/:id/complete`| ?             | Returns complete user data given an user id. | id                            | 
 | GET    | `/api/users/:username`  | ?              | Returns a user given a username.             | username                      |
 | GET    | `/api/users/:email`     | ?              | Returns a user given an email.               | email                         |
 | GET    | `/api/users/:sub_id`    | ?              | Returns a user given a sub id.               | sub_id                        |
 | POST   | `/api/users/`           | ?              | Add a new user.                              | email, sub_id, username       |
-| PUT    | `/api/users/:id`        | ?              | Update a user's information.                 | user_id                       |
-| DELETE | `/api/users/:id`        | ?              | Delete a user.                               | user_id                       |
+| PUT    | `/api/users/:id`        | ?              | Update a user's information.                 | id                            |
+| DELETE | `/api/users/:id`        | ?              | Delete a user.                               | id                            |
 
 #### User Meta Routes
 
@@ -57,73 +51,84 @@ To get the server running locally:
 | GET    | `api/users/meta/zip/:zip`             | ?              | Returns user metas given zip code.          | zip                     |
 | GET    | `api/users/meta/city/:city`           | ?              | Returns user metas given city.              | city                    |
 | POST   | `/api/users/meta`                     | ?              | Creates a new user meta.                    | user_id, shelter_user_id|
-| PUT    | `/api/users/meta/:id`                 | ?              | Updates a user meta.                        | user_meta_id            |
-| DELETE | `/api/users/meta/:id`                 | ?              | Deletes a user meta.                        | user_meta_id            |
+| PUT    | `/api/users/meta/:id`                 | ?              | Updates a user meta.                        | id                      |
+| DELETE | `/api/users/meta/:id`                 | ?              | Deletes a user meta.                        | id                      |
 
 # Data Model
 
-🚫This is just an example. Replace this with your data model
-
-#### 2️⃣ ORGANIZATIONS
+#### 2️⃣ USERS
 
 ---
 
 ```
 {
   id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
+  email: STRING
+  sub_id: INTEGER
+  username: BOOLEAN
+  created_at: STRING
 }
 ```
 
-#### USERS
+#### USER_META
 
 ---
 
 ```
 {
   id: UUID
-  organization_id: UUID foreign key in ORGANIZATIONS table
-  first_name: STRING
-  last_name: STRING
-  role: STRING [ 'owner', 'supervisor', 'employee' ]
-  email: STRING
-  phone: STRING
-  cal_visit: BOOLEAN
-  emp_visit: BOOLEAN
-  emailpref: BOOLEAN
-  phonepref: BOOLEAN
+  user_id: UUID foreign key in USERS table
+  phone_number: STRING
+  name: STRING
+  street_address: STRING
+  city: STRING
+  state_id: UUID foreign key in STATES table
+  zip: INTEGER
+  shelter_user_id: UUID foreign key in SHELTER_USERS table
 }
 ```
 
 ## 2️⃣ Actions
 
-🚫 This is an example, replace this with the actions that pertain to your backend
+`getUsers()` -> Returns all users
 
-`getOrgs()` -> Returns all organizations
+`getUserById(id)` -> Returns a single user by ID
 
-`getOrg(orgId)` -> Returns a single organization by ID
+`getCompleteUserDataById(id)` -> Returns complete user data for a single user by ID
 
-`addOrg(org)` -> Returns the created org
+`getUserByUsername(username)` -> Returns a single user by username
 
-`updateOrg(orgId)` -> Update an organization by ID
+`getUserByEmail(email)` -> Returns a single user by email
 
-`deleteOrg(orgId)` -> Delete an organization by ID
+`getUserBySubId(sub_id)` -> Returns a single user by sub id
+
+`createUser()` -> Returns the created user
+
+`updateUser(id)` -> Update a user by ID
+
+`deleteUser(id)` -> Delete a user by ID
 <br>
 <br>
 <br>
-`getUsers(orgId)` -> if no param all users
+`getUserMetaById(id)` -> returns a user meta by ID
 
-`getUser(userId)` -> Returns a single user by user ID
+`getUserMetaByUserId(user_id)` -> Returns a user meta by user ID
 
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
+`getUserMetaByStateId(state_id)` -> Returns a user meta by state ID
 
-`updateUser(userId, changes object)` -> Updates a single user by ID.
+`getUserMetaByShelterUserId(shelter_user_id)` -> Returns a user meta by shelter user ID
 
-`deleteUser(userId)` -> deletes everything dependent on the user
+`getUserMetaByPhoneNumber(phone_number)` -> Returns user meta by phone number
+
+`getUserMetaByZip(zip)` -> Returns user meta by zip
+
+`getUserMetaByCity(city)` -> Returns user meta by city
+
+`createUserMeta()` --> Creates a new user meta and returns it. 
+
+`updateUserMeta(id, changes)` -> Updates a single user meta by ID.
+
+`deleteUserMeta(id)` -> deletes user meta by ID
 
 ## 3️⃣ Environment Variables
 
@@ -136,7 +141,6 @@ create a .env file that includes the following:
     *  STAGING_DB - optional development db for using functionality not available in SQLite
     *  NODE_ENV - set to "development" until ready for "production"
     *  JWT_SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-*=+)') for i in range(50)])
-    *  SENDGRID_API_KEY - this is generated in your Sendgrid account
     *  stripe_secret - this is generated in the Stripe dashboard
     
 ## Contributing
@@ -177,5 +181,4 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 
 ## Documentation
 
-See [Frontend Documentation](🚫link to your frontend readme here) for details on the fronend of our project.
-🚫 Add DS iOS and/or Andriod links here if applicable.
+See [Frontend Documentation] (https://github.com/Pawsnfind/front-end/blob/master/README.md)
