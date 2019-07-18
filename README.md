@@ -34,11 +34,14 @@ To get the server running locally:
 
 #### Organization Routes
 
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
+| Method | Endpoint                | Access Control | Description                                  |  Required    |
+| ------ | ----------------------- | -------------- | -------------------------------------------- |--------------|         
+| GET    | `/api/shelters/`        | ?              | Returns all the shelters.                    |              |
+| GET    | `/api/shelters/:id` | ?        | Returns a shelter by an ID           |   shelter_id           |
+| GET | `/api/shelters/:id/contacts` | ?         | Return all the shelter contacts by shelter ID.                      |   shelter_id           |
+| GET    | `/api/shelters/contacts/:id`        | ?              | Returns all the shelters.                    |              |
+| GET    | `/api/shelters/:id` | ?        | Returns a shelter by an ID           |   shelter_id           |
+| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |              |
 
 #### User Routes
 
