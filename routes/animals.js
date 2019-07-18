@@ -3,6 +3,7 @@ const Animals = require('../models/animals/animals.js');
 const AnimalMeta = require('../models/animal_meta/animal_meta.js');
 const AnimalFollows = require('../models/animal_follows/animal_follows.js')
 const AnimalAdmin = require('../models/animal_admin/animal_admin.js')
+const Shelter = require('../models/shelters/shelters.js')
 
 
 
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
 })
 
 // gets specific animal by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', validateAnimalId, (req, res) => {
     Animals.getById(req.params.id)
     .then(animal => {
         if (animal) {
@@ -33,7 +34,7 @@ router.get('/:id', (req, res) => {
 })
 
 // gets meta information by animal ID
-router.get('/:id/meta', (req, res) => {
+router.get('/:id/meta', validateAnimalId, (req, res) => {
     Animals.getAnimalMetaById(req.params.id)
     .then(animal => {
         if (animal) {
@@ -48,7 +49,7 @@ router.get('/:id/meta', (req, res) => {
 })
 
 // gets all followers of the animal by animal ID
-router.get('/:id/follows', (req, res) => {
+router.get('/:id/follows', validateAnimalId, (req, res) => {
     Animals.getAnimalFollowsById(req.params.id)
     .then(follows => {
         res.status(200).json(follows)
@@ -59,7 +60,7 @@ router.get('/:id/follows', (req, res) => {
 })
 
 // gets all the notes of the animal by ID
-router.get('/:id/notes', (req, res) => {
+router.get('/:id/notes', validateAnimalId, (req, res) => {
     Animals.getNotesByAnimalId(req.params.id)
     .then(animal => {
         res.status(200).json(animal)
@@ -70,7 +71,7 @@ router.get('/:id/notes', (req, res) => {
 })
 
 //gets all animals of a specific shelter by shelter ID
-router.get('/shelter/:id', (req, res) => {
+router.get('/shelter/:id', validateShelterId, (req, res) => {
     Animals.getAnimalsByShelterId(req.params.id)
     .then(animals => {
         res.status(200).json(animals)
@@ -82,7 +83,7 @@ router.get('/shelter/:id', (req, res) => {
 
 
 //get specific animal meta info by meta id
-router.get('/meta/:id', (req, res) => {
+router.get('/meta/:id', validateMetaId, (req, res) => {
     AnimalMeta.getById(req.params.id)
     .then(animal => {
         res.status(200).json(animal)
@@ -93,7 +94,7 @@ router.get('/meta/:id', (req, res) => {
 })
 
 //get followers of animal by animal id
-router.get('/:id/follows', (req, res) => {
+router.get('/:id/follows', validateAnimalId, (req, res) => {
     AnimalFollows.getByAnimalId(req.params.id)
     .then(follows => {
         res.status(200).json(follows)
@@ -104,7 +105,7 @@ router.get('/:id/follows', (req, res) => {
 })
 
 //get follower of an animal by animal id and the user by user id
-router.get('/follows/:animalId/:userId', (req, res) => {
+router.get('/follows/:animalId/:userId', getMatchAnimalUser, (req, res) => {
     AnimalFollows.getByIds(req.params.animalId, req.params.userId)
     .then(follows => {
         res.status(200).json(follows)
@@ -115,7 +116,7 @@ router.get('/follows/:animalId/:userId', (req, res) => {
 })
 
 //get animal admin by Id
-router.get('/admin/:id', (req, res) => {
+router.get('/admin/:id', validateAdminId, (req, res) => {
     AnimalAdmin.getById(req.params.id)
     .then(admin => {
         res.status(200).json(admin)
@@ -126,7 +127,7 @@ router.get('/admin/:id', (req, res) => {
 })
 
 //get animal admin notes of a specific animal using animal id
-router.get('/:id/admin', (req, res) => {
+router.get('/:id/admin', validateAnimalId, (req, res) => {
     AnimalAdmin.getNotesByAnimalId(req.params.id)
     .then(notes=> {
         res.status(200).json(notes)
@@ -135,6 +136,19 @@ router.get('/:id/admin', (req, res) => {
         res.status(500).json({message: `Error getting notes of animal with id ${req.params.id}`})
     })
 })
+
+
+//get specific admin note of a specific animal using animal id and admin id
+router.get('/:animalId/admin/:adminId', (req, res) => {
+    AnimalAdmin.getByIds(req.params.animalId, req.params.adminId)
+    .then(admin => {
+        res.status(200).json(admin)
+    })
+    .catch(error => {
+        res.status(500).json({message: `Error getting the note of the animal id ${req.params.animalId} and admin id ${req.params.adminId}`})
+    })
+})
+
 
 //Post animal admin notes
 router.post('/:id/admin', (req, res) => {
@@ -163,7 +177,7 @@ router.post('/:id/admin', (req, res) => {
 })
 
 //Delete animal admin notes
-router.delete('/:id/admin/:adminId', (req, res) => {
+router.delete('/:id/admin/:adminId', validateAnimalId, (req, res) => {
     Animals.getById(req.params.id)
         .then(animal => {
             if(animal.id) {
@@ -188,7 +202,7 @@ router.delete('/:id/admin/:adminId', (req, res) => {
 })
 
 //Update animal admin note
-router.put('/:id/admin/:adminId', (req, res) => {
+router.put('/:id/admin/:adminId', validateAnimalId, (req, res) => {
     Animals.getById(req.params.id)
         .then(animal => {
             if(animal.id) {
@@ -361,7 +375,8 @@ router.post('/', addAnimal, (req, res) => {
         req.body.description ) {
             AnimalMeta.add(animal_meta)
             .then( id => {
-                res.status(201).json(id)
+
+                res.status(201).json( req.body.animal_id )
             })
             .catch( error => {
                 Animals.remove(req.body.animal_id)
@@ -408,4 +423,84 @@ function addAnimal(req, res, next) {
         }
 }
 
+//middleware to validate animal Id
+function validateAnimalId(req, res, next) {
+    if (req.params.id) {
+        Animals.getById(req.params.id)
+            .then(animal => {
+                if (animal) {
+                    next();
+                } else {
+                    res.status(404).json({message: "No animal by that animal id"})
+                }
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error getting valid animal", error: error.toString() })
+            })
+    }
+}
+
+//middleware to validate animal meta Id
+function validateMetaId(req, res, next) {
+    if (req.params.id) {
+        AnimalMeta.getById(req.params.id)
+            .then(animal => {
+                if (animal) {
+                    next();
+                } else {
+                    res.status(404).json({message: "No animal by that animal meta id"})
+                }
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error getting valid animal meta", error: error.toString() })
+            })
+    }
+}
+
+//middleware to validate animal admin Id
+function validateAdminId(req, res, next) {
+    if (req.params.id) {
+        AnimalAdmin.getById(req.params.id)
+            .then(admin => {
+                if (admin) {
+                    next();
+                } else {
+                    res.status(404).json({message: "No admin by that animal admin Id" })
+                }
+            })
+            .catch(error => {
+                    res.status(500).json({message: "Error getting valid admin", error: error.toString() })
+            })
+    }
+}
+
+//Middleware to verify that there is animalId and userId match
+function getMatchAnimalUser (req, res, next) {
+    AnimalFollows.findMatch(req.params.animalId, req.params.userId)
+    .then(match => {
+        if(match) {
+            next()
+        } else {
+            res.status(404).json({message: 'No match found'})
+        }
+    })
+    .catch (error => {
+        res.status(500).json({message: "Error accessing database", error: error.toString()})
+    })
+}
+
+//middleware to validate shelter Id
+function validateShelterId (req, res, next) {
+    Shelter.getById(req.params.id)
+        .then(shelter => {
+            if (shelter) {
+                next();
+            } else {
+                res.status(404).json({message: "No shelter by that shelter Id exists"})
+            }
+        })
+        .catch(error => {
+            res.status(500).json({message: "Error getting valid shelter id", error: error.toString() })
+        })
+}
 module.exports = router;

@@ -49,7 +49,7 @@ function getById(id) {
 //get animal followers by animal id
 function getAnimalFollowsById(id) {
     return db
-    .select('users.email')
+    .select('animal_follows.user_id', 'animal_follows.animal_id', 'users.email')
     .from('animal_follows')
     .innerJoin('users', 'animal_follows.user_id', 'users.id')
     .innerJoin('animals', 'animal_follows.animal_id', 'animals.id')
@@ -58,7 +58,7 @@ function getAnimalFollowsById(id) {
 
 function getNotesByAnimalId(id) {
     return db
-    .select('id', 'notes', 'shelter_user_id', 'created_at')
+    .select('id', 'notes', 'animal_id', 'shelter_user_id', 'created_at')
     .from('animal_admin')
     .where('animal_id', id)
 }
@@ -67,7 +67,7 @@ function getNotesByAnimalId(id) {
 function getAnimalMetaById(id) {
     console.log(id)
     let meta = db
-    .select('breeds.breed', 'animal_meta.is_mixed', 'ages.age','size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.coat_length', 'animal_meta.is_male as sex', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
+    .select('animal_meta.id', 'animal_meta.animal_id', 'breeds.breed', 'animal_meta.is_mixed', 'ages.age','size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.coat_length', 'animal_meta.is_male as sex', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
     .from('animal_meta')
     .innerJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
     .innerJoin('ages', 'animal_meta.age_id', 'ages.id')
@@ -143,6 +143,7 @@ function add(animal) {
     // .then (([id]) => getById(id))  
 }
 
+
 function findMatch(animalId, metaId) {
     return db('animal_meta')
     .where({ 
@@ -151,4 +152,3 @@ function findMatch(animalId, metaId) {
     })
     .first()
 }
-

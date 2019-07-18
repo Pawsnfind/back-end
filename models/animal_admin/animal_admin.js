@@ -6,7 +6,8 @@ module.exports = {
     getNotesByAnimalId,
     add,
     remove,
-    update
+    update, 
+    getByIds
 }
 
 function getNotesByAnimalId(id) {
@@ -43,3 +44,14 @@ function update(id, change) {
     .update(change)
     .then( update => update? getById(id) : null)
 }
+
+
+function getByIds(animalId, adminId) {
+    return db('animal_admin')
+    .where({
+        animal_id : animalId,
+        id : adminId
+    })
+    .first()
+}
+

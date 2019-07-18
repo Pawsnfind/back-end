@@ -76,6 +76,7 @@ To get the server running locally:
 | ------ | ----------------------- | -------------- | -------------------------------------------- |----------
 | GET    | `/api/animals/admin`            | owners     | Returns the animal admin note given the admin Id | id 
 | GET    | `/api/animals/:id/admin` | owners      | Returns all the admin notes given the animal id | animal_id
+| GET    | `/api/animals/:animalId/admin/:adminId | owners | Returns the specific admin note of an animal given animal id and admin id
 | POST   | `/api/animals/:id/admin` | owners      | Adds a new admin note given the animal id       | animal_id
 | PUT    | `/api/animals/:id/admin/:adminId` | owners | Updates an animal admin note given the animal id | animal_id
 | DELETE | `/api/animals/:id/admin/:adminId` | owners | Deletes an animal admin note of a specific animal given the animal id and admin id | animal_id, id
@@ -205,6 +206,8 @@ To get the server running locally:
 `update(id, change)` -> Updates the change in admin note using the admin Id
 
 `remove(id)` -> Deletes the animal admin note by admin Id
+
+`getByIds(animalId, adminId)` -> Gets the animal admin note that matches both the animalId and adminId.
 
 
 
