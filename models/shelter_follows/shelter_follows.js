@@ -1,13 +1,13 @@
 const db = require('../../data/dbConfig.js')
 module.exports = {
-   getUsersByShelterId,
-    getByUserId,
+   getUsersFollowsByShelterId,
+   getByUserFollowId,
     getFollowsByIds,
     addShelterFollows,
     deleteShelterFollows,
  }
  
- function getUsersByShelterId(id) {
+ function getUsersFollowsByShelterId(id) {
     return db
     .select('shelter_follows.shelter_id','user_meta.name')
     .from('shelter_follows')
@@ -17,7 +17,7 @@ module.exports = {
  
 
  
- function getByUserId(id) {
+ function getByUserFollowId(id) {
     return db('shelter_follows')
     .where('user_id',id)
  }

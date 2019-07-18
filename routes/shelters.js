@@ -98,7 +98,7 @@ router.get('/follows/:shelterId/:userId', (req, res) => {
 
 //get the match for all the users who follows a specific shelter
 router.get('/:id/follows', (req, res) => {
-    ShelterFollows.getUsersByShelterId(req.params.id)
+    ShelterFollows.getUsersFollowsByShelterId(req.params.id)
         .then(follows => {
             res.status(200).json(follows)
         })
