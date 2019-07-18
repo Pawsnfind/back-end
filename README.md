@@ -19,7 +19,7 @@ To get the server running locally:
 
 🚫 Why did you choose this framework?
 
-- NodeJS with express framework
+- NodeJS with Express
 - knex for database connection 
 
 
@@ -27,17 +27,17 @@ To get the server running locally:
 
 #### User Routes
 
-| Method | Endpoint                | Access Control | Description                                  | Required                      |
-| ------ | ----------------------- | -------------- | -------------------------------------------- | ----------------------------- |
-| GET    | `/api/users`            | ?              | Returns all users in system.                 |                               |
-| GET    | `/api/users/:id`        | ?              | Returns a user given an user id.             | id                            | 
-| GET    | `/api/users/:id/complete`| ?             | Returns complete user data given an user id. | id                            | 
-| GET    | `/api/users/:username`  | ?              | Returns a user given a username.             | username                      |
-| GET    | `/api/users/:email`     | ?              | Returns a user given an email.               | email                         |
-| GET    | `/api/users/:sub_id`    | ?              | Returns a user given a sub id.               | sub_id                        |
-| POST   | `/api/users/`           | ?              | Add a new user.                              | email, sub_id, username       |
-| PUT    | `/api/users/:id`        | ?              | Update a user's information.                 | id                            |
-| DELETE | `/api/users/:id`        | ?              | Delete a user.                               | id                            |
+| Method | Endpoint                       | Access Control | Description                                  | Required                     |
+| ------ | ------------------------------ | -------------- | -------------------------------------------- | ---------------------------- |
+| GET    | `/api/users`                   | ?              | Returns all users in system.                 |                              |
+| GET    | `/api/users/:id`               | ?              | Returns a user given an user id.             | id                           | 
+| GET    | `/api/users/:id/complete`      | ?              | Returns complete user data given an user id. | id                           | 
+| GET    | `/api/users/username/:username`| ?              | Returns a user given a username.             | username                     |
+| GET    | `/api/users/email/:email`      | ?              | Returns a user given an email.               | email                        |
+| GET    | `/api/users/sub/:sub_id`       | ?              | Returns a user given a sub id.               | sub_id                       |
+| POST   | `/api/users/`                  | ?              | Add a new user.                              | email, sub_id, username      |
+| PUT    | `/api/users/:id`               | ?              | Update a user's information.                 | id                           |
+| DELETE | `/api/users/:id`               | ?              | Delete a user.                               | id                           |
 
 #### User Meta Routes
 
@@ -50,7 +50,7 @@ To get the server running locally:
 | GET    | `api/users/meta/num/:phone_number`    | ?              | Returns user metas given phone number.      | phone_number            |
 | GET    | `api/users/meta/zip/:zip`             | ?              | Returns user metas given zip code.          | zip                     |
 | GET    | `api/users/meta/city/:city`           | ?              | Returns user metas given city.              | city                    |
-| POST   | `/api/users/meta`                     | ?              | Creates a new user meta.                    | user_id, shelter_user_id|
+| POST   | `/api/users/meta`                     | ?              | Creates a new user meta.                    | user_id, shelter_user_id, state_id|
 | PUT    | `/api/users/meta/:id`                 | ?              | Updates a user meta.                        | id                      |
 | DELETE | `/api/users/meta/:id`                 | ?              | Deletes a user meta.                        | id                      |
 
