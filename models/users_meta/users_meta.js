@@ -16,7 +16,7 @@ module.exports={
 function getUserMetaById(id) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
@@ -27,7 +27,7 @@ function getUserMetaById(id) {
 function getUserMetaByUserId(user_id) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
@@ -38,7 +38,7 @@ function getUserMetaByUserId(user_id) {
 function getUserMetaByStateId(state_id) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
@@ -48,7 +48,7 @@ function getUserMetaByStateId(state_id) {
 function getUserMetaByShelterUserId(shelter_user_id) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
@@ -59,7 +59,7 @@ function getUserMetaByShelterUserId(shelter_user_id) {
 function getUserMetaByPhoneNumber(phone_number) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
@@ -69,7 +69,7 @@ function getUserMetaByPhoneNumber(phone_number) {
 function getUserMetaByZip(zip) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
@@ -79,7 +79,7 @@ function getUserMetaByZip(zip) {
 function getUserMetaByCity(city) {
     return db
     .select('user_meta.id', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
-    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_user.role_id', 'shelter_users.shelter_id')
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
