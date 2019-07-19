@@ -3,6 +3,7 @@ const Users = require('../models/users/users.js');
 
 const UserMetas = require('../models/users_meta/users_meta');
 
+// MIDDLEWARE TO VALIDATE IDs
 function validateUserId (req, res, next) {
     if (req.params.id) {
         Users.getUserById(req.params.id)
@@ -35,6 +36,7 @@ function validateUserMetaId (req, res, next) {
     }
 }
 
+// CRUD for USERS
 router.get('/', (req, res) => {
     Users.getUsers()
     .then( users => {
@@ -85,7 +87,7 @@ router.get('/sub/:sub_id', (req, res) => {
     })
 })
 
-router.get('/:id/complete', (req, res) => {
+router.get('/:id/complete', validateUserId, (req, res) => {
     Users.getCompleteUserDataById(req.params.id)
     .then( user => {
         res.status(200).json(user)
@@ -124,7 +126,7 @@ router.post('/', (req, res) => {
     })
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateUserId, async (req, res) => {
     const { email, username, sub_id } = req.body
     
     if (!email || !username || !sub_id ) {
@@ -249,7 +251,7 @@ router.post('/meta', (req, res) => {
     })
 })
 
-router.put('/meta/:id', (req, res) => {
+router.put('/meta/:id', validateUserMetaId, (req, res) => {
     const { id, user_id, shelter_user_id } = req.body
 
     UserMetas.updateUserMeta(req.params.id, req.body)
