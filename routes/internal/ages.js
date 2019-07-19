@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
       res.status(200).json(ages);
     })
     .catch(error => {
-      res.status(500).json({ error: `Can not access the database` });
+      res.status(500).json({ message: `Can not access the database`, error: error.toString()});
     });
 });
 
@@ -37,17 +37,20 @@ router.delete("/:id", verifyId, (req, res) => {
       res.status(200).json({ message: `${count} record has been deleted` });
     })
     .catch(error => {
-      res.status(500).json({ error: `Can not delete this record` });
+      res.status(500).json({ message: `Can not delete this record`, error: error.toString()});
     });
 });
 
 router.put("/:id", verifyId, (req, res) => {
+
+  const age = req.body
+
   Age.update(req.params.id, req.body)
-    .then(age => {
-      res.status(200).json({ message: `${age} record successfully updated` });
+    .then(count => {
+      res.status(200).json({ message: `${count} record successfully updated`, age });
     })
     .catch(error => {
-      res.status(500).json({ error: `Can not update age` });
+      res.status(500).json({ message: `Can not update age`, error: error.toString() });
     });
 });
 

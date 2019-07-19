@@ -28,7 +28,7 @@
 
 `getById(id)` -> Returns a single age by ID
 
-`getBy(filter)` -> Returns items by chosen field to filter
+`getBy(filter)` -> Search items by chosen field
 
 `add(age)` -> Returns the item created
 
@@ -65,7 +65,7 @@
 
 `getById(id)` -> Returns a single animal status by ID
 
-`getBy(filter)` -> Returns an animal status by chosen field to filter
+`getBy(filter)` -> Search animal status by chosen field 
 
 `add(status)` -> Returns the item created
 
@@ -102,7 +102,7 @@
 
 `getById(id)` -> Returns a single application status by ID
 
-`getBy(filter)` -> Returns an application status by chosen field to filter
+`getBy(filter)` -> Search an item by chosen field 
 
 `add(status)` -> Returns the item created
 
@@ -139,11 +139,11 @@
 
 `getAll()` -> Returns all items
 
-`getById(id)` -> Returns a single application status by ID
+`getById(id)` -> Returns a single breed by ID
 
 `getBySpeciesId(species_id)` -> Returns all breeds for the specified species ID
 
-`getBy(filter)` -> Returns an application status by chosen field to filter
+`getBy(filter)` -> Search item by chosen field 
 
 `add(status)` -> Returns the item created
 
@@ -180,7 +180,7 @@
 
 `getById(id)` -> Returns a single coat length by ID
 
-`getBy(filter)` -> Returns a coat length by chosen field to filter
+`getBy(filter)` -> Search item by chosen field
 
 `add(length)` -> Returns the item created
 
@@ -217,7 +217,7 @@
 
 `getById(id)` -> Returns a single role by ID
 
-`getBy(filter)` -> Returns a role by chosen field to filter
+`getBy(filter)` -> Search item by chosen field
 
 `add(role)` -> Returns the item created
 
@@ -255,7 +255,7 @@
 
 `getById(id)` -> Returns a single size by ID
 
-`getBy(filter)` -> Returns a size by chosen field to filter
+`getBy(filter)` -> Search item by chosen field
 
 `add(size)` -> Returns the item created
 
@@ -292,7 +292,7 @@
 
 `getById(id)` -> Returns a single species by ID
 
-`getBy(filter)` -> Returns a species by chosen field to filter
+`getBy(filter)` -> Search item by chosen field
 
 `add(species)` -> Returns the item created
 
@@ -329,7 +329,7 @@
 
 `getById(id)` -> Returns a single state by ID
 
-`getBy(filter)` -> Returns a state by chosen field to filter
+`getBy(filter)` -> Search item by chosen field
 
 `add(state)` -> Returns the item created
 
@@ -369,7 +369,7 @@
 
 `getById(id)` -> Returns a subscription length by ID
 
-`getBy(filter)` -> Returns a subscription by chosen field to filter
+`getBy(filter)` -> Search item by chosen field
 
 `add(subscription)` -> Returns the item created
 
