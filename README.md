@@ -44,7 +44,7 @@ To get the server running locally:
 | GET    | `/api/animals/shelter/:id` | all users   | Returns all animals of a specific shelter given the shelter id | shelter_id
 | GET    | `/api/animals/meta/:id` | all users      | Returns the specific animal meta info given the meta id | meta_id
 | POST   | `/api/animals`          | owners         | Add a new animal | animal_id, breed_id, is_mixed, age_id, health, size_id, color, coat_length_id, is_male, is_house_trained, is_neutered_spayed, is_good_with_kids, is_good_with_dogs, is_good_with_cats, is_vaccinated, description
-| PUT    | `/api/animals/:id/meta/:metaId` | owners    | Updates an animal including the meta info | id, meta_id
+| PUT    | `/api/animals/:id/meta/:metaId` | owners    | Updates an animal including the meta info | id, meta_id, animal_id, breed_id, is_mixed, age_id, health, size_id, color, coat_length_id, is_male, is_house_trained, is_neutered_spayed, is_good_with_kids, is_good_with_dogs, is_good_with_cats, is_vaccinated, description
 | DELETE | `/api/animals/:id/meta/:metaId` | owners    | Deletes an animal including the meta info | id, meta_id
 
 
@@ -70,8 +70,8 @@ To get the server running locally:
 | GET    | `/api/animals/admin`            | owners     | Returns the animal admin note given the admin Id | id 
 | GET    | `/api/animals/:id/admin` | owners      | Returns all the admin notes given the animal id | animal_id
 | GET    | `/api/animals/:animalId/admin/:adminId | owners | Returns the specific admin note of an animal given animal id and admin id
-| POST   | `/api/animals/:id/admin` | owners      | Adds a new admin note given the animal id       | animal_id
-| PUT    | `/api/animals/:id/admin/:adminId` | owners | Updates an animal admin note given the animal id | animal_id
+| POST   | `/api/animals/:id/admin` | owners      | Adds a new admin note given the animal id       | animal_id, notes, shelter_user_id
+| PUT    | `/api/animals/:id/admin/:adminId` | owners | Updates an animal admin note given the animal id | admin_id, animal_id, notes, shelter_user_id
 | DELETE | `/api/animals/:id/admin/:adminId` | owners | Deletes an animal admin note of a specific animal given the animal id and admin id | animal_id, id
 
 
