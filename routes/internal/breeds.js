@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Breeds = require("../../models/internal-tables/breeds");
+const Species = require('../../models/internal-tables/species')
 
 router.get("/", (req, res) => {
   Breeds.getAll()
@@ -21,7 +22,7 @@ router.get("/:id", verifyId, (req, res) => {
     });
 });
 
-router.get("/species/:id", verifyId, (req, res) => {
+router.get("/species/:id", verifySpeciesId, (req, res) => {
   Breeds.getBySpeciesId(req.params.id)
     .then(breeds => {
       res.status(200).json(breeds);
@@ -68,6 +69,22 @@ function verifyId(req, res, next) {
     Breeds.getById(req.params.id) 
     .then(breed => {
       if (breed) {
+        next()
+      } else {
+        res.status(404).json({ message: `No record found with this id`})
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error: `Can not access database`})
+    })
+  }
+}
+
+function verifySpeciesId(req, res, next) {
+  if (req.params.id) {
+    Species.getById(req.params.id) 
+    .then(species => {
+      if (species) {
         next()
       } else {
         res.status(404).json({ message: `No record found with this id`})

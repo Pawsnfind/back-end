@@ -308,9 +308,9 @@
 
 | Method | Endpoint                | Access Control      | Description                                        |
 | ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/`                     | Developers          | Returns all state info                              |
-| GET    | `/:id`                  | Developers          | Returns state info for particular id.               |
-| POST   | `/`                     | Developers          | Creates a new state record                          |
+| GET    | `/`                     | Developers          | Returns all state info                             |
+| GET    | `/:id`                  | Developers          | Returns state info for particular id.              |
+| POST   | `/`                     | Developers          | Creates a new state record                         |
 | PUT    | `/:id`                  | Developers          | Edits a state record                               |
 | DELETE | `/:id`                  | Developers          | Deletes a state record                             |
 
@@ -345,7 +345,7 @@
 
 | Method | Endpoint                | Access Control      | Description                                        |
 | ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/`                     | Developers          | Returns all subscription info                              |
+| GET    | `/`                     | Developers          | Returns all subscription info                       |
 | GET    | `/:id`                  | Developers          | Returns subscription info for particular id.               |
 | POST   | `/`                     | Developers          | Creates a new subscription record                          |
 | PUT    | `/:id`                  | Developers          | Edits a subscription record                               |

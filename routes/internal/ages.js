@@ -55,6 +55,7 @@ router.put("/:id", verifyId, (req, res) => {
 });
 
 // Middleware
+
 function verifyId(req, res, next) {
   if (req.params.id) {
     Age.getById(req.params.id) 
