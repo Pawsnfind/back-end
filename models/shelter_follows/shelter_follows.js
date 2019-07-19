@@ -9,9 +9,10 @@ module.exports = {
  
  function getUsersFollowsByShelterId(id) {
     return db
-    .select('shelter_follows.id','shelter_follows.shelter_id','user_meta.name')
+    .select('shelter_follows.shelter_id', 'shelter_follows.user_id', 'user_meta.name', 'shelters.shelter')
     .from('shelter_follows')
     .innerJoin('user_meta','shelter_follows.user_id','user_meta.user_id')
+    .innerJoin('shelters', 'shelter_follows.shelter_id', 'shelters.id')
     .where('shelter_id',id)
  }
  
@@ -25,7 +26,7 @@ module.exports = {
 
 function getFollowsByIds(shelterId,userId){
    return db
-   .select('shelter_follows.id','shelter_follows.shelter_id','shelter_follows.user_id','users.username')
+   .select('shelter_follows.shelter_id','shelter_follows.user_id','users.username')
    .from('shelter_follows')
    .innerJoin('users','shelter_follows.user_id','users.id')
    .where({
