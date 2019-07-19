@@ -111,11 +111,7 @@ router.get('/follows/:id/:userId', (req, res) => {
         })
         .catch(error => {
             res.status(500)
-<<<<<<< HEAD
                 .json({ message: `could not get the follows for shelter ${req.params.id} error: ${error.toString()}` })
-=======
-                .json({ message: `could not get the follows for shelter ${req.params.shelterId}`, error: error.toString() })
->>>>>>> 64af601f68f8e0c17da3aebe2d7a7caff94686ef
         })
 })
 
