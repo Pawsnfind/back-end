@@ -39,18 +39,18 @@ To get the server running locally:
 | GET    | `/api/shelters/`                           | ?              | Returns all the shelters.                             |                          |
 | GET    | `/api/shelters/:id`                        | ?              | Returns a shelter by an ID                            |   shelter_id             |
 | GET    | `/api/shelters/:id/contacts`               | ?              | Return all the shelter contacts by shelter ID.        |   shelter_id             |
-| GET    | `/api/shelters/contacts/:id`               | ?              | Returns a shelter contact by Id.                      |  contact_id              |
+| GET    | `/api/shelters/contact/:id`               | ?              | Returns a shelter contact by Id.                      |  contact_id              |
 | GET    | `/api/shelters/:id/locations`              | ?              | Return all the shelter locations by shelter ID.       |   shelter_id             |
-| GET    | `/api/shelters/locations/:id`              | ?              | Returns a shelter location by Id.                     |    location_id           |
+| GET    | `/api/shelters/location/:id`              | ?              | Returns a shelter location by Id.                     |    location_id           |
 | GET    | `/api/shelters/:id/users`                  | ?              | Returns all the shelter users  based on their rold id |     shelter_id           |
-| GET    | `/api/shelters/follows/:shelterId/:userId` | ?              | Returns a users following a shelter                   |   shelter_id,user_id     |
+| GET    | `/api/shelters/follows/:id/:userId` | ?              | Returns a user following a shelter                   |   shelter_id,user_id     |
 | GET    | `/api/shelters/:id/follows`                | ?              | Return all the users following a shelter .            |   shelter_id             |
-| POST   | `/api/shelters/:id/location`               | ?              | Add a location for a shelter.                         |    shelter_id            |
-| PUT    | `/api/shelters/:id/location/:locationId`   | ?              | Update a location of a shelter.                       |  shelter_id,location_id  |
-| DELETE | `/api/shelters/:id/location/:locationId`   | ?              | Delete a shelter location for a shelter.              |  shelter_id,location_id  |
-| POST   | `/api/shelters/:id/contact`                | ?              | Add a contact for a shelter.                          |    shelter_id            |
-| PUT    | `/api/shelters/:id/contact/:contactId`     | ?              | Update a contact of a shelter.                        |  shelter_id,contact_id   |
-| DELETE | `/api/shelters/:id/contact/:contactId`     | ?              | Delete a shelter contact for a shelter.               |  shelter_id,contact_id   |
+| POST   | `/api/shelters/:id/location`               | ?              | Add a location for a shelter.                         |    shelter_id, nickname,street_address,city,state_id,zipcode,phone_number,shelter_contact_id            |
+| PUT    | `/api/shelters/location/:locationId`   | ?              | Update a location of a shelter.                       |  shelter_id,location_id,nickname,street_address,city,state_id,zipcode,phone_number,shelter_contact_id  |
+| DELETE | `/api/shelters/location/:locationId`   | ?              | Delete a shelter location for a shelter.              |  shelter_id,location_id  |
+| POST   | `/api/shelters/:id/contact`                | ?              | Add a contact for a shelter.                          |    shelter_id,name,email,phone            |
+| PUT    | `/api/shelters/contact/:contactId`     | ?              | Update a contact of a shelter.                        |  shelter_id,contact_id,name,email,phone    |
+| DELETE | `/api/shelters/contact/:contactId`     | ?              | Delete a shelter contact for a shelter.               |  shelter_id,contact_id   |
 
 
 # Data Model
