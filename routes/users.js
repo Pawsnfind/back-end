@@ -3,6 +3,38 @@ const Users = require('../models/users/users.js');
 
 const UserMetas = require('../models/users_meta/users_meta');
 
+function validateUserId (req, res, next) {
+    if (req.params.id) {
+        Users.getUserById(req.params.id)
+        .then(user => {
+            if (user) {
+                next()
+            } else {
+                res.status(404).json({ message: 'No user by that id' })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Error retrieiving valid user', error: error.toString() })
+        })
+    }
+}
+
+function validateUserMetaId (req, res, next) {
+    if (req.params.id) {
+        UserMetas.getUserMetaById(req.params.id)
+        .then(meta => {
+            if (meta) {
+                next();
+            } else {
+                res.status(404).json({ message: 'No user meta by that id' })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'Error retrieiving valid user meta', error: error.toString() })
+        })
+    }
+}
+
 router.get('/', (req, res) => {
     Users.getUsers()
     .then( users => {
