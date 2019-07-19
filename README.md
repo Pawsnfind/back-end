@@ -54,7 +54,6 @@ To get the server running locally:
 
 # Data Model
 
-🚫This is just an example. Replace this with your data model
 
 #### 2️⃣ SUBSCRIPTIONS
 
@@ -89,11 +88,11 @@ To get the server running locally:
 
 ## 2️⃣ Actions
 
-`getDonationsByUser(id)` -- returns donation by user id
+- `getDonationsByUser(id)` -- returns donation by user id
 
-`getDonationbyId(id)` - return donation by donation id
+- `getDonationbyId(id)` - return donation by donation id
 
-`getDonationsByShelter(id)` - return donation by shelter id
+- `getDonationsByShelter(id)` - return donation by shelter id
 
 `getAllDonations`
 
