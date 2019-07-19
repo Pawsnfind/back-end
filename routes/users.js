@@ -45,8 +45,8 @@ router.get('/', (req, res) => {
     })
 })
 
-router.get('/:user_id', (req, res) => {
-    Users.getUserById(req.params.user_id)
+router.get('/:id', validateUserId, (req, res) => {
+    Users.getUserById(req.params.id)
     .then( user => {
         res.status(200).json(user)
     })
@@ -162,7 +162,7 @@ router.delete('/:id', (req, res) => {
 
 
 // user_meta routes
-router.get('/meta/:id', (req, res) => {
+router.get('/meta/:id', validateUserMetaId, (req, res) => {
     UserMetas.getUserMetaById(req.params.id)
     .then( meta => {
         res.status(200).json(meta)
