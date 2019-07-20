@@ -16,10 +16,10 @@ router.get('/', (req, res) => {
 })
 
 //get an application
-router.get('/:id', validateApplicationId, (req,res) => {
-    
-            res.status(200).json(req.application)
-        
+router.get('/:id', validateApplicationId, (req, res) => {
+
+    res.status(200).json(req.application)
+
 })
 
 //get notes by application id
@@ -35,14 +35,14 @@ router.get('/:id/notes', validateApplicationId, (req, res) => {
 })
 
 //get notes by application id
-router.get('/notes/:id', validateNoteId, (req,res) => {
+router.get('/notes/:id', validateNoteId, (req, res) => {
     AppAdmin.getById(req.params.id)
-    .then(note => {
-        res.status(200).json(note)
-    })
-    .catch(error => {
-        res.status(500).json({ message: "Error getting applications", error: error.toString() })
-    })
+        .then(note => {
+            res.status(200).json(note)
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Error getting applications", error: error.toString() })
+        })
 })
 
 //get notes by an applications, admin id
@@ -80,7 +80,7 @@ router.get('/user/:id', validateUserId, (req, res) => {
 })
 
 //post notes for an application
-router.post('/note', validateApplicationId, (req, res) => {
+router.post('/:id/note', validateApplicationId, (req, res) => {
 
     const application_admin = {
         notes: req.body.notes,
@@ -88,18 +88,26 @@ router.post('/note', validateApplicationId, (req, res) => {
         shelter_user_id: req.body.shelter_user_id
     }
 
-    AppAdmin.add(application_admin)
-    .then(note => {
-        res.status(200).json(note)
-    })
-    .catch(error => {
-        res.status(500).json({ message: "Error adding notes", error: error.toString() })
-    })
+    if (application_admin.notes &&
+        application_admin.shelter_user_id) {
+        AppAdmin.add(application_admin)
+            .then(note => {
+                res.status(200).json(note)
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error adding notes", error: error.toString() })
+            })
+    }
+    else {
+        res.status(404).json({ message: 'Please enter all the required columns' })
+
+    }
+
 })
 
 //update notes for an application
-router.put('/note/:id',validateNoteId, (req,res)=> {
-    
+router.put('/note/:id', validateNoteId, (req, res) => {
+
 
     const application_admin = {
         notes: req.body.notes,
@@ -107,48 +115,67 @@ router.put('/note/:id',validateNoteId, (req,res)=> {
         shelter_user_id: req.body.shelter_user_id
     }
 
-    AppAdmin.update(req.params.id, application_admin)
-    .then(updated => {
-        res.status(200).json(updated)
-    })
-    .catch(error => {
-        res.status(500).json({ message: "Error updating notes", error: error.toString() })
-    })
+    if (application_admin.notes &&
+        application_admin.shelter_user_id) {
+
+        AppAdmin.update(req.params.id, application_admin)
+            .then(updated => {
+                res.status(200).json(updated)
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error updating notes", error: error.toString() })
+            })
+    }
+    else {
+        res.status(404).json({ message: 'Please enter all the required columns' })
+
+    }
+
+
 })
 
 //delete notes for an application
-router.delete('/note/:id', validateNoteId, (req,res) => {
+router.delete('/note/:id', validateNoteId, (req, res) => {
     AppAdmin.remove(req.params.id)
-    .then(count => {
-        if(count>0){
-            res.status(200).json({message:`Deleted ${count} row`})
-        }
-        else {
-            res.status(404).json({message:`Note ID ${req.params.id} not found`})
+        .then(count => {
+            if (count > 0) {
+                res.status(200).json({ message: `Deleted ${count} row` })
+            }
+            else {
+                res.status(404).json({ message: `Note ID ${req.params.id} not found` })
 
-        }
-    })
-    .catch(error => {
-        res.status(500).json({ message: "Error deleting notes", error: error.toString() })
-    })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ message: "Error deleting notes", error: error.toString() })
+        })
 })
 
 //update application status
-router.put('/:id/status', validateApplicationId, (req,res) => {
+router.put('/:id/status', validateApplicationId, (req, res) => {
     const applicationStatus = {
-        animal_id:req.body.animal_id,
-        shelter_id:req.body.shelter_id,
-        user_id:req.body.user_id,
-        application_status_id:req.body.application_status_id
+        animal_id: req.body.animal_id,
+        shelter_id: req.body.shelter_id,
+        user_id: req.body.user_id,
+        application_status_id: req.body.application_status_id
     }
 
-    App.update(req.params.id, applicationStatus)
-    .then(updated => {
-        res.status(200).json(updated)
-    })
-    .catch(error => {
-        res.status(500).json({ message: "Error updating application status", error: error.toString() })
-    })
+    if (applicationStatus.animal_id &&
+        applicationStatus.shelter_id &&
+        applicationStatus.user_id &&
+        applicationStatus.application_status_id) {
+        App.update(req.params.id, applicationStatus)
+            .then(updated => {
+                res.status(200).json(updated)
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error updating application status", error: error.toString() })
+            })
+    }
+    else {
+        res.status(404).json({ message: 'Please enter all the required columns' })
+
+    }
 
 })
 
@@ -178,6 +205,8 @@ router.post('/', addApplication, (req, res) => {
         is_declaration: req.body.is_declaration
     }
 
+
+
     AppMeta.add(application_meta)
         .then(id => {
             res.status(201).json(id)
@@ -194,37 +223,38 @@ router.post('/', addApplication, (req, res) => {
         })
 })
 
-    // if (req.body.application_id &&
-    //     req.body.name &&
-    //     req.body.street_address &&
-    //     req.body.city &&
-    //     req.body.state_id &&
-    //     req.body.zip &&
-    //     req.body.home_phone &&
-    //     req.body.email &&
-    //     req.body.is_over_18 &&
-    //     req.body.is_homeowner &&
-    //     req.body.is_in_agreement &&
-    //     req.body.is_homevisit_allowed &&
-    //     req.body.is_fenced &&
-    //     req.body.ref_name_1 &&
-    //     req.body.ref_phone_1 &&
-    //     req.body.ref_relationship_1 &&
-    //     req.body.ref_name_2 &&
-    //     req.body.ref_phone_2 &&
-    //     req.body.is_declaration ) {
-    //         AppMeta.add(application_meta)
-    //         .then( id => {
-    //             res.status(201).json(id)
-    //         })
-    //         .catch( error => {
-    //             res.status(500).json({ message: "Error getting applications", error: error.toString()})
-    //         })
-    //     } else {
-    //         res.status(400).json({message: "please enter all required META field"})
-    //     }
+// if (req.body.application_id &&
+//     req.body.name &&
+//     req.body.street_address &&
+//     req.body.city &&
+//     req.body.state_id &&
+//     req.body.zip &&
+//     req.body.home_phone &&
+//     req.body.email &&
+//     req.body.is_over_18 &&
+//     req.body.is_homeowner &&
+//     req.body.is_in_agreement &&
+//     req.body.is_homevisit_allowed &&
+//     req.body.is_fenced &&
+//     req.body.ref_name_1 &&
+//     req.body.ref_phone_1 &&
+//     req.body.ref_relationship_1 &&
+//     req.body.ref_name_2 &&
+//     req.body.ref_phone_2 &&
+// req.body.ref_relationship_2 &&
+//     req.body.is_declaration ) {
+//         AppMeta.add(application_meta)
+//         .then( id => {
+//             res.status(201).json(id)
+//         })
+//         .catch( error => {
+//             res.status(500).json({ message: "Error getting applications", error: error.toString()})
+//         })
+//     } else {
+//         res.status(400).json({message: "please enter all required META field"})
+//     }
 
-    // })
+// })
 
 
 
@@ -305,20 +335,20 @@ function validateUserId(req, res, next) {
 
 }
 
-function validateNoteId(req,res,next){
-    if(req.params.id){
+function validateNoteId(req, res, next) {
+    if (req.params.id) {
         AppAdmin.getById(req.params.id)
-        .then(note => {
-            if(note){
-                next()
-            }
-            else {
-                res.status(404).json({ message: "Note does not exists" })
-            }
-        })
-        .catch(error => {
-            res.status(500).json({ message: "Error getting valid note for the application", error: error.toString() })
-        })
+            .then(note => {
+                if (note) {
+                    next()
+                }
+                else {
+                    res.status(404).json({ message: "Note does not exists" })
+                }
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error getting valid note for the application", error: error.toString() })
+            })
     }
 }
 

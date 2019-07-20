@@ -25,6 +25,7 @@ function getUserById(id) {
     .from('users') 
     .innerJoin('user_meta', 'users.id', 'user_meta.user_id')
     .where('users.id', id)
+    .first()
 }
 
 function getBy(filter) {
