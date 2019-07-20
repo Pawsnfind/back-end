@@ -43,11 +43,11 @@ To get the server running locally:
 | GET    | `/api/applications/:id/admin/:adminId` | Return all the notes created by shelter admin ID.    |   application_id,shelterAdmin_id |
 | GET    | `/api/applications/shelter/:id`        | Returns all the applications by shelter Id.          |    shelter_id                    |        
 | GET    | `/api/applications/user/:id`           | Returns all the applications by user Id              |     user_id                      |
-| POST   | `/api/applications/note`               | Add a note for an application                        |                                  |
-| PUT    | `/api/applications/note/:id`           | Update a note for an application .                   |   note_id                        |
+| POST   | `/api/applications/:id/note`               | Add a note for an application                        |    application_id,notes,shelter_user_id                              |
+| PUT    | `/api/applications/note/:id`           | Update a note for an application .                   |   note_id,application_id,notes,shelter_user_id                        |
 | DELETE | `/api/applications/note/:id`           | Delete a note for an application .                   |    note_id                       |
-| PUT    | `/api/applications/:id/status`         | Update an application status by application ID.      |  application_id                  |
-| POST   | `/api/applications/`                   | Add an application.                                  |                                  |
+| PUT    | `/api/applications/:id/status`         | Update an application status by application ID.      |  application_id,animal_id,shelter_id,user_id,application_status_id                  |
+| POST   | `/api/applications/`                   | Add an application.                                  |  animal_id,shelter_id,user_id,application_status_id, name,street_address,city,state_id,zip,home_phone,email,cell_phone,is_over_18,is_homeowner,is_in_agreement,is_homevisit_allowed,is_fenced,ref_name_1,ref_phone_1,ref_relationship_1,ref_name_2,ref_phone_2,ref_relationship_2,is_declaration    |
 
 
 # Data Model
