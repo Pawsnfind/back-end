@@ -111,12 +111,10 @@ router.put('/note/:id', validateNoteId, (req, res) => {
 
     const application_admin = {
         notes: req.body.notes,
-        application_id: req.body.application_id,
-        shelter_user_id: req.body.shelter_user_id
+        
     }
 
-    if (application_admin.notes &&
-        application_admin.shelter_user_id) {
+    if (application_admin.notes) {
 
         AppAdmin.update(req.params.id, application_admin)
             .then(updated => {
@@ -154,16 +152,11 @@ router.delete('/note/:id', validateNoteId, (req, res) => {
 //update application status
 router.put('/:id/status', validateApplicationId, (req, res) => {
     const applicationStatus = {
-        animal_id: req.body.animal_id,
-        shelter_id: req.body.shelter_id,
-        user_id: req.body.user_id,
+        
         application_status_id: req.body.application_status_id
     }
 
-    if (applicationStatus.animal_id &&
-        applicationStatus.shelter_id &&
-        applicationStatus.user_id &&
-        applicationStatus.application_status_id) {
+    if (applicationStatus.application_status_id) {
         App.update(req.params.id, applicationStatus)
             .then(updated => {
                 res.status(200).json(updated)
