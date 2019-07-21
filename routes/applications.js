@@ -202,7 +202,7 @@ router.post('/', addApplication, (req, res) => {
 
     AppMeta.add(application_meta)
         .then(id => {
-            res.status(201).json(id)
+            res.status(201).json(req.body.application_id)
         })
         .catch(error => {
             App.remove(req.body.application_id)
