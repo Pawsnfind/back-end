@@ -96,6 +96,7 @@ function getShelterFollows(user_id) {
     .from('shelter_follows')
     .innerJoin('shelters', 'shelter_follows.shelter_id', 'shelters.id')
     .where('shelter_follows.user_id', user_id )
+
 }
 // ***********************
 

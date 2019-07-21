@@ -54,16 +54,17 @@ function getById(id) {
 
 //get shelter location and the contact for that location
 
-function getShelterLocation(shelterId) {
+
+function getShelterLocation(id) {
     return db
         .select('shelter_locations.nickname', 'shelter_locations.street_address',
-            'shelter_locations.city', 'states.state','shelter_locations.shelter_contact_id','shelter_contacts.name')
+            'shelter_locations.city', 'states.state', 'shelter_contacts.name')
         .from('shelter_locations')
         .innerJoin('states', 'shelter_locations.state_id', 'states.id')
-        .innerJoin('shelter_contacts','shelter_locations.shelter_contact_id','shelter_contacts.id')
-        .where('shelter_locations.shelter_id', shelterId)
-
+        .innerJoin('shelter_contacts', 'shelter_locations.shelter_contact_id', 'shelter_contacts.id')
+        .where('shelter_locations.shelter_id', id)
 }
+
 
 //get the users following the shelters
 function getShelterFollows(id) {

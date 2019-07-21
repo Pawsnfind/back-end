@@ -20,7 +20,7 @@ function getAll() {
 // get by application id
 function getById(id) {
     let query = db
-    .select('applications.id', 'animals.name', 'shelters.shelter', 'application_status.application_status', 'applications.user_id', 'application_meta.*') 
+    .select('applications.id', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', 'applications.user_id', 'application_meta.*') 
     .from('applications')
     .innerJoin('animals', 'applications.animal_id', 'animals.id')
     .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
@@ -52,9 +52,10 @@ function getById(id) {
 function getApplicationNotes(application_id) {
     if(application_id) {
         return db
-        .select('application_admin.notes', 'application_admin.shelter_user_id as by', 'application_admin.created_at')
+        .select('application_admin.notes', 'users.username as by', 'application_admin.created_at')
         .from('application_admin')
         .innerJoin('shelter_users', 'application_admin.shelter_user_id', 'shelter_users.id')
+        .innerJoin('users', 'shelter_users.user_id', 'users.id')
         .where('application_admin.application_id', application_id)
          
     } else {
@@ -64,7 +65,7 @@ function getApplicationNotes(application_id) {
 
 function getByUserId(id) {
     return db
-    .select('applications.id', 'animals.name as animal name', 'shelters.shelter', 'application_status.application_status')
+    .select('applications.id', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status')
     .from('applications')
     .innerJoin('animals', 'applications.animal_id', 'animals.id')
     .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
@@ -73,13 +74,18 @@ function getByUserId(id) {
 }
 
 function getByShelterId(id) {
-    return db
-    .select('applications.id', 'animals.name as animal name', 'users.email', 'application_status.application_status')
-    .from('applications')
-    .innerJoin('animals', 'applications.animal_id', 'animals.id')
-    .innerJoin('users', 'applications.user_id', 'users.id')
-    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
-    .where('applications.shelter_id', id)
+    if(id) {
+        return db
+        .select('applications.id', 'animals.name as animal_name', 'users.email', 'application_status.application_status')
+        .from('applications')
+        .innerJoin('animals', 'applications.animal_id', 'animals.id')
+        .innerJoin('users', 'applications.user_id', 'users.id')
+        .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+        .where('applications.shelter_id', id)
+    } else {
+        return null
+    }
+    
 }
 
 function getByAnimalId(id) {
@@ -101,6 +107,7 @@ function getBy(filter) {
 function add(application) {
     return db('applications')
     .insert(application, 'id')
+
    // .then( ([id]) => getById(id))
 }
 

@@ -1,10 +1,11 @@
 const router = require("express").Router();
-
+const Shelter = require("../models/shelters/shelters.js")
 const Shelters = require('../models/shelters/shelters.js')
 const ShelterContacts = require('../models/shelter_contacts/shelter_contacts.js')
 const ShelterLocation = require('../models/shelter_locations/shelter_locations.js')
 const ShelterUsers = require('../models/shelter_users/shelter_users.js')
 const ShelterFollows = require('../models/shelter_follows/shelter_follows.js')
+
 
 //get route to get the shelter name including the shelter contact, shelter location and 
 //the contact for that location, shelter followers
