@@ -46,9 +46,9 @@ router.get('/notes/:id', validateNoteId, (req, res) => {
 })
 
 //get notes by an applications, admin id
-router.get('/:id/admin/:adminId', getMatch, (req, res) => {
+router.get('/:id/admin/:shelterUserId', getMatch, (req, res) => {
 
-    AppAdmin.getById(req.params.adminId)
+    AppAdmin.getById(req.params.shelterUserId)
         .then(notes => {
             res.status(200).json(notes)
         })
@@ -111,7 +111,7 @@ router.put('/note/:id', validateNoteId, (req, res) => {
 
     const application_admin = {
         notes: req.body.notes,
-        
+
     }
 
     if (application_admin.notes) {
@@ -152,7 +152,7 @@ router.delete('/note/:id', validateNoteId, (req, res) => {
 //update application status
 router.put('/:id/status', validateApplicationId, (req, res) => {
     const applicationStatus = {
-        
+
         application_status_id: req.body.application_status_id
     }
 
@@ -347,7 +347,7 @@ function validateNoteId(req, res, next) {
 
 
 function getMatch(req, res, next) {
-    AppAdmin.findMatch(req.params.id, req.params.adminId)
+    AppAdmin.findMatch(req.params.id, req.params.shelterUserId)
         .then(match => {
             if (match) {
                 next()

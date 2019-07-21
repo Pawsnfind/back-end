@@ -40,7 +40,7 @@ To get the server running locally:
 | GET    | `/api/applications/:id`                | Returns an applications by ID                        |   application_id                 |
 | GET    | `/api/applications/:id/notes`          | Return all the application notes by application ID.  |   application_id                 |
 | GET    | `/api/applications/notes/:id`          | Returns an application note by note Id.              |  note_id                         |
-| GET    | `/api/applications/:id/admin/:adminId` | Return all the notes created by shelter admin ID.    |   application_id,shelterAdmin_id |
+| GET    | `/api/applications/:id/admin/:shelterUserId` | Return all the notes created by shelter user ID.    |   application_id,shelter_user_id |
 | GET    | `/api/applications/shelter/:id`        | Returns all the applications by shelter Id.          |    shelter_id                    |        
 | GET    | `/api/applications/user/:id`           | Returns all the applications by user Id              |     user_id                      |
 | POST   | `/api/applications/:id/note`               | Add a note for an application                        |    application_id,notes,shelter_user_id                              |

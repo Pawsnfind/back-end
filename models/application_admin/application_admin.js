@@ -45,11 +45,11 @@ function update(id, change) {
     .then(updatedNote => updatedNote ? getById(id) : null)
 }
 
-function findMatch(applicationId,adminId){
+function findMatch(applicationId,shelterUserId){
     return db('application_admin')
     .where({
         application_id:applicationId,
-        id:adminId
+        shelter_user_id:shelterUserId
     })
     .first()
 }
