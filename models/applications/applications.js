@@ -76,7 +76,7 @@ function getByUserId(id) {
 function getByShelterId(id) {
     if(id) {
         return db
-        .select('applications.id', 'animals.name as animal name', 'users.email', 'application_status.application_status')
+        .select('applications.id', 'animals.name as animal_name', 'users.email', 'application_status.application_status')
         .from('applications')
         .innerJoin('animals', 'applications.animal_id', 'animals.id')
         .innerJoin('users', 'applications.user_id', 'users.id')
