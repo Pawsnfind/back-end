@@ -51,5 +51,5 @@ function findMatch(applicationId,shelterUserId){
         application_id:applicationId,
         shelter_user_id:shelterUserId
     })
-    .first()
+    
 }
