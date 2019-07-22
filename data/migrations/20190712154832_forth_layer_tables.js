@@ -13,14 +13,12 @@ exports.up = function(knex, Promise) {
     tbl.timestamp('created_at', { precision: 6 })
         .defaultTo(knex.fn.now(6));
     tbl.integer('shelter_location_id')
-        .notNullable()
         .unsigned()
         .references('id')
         .inTable('shelter_locations')
         .onDelete('RESTRICT')
         .onUpdate('CASCADE');
     tbl.integer('shelter_contact_id')
-        .notNullable()
         .unsigned()
         .references('id')
         .inTable('shelter_contacts')
