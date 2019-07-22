@@ -2,7 +2,7 @@
 ---
 [Animal Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEANIMALS.md)       
 ---
-[Donation Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEDONATIONS.md)   
+[Donation/ Subscription Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEDONATIONS.md)   
 ---
 [Internal Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEINTERNAL.md)  
 ---
