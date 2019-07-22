@@ -26,7 +26,6 @@ exports.up = function(knex, Promise) {
         .onUpdate('CASCADE');
   })
 };
-
 exports.down = function(knex, Promise) {
   return knex.schema.dropTableIfExists('shelters')
 };

@@ -4,7 +4,7 @@ const AnimalMeta = require('../models/animal_meta/animal_meta.js');
 const AnimalFollows = require('../models/animal_follows/animal_follows.js')
 const AnimalAdmin = require('../models/animal_admin/animal_admin.js')
 const Shelter = require('../models/shelters/shelters.js')
-
+const Pictures = require('../models/pictures/pictures.js')
 
 
 // gets all animals
@@ -114,6 +114,91 @@ router.get('/follows/:animalId/:userId', getMatchAnimalUser, (req, res) => {
         res.status(500).json({message: `Error getting user ${req.params.userId} following animal with id ${req.params.animalId}`})
     })
 })
+
+//get animal picture by id
+router.get('/pictures/:id', (req,res) => {
+    Pictures.getById(req.params.id)
+    .then( picture => {
+        res.status(200).json(picture)
+    })
+    .catch (error => {
+        res.status(500).json({message: `Error getting picture id ${req.params.id} `})
+    })
+})
+    
+
+//get animal pictures by animal_id
+router.get('/:id/pictures', (req, res) => {
+    Pictures.getByAnimalId(req.params.id)
+    .then( pictures => {
+        res.status(200).json(pictures)
+    })
+    .catch (error => {
+        res.status(500).json({message: `Error getting picture of animal ${req.params.id} `})
+    })
+})
+
+
+//get animal picture by img_id
+router.get('/pictures/img/:id', (req,res) => {
+    Pictures.getByImgId(req.params.id)
+    .then( picture => {
+        res.status(200).json(picture)
+    })
+    .catch (error => {
+        res.status(500).json({message: `Error getting picture with img_id ${req.params.id} `})
+    })
+})
+
+//remove picture by id
+router.delete('/pictures/:id', (req, res) => {
+
+
+    Pictures.remove(req.params.id) 
+    .then( count => {
+        res.status(200).json(`${count} picture removed`)
+    })
+    .catch ( error => {
+        res.status(500).json({message: `Error removing picture with id ${req.params.id} `})
+    })
+})
+
+//update picture by id
+router.put('/pictures/:id', (req, res) => {
+
+
+    const pic = {
+        id: req.params.id,
+        animal_id: req.body.animal_id,
+        img_url: req.body.img_url,
+        img_id: req.body.img_id
+    }
+    Pictures.update(req.params.id, pic)
+    .then ( pic => {
+        res.status(200).json(pic)
+    })
+    .catch ( error => {
+        res.status(500).json({message: `Error updating picture with id ${req.params.id} `})
+    })
+})
+//add picture
+router.post('/pictures', (req, res) => {
+
+    const pic = {
+        animal_id: req.body.animal_id,
+        img_url: req.body.img_url,
+        img_id: req.body.img_id
+    }
+    Pictures.add(pic) 
+    .then(pic => {
+        res.status(200).json(pic)
+    })
+    .catch (error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+    })
+})
+
+
 
 //get animal admin by Id
 router.get('/admin/:id', validateAdminId, (req, res) => {
@@ -359,19 +444,19 @@ router.post('/', addAnimal, (req, res) => {
     }
     if  (req.body.animal_id &&
         req.body.breed_id &&
-        req.body.is_mixed &&
+        req.body.is_mixed != null &&
         req.body.age_id &&
         req.body.health &&
         req.body.size_id &&
         req.body.color &&
         req.body.coat_length_id &&
-        req.body.is_male &&
-        req.body.is_house_trained &&
-        req.body.is_neutered_spayed &&
-        req.body.is_good_with_kids &&
-        req.body.is_good_with_dogs &&
-        req.body.is_good_with_cats &&
-        req.body.is_vaccinated &&
+        req.body.is_male != null &&
+        req.body.is_house_trained != null &&
+        req.body.is_neutered_spayed != null &&
+        req.body.is_good_with_kids != null &&
+        req.body.is_good_with_dogs != null &&
+        req.body.is_good_with_cats != null &&
+        req.body.is_vaccinated != null &&
         req.body.description ) {
             AnimalMeta.add(animal_meta)
             .then( id => {
