@@ -14,34 +14,35 @@ function getAllDonations() {
 }
 
 function getDonationbyId (id) {
-    if(id){
+    
         return db
         .select('donations.id', 'donations.amount', 'donations.created_at', 'shelters.shelter', 'users.username')
         .from('donations')
-        .innerJoin('shelters', 'donations.shelter_id', 'shelters.id')
-        .innerJoin('users', 'donations.user_id', 'users.id')
+        .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
+        .leftJoin('users', 'donations.user_id', 'users.id')
         .where({ 'donations.id' : id })
-    } else {
-        return null;
-    }
+        .first();
+ 
 }
 
 function getDonationsByUser(id) {
     return db
     .select('donations.id', 'donations.amount', 'donations.created_at', 'shelters.shelter', 'users.username')
     .from('donations')
-    .innerJoin('shelters', 'donations.shelter_id', 'shelters.id')
-    .innerJoin('users', 'donations.user_id', 'users.id')
+    .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
+    .leftJoin('users', 'donations.user_id', 'users.id')
     .where({ 'donations.user_id' : id })
+ 
 }
 
 function getDonationsByShelter(id) {
     return db
     .select('donations.id', 'donations.amount', 'donations.created_at', 'shelters.shelter', 'users.username')
     .from('donations')
-    .innerJoin('shelters', 'donations.shelter_id', 'shelters.id')
-    .innerJoin('users', 'donations.user_id', 'users.id')
+    .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
+    .leftJoin('users', 'donations.user_id', 'users.id')
     .where({ 'donations.shelter_id' : id })
+    
 }
 
 function addDonation(donation) {

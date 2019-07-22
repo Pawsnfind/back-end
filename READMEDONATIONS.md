@@ -33,24 +33,24 @@ To get the server running locally:
 
 #### Donations
 
-| Method | Endpoint                    | Access Control              | Description                                        |
-| ------ | --------------------------- | --------------------------- | ---------------------------------------------------|
-| GET    | `/api/donations/`           | owner                       | Returns all donations                              |
-| GET    | `/api/donations/:id`        | owner shelter operator      | Returns donations by id                            |
-| GET    | `/api/donations/:id/user`   | owner, adopters             | Returns donations by user                          |
-| GET    | `/api/donations/:id/shelter`| owner, shelter operators    | Returns donations for shelter                      |
-| POST   | `/api/donations/`           | adopters                    | Makes a new donation                               |
-| PUT    | `/api/donations/:id`        | owners                      | Update existing donation                           |   
+| Method | Endpoint                    | Access Control              | Description                                        | Required
+| ------ | --------------------------- | --------------------------- | ---------------------------------------------------| ----------------------------------------------------|
+| GET    | `/api/donations/`           | owner                       | Returns all donations                              |                                                     |
+| GET    | `/api/donations/:id`        | owner shelter operator      | Returns donations by id                            |  id                                                 |
+| GET    | `/api/donations/user/:id`   | owner, adopters             | Returns donations by user                          |   id                                                |
+| GET    | `/api/donations/shelter:/id`| owner, shelter operators    | Returns donations for shelter                      |   id                                                |
+| POST   | `/api/donations/`           | adopters                    | Makes a new donation                               | user_id, shelter_id, amount                         |
+| PUT    | `/api/donations/:id`        | owners                      | Update existing donation                           |   user_id, shelter_id, amount                       |
 
 
-| Method | Endpoint                        | Access Control              | Description                                        |
-| ------ | ------------------------------- | --------------------------- | ---------------------------------------------------|
-| GET    | `/api/subscriptions/`           | owner                       | Returns all subscriptions                          |
-| GET    | `/api/subscriptions/:id`        | owner shelter operator      | Returns subscriptions by id                        |
-| GET    | `/api/subscriptions/:id/shelter`| owner, shelter operator     | Returns subscription for shelter                   |
-| GET    | `/api/subscriptions/:id/level`  | owner                       | Returns subscriptions by level                     |
-| POST   | `/api/subscriptions/`           | shelter                     | Makes a new subscription                           |
-| PUT    | `/api/subscriptions/:id`        | owners                      | Update existing donation                           |      
+| Method | Endpoint                        | Access Control              | Description                                        | Required
+| ------ | ------------------------------- | --------------------------- | ---------------------------------------------------| ----------------------------------------------------|
+| GET    | `/api/subscriptions/`           | owner                       | Returns all subscriptions                          |                                                     |
+| GET    | `/api/subscriptions/:id`        | owner shelter operator      | Returns subscriptions by id                        | id                                                  |
+| GET    | `/api/subscriptions/shelter:/id`| owner, shelter operator     | Returns subscription for shelter                   | id                                                  |
+| GET    | `/api/subscriptions/level:/id`  | owner                       | Returns subscriptions by level                     | id                                                  |
+| POST   | `/api/subscriptions/`           | shelter                     | Makes a new subscription                           | shelter_id, subscription_id, is_active              |
+| PUT    | `/api/subscriptions/:id`        | owners                      | Update existing donation                           | shelter_id, subscription_id, is_active              |
 
 # Data Model
 
