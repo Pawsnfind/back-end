@@ -154,7 +154,10 @@ exports.up = function(knex, Promise) {
             .references('id')
             .inTable('animals')
             .onDelete('RESTRICT')
-            .onUpdate('CASCADE')
+            .onUpdate('CASCADE');
+        tbl.integer('img_id')
+            .notNullable()
+            .unsigned()
     })
     .createTable('animal_follows', tbl => {
         tbl.integer('animal_id')
