@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const Donations = require('../models/donations/donations.js')
 
+ 
+
 router.get('/', (req, res) => {
     Donations.getAllDonations()
     .then(donations => {
@@ -13,10 +15,16 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res)=> {
 
+ 
     const { id } = req.params;
+    if (typeof id !== 'number')
+    {
+        res.status(400).json({ message:'No donation id '})
+    }
+ 
         Donations.getDonationbyId(id)
         .then(donation => {
-            if (req.params.id){
+            if (donation){
             res.status(200).json(donation)
             } else { 
                 res.status(404).json({ message:'id cannot be found '})
@@ -24,17 +32,21 @@ router.get('/:id', (req, res)=> {
         })
         .catch(err => {
             res.status(500).json({ message: "Error getting donation", err: err.toString() })
-        })
-    
+            })
+
 })
 
-router.get('/:id/user', (req, res)=> {
+router.get('/user/:id', (req, res)=> {
 
     const { id } = req.params;
 
+    if (!id){
+        res.status(400).json({ message:'No user id '})
+    }
+
     Donations.getDonationsByUser(id)
     .then(donation => {
-        if (req.params.id){
+        if (donation.length){
             res.status(200).json(donation)
             } else { 
                 res.status(404).json({ message:'id cannot be found '})
@@ -45,13 +57,15 @@ router.get('/:id/user', (req, res)=> {
     })
 })
 
-router.get('/:id/shelter', (req, res)=> {
+router.get('/shelter/:id', (req, res)=> {
 
     const { id } = req.params;
-
+    if (!id){
+        res.status(400).json({ message:'No shelter id '})
+    }
     Donations.getDonationsByShelter(id)
     .then(donation => {
-        if (req.params.id){
+        if (donation.length > 0){
             res.status(200).json(donation)
             } else { 
                 res.status(404).json({ message:'id cannot be found '})
@@ -87,7 +101,7 @@ router.put('/:id', (req, res ) => {
     
     Donations.updateDonation(id, { user_id, shelter_id, amount } )
     .then(donation => {
-        if (req.params.id){
+        if (donation){
         res.status(200).json({ message: "Successfully updated", donation})
         } else {
             res.status(404).json({ message: "id cannot be found"})

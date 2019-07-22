@@ -18,7 +18,26 @@ function shelterValidation (req, res, next) {
     })
 
     } else {
-        res.status(500).json({ message: "no shelter id", error: error.toString()}) 
+        res.status(400).json({ message: "no shelter id"});
+    }
+} 
+
+function subscriptionValidation (req, res, next) {
+    if (req.params.id) {
+    Subscription.getSubscriptionbyID(req.params.id)
+    .then(subscription => {
+        if (subscription){
+            next()
+        } else {
+            res.status(404).json({message: 'no subscription by that id' })
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ message: "Error getting valid subscription", err: err.toString() })
+    })
+
+    } else {
+        res.status(400).json({ message: "no subscription id"});
     }
 } 
 
@@ -26,7 +45,11 @@ function shelterValidation (req, res, next) {
 router.get('/', (req, res) => {
     Subscription.getAllSubscriptions()
     .then(subs => {
-        res.status(200).json(subs)
+        if (subs.length > 0){
+            res.status(200).json(subs)
+        } else {
+            res.status(404).json({message: 'Not found'})
+        }
     })
     .catch(err => {
         res.status(500).json({ message: "Error getting subscriptions", err: err.toString()})
@@ -36,9 +59,12 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const { id } = req.params;
 
+    if (!id){
+        res.status(400).json({ message: "no subscription id"});
+    }
     Subscription.getSubscriptionbyID(id)
     .then(sub => {
-        if(req.params.id) {
+        if(sub) {
         res.status(200).json(sub)
         } else {
             res.status(404).json({message: 'id cannot be found'})
@@ -49,7 +75,7 @@ router.get('/:id', (req, res) => {
      })
 })
 
-router.get('/:id/shelter', shelterValidation, (req, res) => {
+router.get('/shelter/:id', shelterValidation, (req, res) => {
     const { id } = req.params;
 
     Subscription.getSubscriptionbyShelter(id)
@@ -62,12 +88,12 @@ router.get('/:id/shelter', shelterValidation, (req, res) => {
 
 })
 
-router.get('/:id/level', (req ,res) =>{
+router.get('/level/:id', (req ,res) =>{
     const { id } = req.params;
 
         Subscription.getSubscriptionbyLevel(id)
         .then(sub => {
-            if (req.params.id){
+            if (sub){
                 res.status(200).json(sub)
             } else {
                 res.status(404).json({message: 'id cannot be found'})
@@ -81,10 +107,10 @@ router.get('/:id/level', (req ,res) =>{
     
 router.post('/', (req, res) => {
     
-    const { shelter_id, subscription_id, expiration_date, is_active } = req.body
+    const { shelter_id, subscription_id, is_active } = req.body
     
-    if (req.body.shelter_id && req.body.subscription_id && req.body.expiration_date && is_active){
-        Subscription.addSubscription({ shelter_id, subscription_id, expiration_date, is_active })
+    if (shelter_id && subscription_id  && is_active){
+        Subscription.addSubscription({ shelter_id, subscription_id, is_active })
         .then(sub => {
             res.status(201).json({ message: "Successfully subscribed", sub})
         })
@@ -97,7 +123,7 @@ router.post('/', (req, res) => {
         
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', subscriptionValidation, (req, res) => {
     
     const { id } = req.params
     const { shelter_id, subscription_id, expiration_date, is_active } = req.body
@@ -113,7 +139,6 @@ router.put('/:id', (req, res) => {
         .catch(err => {
             res.status(500).json({ message: "Error getting updated", err: err.toString() })
         })
-
 })
 
 module.exports = router;
