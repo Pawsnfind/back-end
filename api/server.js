@@ -25,7 +25,9 @@ const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 
 server.use(helmet());
 server.use(express.json());
-server.use(cors());
+server.use(cors({
+  origin: '*'
+}));
 
 server.use("/api/animals", animalRouter);
 server.use("/api/applications", applicationRouter);
