@@ -23,13 +23,6 @@ const iSpeciesRouter = require("../routes/internal/species.js");
 const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 
-var crossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-};
-
-server.user(crossDomain);
 server.use(cors());
 server.use(helmet());
 server.use(express.json());
