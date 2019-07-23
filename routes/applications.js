@@ -84,7 +84,7 @@ router.post('/:id/note', validateApplicationId, (req, res) => {
 
     const application_admin = {
         notes: req.body.notes,
-        application_id: req.body.application_id,
+        application_id: req.params.id,
         shelter_user_id: req.body.shelter_user_id
     }
 
