@@ -49,3 +49,4 @@ function add(picture) {
     .insert(picture, 'id')
     .then(([id]) => getById(id))
 }
+ 
