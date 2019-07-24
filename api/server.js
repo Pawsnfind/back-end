@@ -24,8 +24,10 @@ const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 
 var corsOptions = {
-  origin: 'http://example.com',
-  optionsSuccessStatus: 200
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
 }
 
 server.use(cors(corsOptions));
