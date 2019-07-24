@@ -10,7 +10,7 @@ const donationRouter = require("../routes/donations.js");
 const shelterRouter = require("../routes/shelters.js");
 const subscriptionRouter = require("../routes/subscriptions.js");
 const userRouter = require("../routes/users.js");
-
+const pictureRouter = require("../routes/picture");
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
 const iAnimalStatusRouter = require("../routes/internal/animal_status.js");
@@ -24,11 +24,6 @@ const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 
  
-
-//var corsOptions = {
-//  origin: 'http://example.com',
-//  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-//}
 server.use(cors());
 
 server.use(helmet());
@@ -41,6 +36,7 @@ server.use("/api/donations", donationRouter);
 server.use("/api/shelters", shelterRouter);
 server.use("/api/subscriptions", subscriptionRouter);
 server.use("/api/users", userRouter);
+server.use("/api/pictures", pictureRouter);
 
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);
