@@ -23,7 +23,9 @@ const iSpeciesRouter = require("../routes/internal/species.js");
 const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 
-server.use(cors());
+server.use(cors({
+  origin: '*'
+}));
 server.use(helmet());
 server.use(express.json());
 
