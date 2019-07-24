@@ -125,7 +125,7 @@ router.put('/note/:id', validateNoteId, (req, res) => {
             })
     }
     else {
-        res.status(404).json({ message: 'Please enter all the required columns' })
+        res.status(400).json({ message: 'Please enter all the required columns' })
 
     }
 
