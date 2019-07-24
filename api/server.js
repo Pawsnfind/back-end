@@ -29,9 +29,11 @@ server.use(function(req, res, next) {
   next();
 });
 
-server.use(cors({
-  origin: '*'
-}));
+var corsOptions = {
+  origin: 'http://example.com',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+server.use(cors(corsOptions));
 server.use(helmet());
 server.use(express.json());
 
