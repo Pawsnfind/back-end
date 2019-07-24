@@ -23,12 +23,7 @@ const iSpeciesRouter = require("../routes/internal/species.js");
 const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 
-server.use(function(req, res, next) {
-   res.header("Access-Control-Allow-Origin", '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-  next();
-});
+ 
 
 //var corsOptions = {
 //  origin: 'http://example.com',
