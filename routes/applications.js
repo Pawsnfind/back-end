@@ -80,7 +80,7 @@ router.get('/user/:id', validateUserId, (req, res) => {
 })
 
 //post notes for an application
-router.post('/:id/note', (req, res) => {
+router.post('/:id/note', validateApplicationId, (req, res) => {
 
     const application_admin = {
         notes: req.body.notes,
