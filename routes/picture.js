@@ -1,12 +1,12 @@
 const router = require("express").Router();
 const pictures = require("../models/pictures/pictures");
+const animals = require("../models/animals/animals");
 const formidable = require("formidable");
-const axios = require("axios");
 const fs = require("fs");
 const request = require("request");
 
 router.get("/:id", (req, res) => {
-  picture
+  pictures
     .getById(req.params.id)
     .then(picture => {
       if (picture) res.status(200).json(picture);
@@ -20,7 +20,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/image/:id", (req, res) => {
-  picture
+  pictures
     .getByImgId(req.params.id)
     .then(picture => {
       if (picture) res.status(200).json(picture);
@@ -33,9 +33,9 @@ router.get("/image/:id", (req, res) => {
     });
 });
 
-router.get("/animal/:id", (req, res) => {
-  picture
-    .getByImgId(req.params.id)
+router.get("/animal/:id", validateAnimalId, (req, res) => {
+  pictures
+    .getByAnimalId(req.params.id)
     .then(picture => {
       if (picture.length > 0) res.status(200).json(picture);
       else res.status(404).json({ message: "No images found" });
@@ -47,20 +47,35 @@ router.get("/animal/:id", (req, res) => {
     });
 });
 
-router.delete("/:id", validateImageId, (req, res) => {
-  picture
-    .remove(req.params.id)
-    .then(response => {
-      res.status(200).json(response);
-    })
-    .catch(error => {
-      res
-        .status(500)
-        .json({ error: "Error removing pictures. " + error.toString() });
-    });
+router.delete("/image/:id", validateImageAPI_Id, async (req, res) => {
+  let formData = {
+    api_key: process.env.image_api_key,
+    image_id: req.params.id
+  };
+
+  await request.post(
+    {
+      url: process.env.delete_url,
+      formData,
+ 
+      header: { "Content-type": "application/json" }
+    },
+    async (err, httpResponse, body) => {
+      if (err || httpResponse.statusCode === 400 || httpResponse === 500) {
+        res.status(400).json(body);
+        return;
+      } else {
+        body = JSON.parse(body);
+        pictures.remove(req.params.id).then(response => {
+          if (response) res.status(200).json(body);
+          else res.status(400).json({ error: "Error deleting image" });
+        });
+      }
+    }
+  );
 });
 
-router.post("/", (req, res) => {
+router.post("/animal/:id", validateAnimalId, async (req, res) => {
   const form = new formidable.IncomingForm().parse(
     req,
     async (err, fields, files) => {
@@ -72,42 +87,68 @@ router.post("/", (req, res) => {
         api_key: process.env.image_api_key,
         image: fs.createReadStream(files.image.path)
       };
-      request.post(
+      await request.post(
         {
           url: process.env.upload_url,
           formData,
-          header: { "Content-type": "application/x-www-form-urlencoded" }
+          header: { "Content-type": "multipart/form-data" }
         },
-        function optionalCallback(err, httpResponse, body) {
-          if (err) {
+        async (err, httpResponse, body) => {
+          if (err || httpResponse === 400 || httpResponse === 500) {
             res.status(400).json({ error: "Error uploading image " + err });
+          } else {
+            body = JSON.parse(body);
+            const newPic = {
+              animal_id: req.params.id,
+              img_id: body.image_id,
+              img_url: body.url
+            };
+            pictures.add(newPic).then(response => {
+              if (response) res.status(200).json(body);
+              else res.status(400).json({ error: "Error uploading image" });
+            });
           }
-          res.status(200).json(body);
         }
       );
     }
   );
 });
 
-function validateImageId(req, res, next) {
+function validateAnimalId(req, res, next) {
+  if (req.params.id) {
+    animals
+      .getById(req.params.id)
+      .then(animal => {
+        if (animal) next();
+        else res.status(404).json({ error: "Animal not found" });
+      })
+      .catch(error => {
+        res
+          .status(500)
+          .json({ error: "Error getting animal " + error.message });
+      });
+  } else res.status(400).json({ error: "No animal id" });
+}
+
+function validateImageAPI_Id(req, res, next) {
   if (req.params.id) {
     pictures
-      .getById(req.params.id)
+      .getByImgId(req.params.id)
       .then(picture => {
         if (picture) {
           next();
         } else {
           res
             .status(404)
-            .json({ message: `No picture found by id: ${req.params.id}` });
+            .json({ message: `No api image found by id: ${req.params.id}` });
         }
       })
       .catch(error => {
         res
           .status(500)
-          .json({ error: "Error getting image " + error.toString() });
+          .json({ error: "Error getting api image " + error.message });
       });
-  }
+  } else res.status(400).json({ error: "No api image id" });
 }
 
 module.exports = router;
