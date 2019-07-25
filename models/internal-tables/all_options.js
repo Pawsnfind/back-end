@@ -41,11 +41,15 @@ function getAllOptions() {
     let rolesQuery = db
     .select('*')
     .from('roles')
+    
+    let statesQuery = db
+    .select('*')
+    .from('states')
 
-    const promises = [sizeQuery, coatLengthQuery, subscriptionsQuery, breedsQuery, agesQuery, applicationStatusQuery, speciesQuery, animalStatusQuery, rolesQuery]
+    const promises = [sizeQuery, coatLengthQuery, subscriptionsQuery, breedsQuery, agesQuery, applicationStatusQuery, speciesQuery, animalStatusQuery, rolesQuery, statesQuery]
     return Promise.all(promises).then(results => {
        
-        let [size, coat_length, subscriptions, breeds, ages, application_status, species, animal_status, roles] = results
+        let [size, coat_length, subscriptions, breeds, ages, application_status, species, animal_status, roles, states] = results
         
         return {
             size: size,
@@ -56,7 +60,8 @@ function getAllOptions() {
             application_status: application_status,
             species: species,
             animal_status: animal_status,
-            roles: roles
+            roles: roles,
+            states: states
         }
     })
 
