@@ -27,8 +27,18 @@ router.get('/validate', checkEIN, (req, res) => {
 
 function checkEIN(req, res, next){
 
-    if (!req.body.ein)
+    if (!req.body.ein){
         res.status(400).json({error: 'No EIN provided'});
+        return;
+    }
+    
+    const parsed = parseInt(req.body.ein);
+ 
+    if (isNaN(parsed) || String(parsed).length !== 9){
+        res.status(400).json({error: 'Invalid EIN'});
+        return;
+    }
+    
     shelter.getByEIN(req.body.ein)
     .then(response =>{
         if (!response)
