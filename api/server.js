@@ -22,6 +22,7 @@ const iSizeRouter = require("../routes/internal/size.js");
 const iSpeciesRouter = require("../routes/internal/species.js");
 const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
+const iOptionsRouter = require("../routes/internal/all_options.js")
 
 server.use(helmet());
 server.use(express.json());
@@ -46,6 +47,7 @@ server.use("/api/internal/paws/size", iSizeRouter);
 server.use("/api/internal/paws/species", iSpeciesRouter);
 server.use("/api/internal/paws/states", iStatesRouter);
 server.use("/api/internal/paws/subscriptions", iSubscriptionsRouter);
+server.use("/api/internal/paws/options", iOptionsRouter)
 
 server.get("/", (req, res) => {
   res.send("It's Working! PAWS UP!");

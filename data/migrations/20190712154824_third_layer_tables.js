@@ -18,8 +18,6 @@ exports.up = function(knex, Promise) {
         .inTable('states')
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
-    tbl.string('phone_number', 512)
-        .notNullable();
     tbl.string('nickname', 256)
         .notNullable();
     tbl.integer('shelter_contact_id')
