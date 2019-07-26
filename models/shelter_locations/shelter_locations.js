@@ -35,6 +35,7 @@ module.exports = {
    .where({ 
       'shelter_id':id
     })
+   
  }
  
  
