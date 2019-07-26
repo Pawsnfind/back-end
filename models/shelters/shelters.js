@@ -3,6 +3,7 @@ module.exports = {
     getAllShelters,
     searchShelter,
     getById,
+    getByEIN,
     addShelter,
     updateShelter,
     deleteShelter,
@@ -13,22 +14,18 @@ function getAllShelters() {
     return db('shelters')
 }
 
-
 //search the shelter table
 function searchShelter(filter) {
     return db('shelters')
         .where(filter)
 }
 
-
 //get shelter name, location and contact
-
 function getById(id) {
     let query = db
         .select('shelters.id','shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
         .from('shelters')
         .innerJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
-
 
     if (id) {
         query.where('shelters.id', id).first()
@@ -52,9 +49,16 @@ function getById(id) {
     }
 }
 
+// get shelter by EIN
+function getByEIN(ein){
+    return db
+    .select('EIN')
+    .from('shelters')
+    .where('EIN', ein)
+    .first();
+}
+
 //get shelter location and the contact for that location
-
-
 function getShelterLocation(id) {
     return db
         .select('shelter_locations.nickname', 'shelter_locations.street_address',

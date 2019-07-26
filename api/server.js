@@ -11,6 +11,7 @@ const shelterRouter = require("../routes/shelters.js");
 const subscriptionRouter = require("../routes/subscriptions.js");
 const userRouter = require("../routes/users.js");
 const authRouter = require('../routes/auth.js');
+const einRouter = require('../routes/ein.js');
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
 const iAnimalStatusRouter = require("../routes/internal/animal_status.js");
@@ -34,7 +35,7 @@ server.use("/api/shelters", shelterRouter);
 server.use("/api/subscriptions", subscriptionRouter);
 server.use("/api/users", userRouter);
 server.use("/api/auth", authRouter);
-
+server.use("/api/ein", einRouter);
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);
 server.use("/api/internal/paws/animal_status", iAnimalStatusRouter);
