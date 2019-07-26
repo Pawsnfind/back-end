@@ -14,9 +14,13 @@ module.exports = {
     findMatch
 }
 
+
+
+
+//get full record for animal, including all ids
 function getById(id) {
     let query = db
-    .select('animals.id', 'animals.name', 'species.species', 'shelters.shelter', 'animal_status.animal_status', 'shelter_locations.nickname', 'pictures.img_url')
+    .select('animals.id', 'animals.name', 'species.id as species_id', 'species.species', 'shelters.id as shelter_id', 'shelters.shelter', 'animal_status.id as animal_status_id', 'animal_status.animal_status', 'shelter_locations.id as shelter_location_id', 'shelter_locations.nickname', 'pictures.img_id', 'pictures.img_url')
     .from('animals')
     .innerJoin('species', 'animals.species_id' , 'species.id')
     .innerJoin('shelters', 'animals.shelter_id', 'shelters.id')
@@ -34,7 +38,7 @@ function getById(id) {
                 animal.meta = meta;
                 animal.notes = notes;
                 animal.followers = followers;
-                animal.meta = animalToBody(animal.meta);
+                //animal.meta = animalToBody(animal.meta);
                 
                 return animal
             } else {
@@ -49,7 +53,7 @@ function getById(id) {
 //get animal followers by animal id
 function getAnimalFollowsById(id) {
     return db
-    .select('animal_follows.user_id', 'animal_follows.animal_id', 'users.email')
+    .select('animal_follows.user_id', 'animal_follows.animal_id', 'users.email', 'users.username')
     .from('animal_follows')
     .innerJoin('users', 'animal_follows.user_id', 'users.id')
     .innerJoin('animals', 'animal_follows.animal_id', 'animals.id')
@@ -58,8 +62,10 @@ function getAnimalFollowsById(id) {
 
 function getNotesByAnimalId(id) {
     return db
-    .select('id', 'notes', 'animal_id', 'shelter_user_id', 'created_at')
+    .select('animal_admin.id', 'animal_admin.notes', 'animal_admin.animal_id', 'animal_admin.shelter_user_id', 'users.username' ,'animal_admin.created_at')
     .from('animal_admin')
+    .leftJoin('shelter_users', 'animal_admin.shelter_user_id', 'shelter_users.id')
+    .leftJoin('users', 'shelter_users.user_id', 'users.id')
     .where('animal_id', id)
 }
 
@@ -67,7 +73,7 @@ function getNotesByAnimalId(id) {
 function getAnimalMetaById(id) {
     console.log(id)
     let meta = db
-    .select('animal_meta.id', 'animal_meta.animal_id', 'breeds.breed', 'animal_meta.is_mixed', 'ages.age','size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.coat_length', 'animal_meta.is_male as sex', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
+    .select('animal_meta.id', 'animal_meta.animal_id', 'breeds.id as breed_id','breeds.breed', 'animal_meta.is_mixed', 'ages.id as age_id', 'ages.age', 'size.id as size_id', 'size.size', 'animal_meta.health', 'animal_meta.color', 'coat_length.id as coat_length_id', 'coat_length.coat_length', 'animal_meta.is_male', 'animal_meta.is_house_trained', 'animal_meta.is_neutered_spayed', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_vaccinated', 'animal_meta.description')
     .from('animal_meta')
     .innerJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
     .innerJoin('ages', 'animal_meta.age_id', 'ages.id')
