@@ -2,8 +2,8 @@ const router = require("express").Router();
 const AllOptions = require('../../models/internal-tables/all_options')
 
 
-router.get("/", (req, res) => {
-    AllOptions.getAllOptions()
+router.get("/:id", (req, res) => {
+    AllOptions.getAllOptions(req.params.id)
       .then(options => {
         res.status(200).json(options);
       })
