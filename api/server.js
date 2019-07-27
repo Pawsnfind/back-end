@@ -27,7 +27,6 @@ const iOptionsRouter = require("../routes/internal/all_options.js")
  
 
 server.use(cors());
-
 server.use(helmet());
 server.use(express.json());
 
@@ -54,7 +53,7 @@ server.use("/api/internal/paws/subscriptions", iSubscriptionsRouter);
 server.use("/api/internal/paws/options", iOptionsRouter)
 
 server.get("/", (req, res) => {
-  res.send("It's Working! PAWS UP!");
+  res.json({ message: "It's Working! PAWS UP!" });
 });
 
 module.exports = server;
