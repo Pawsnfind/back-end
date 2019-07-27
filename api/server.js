@@ -53,7 +53,7 @@ server.use("/api/internal/paws/subscriptions", iSubscriptionsRouter);
 server.use("/api/internal/paws/options", iOptionsRouter)
 
 server.get("/", (req, res) => {
-  res.json({ message: "It's Working! PAWS UP!" });
+  res.send("It's Working! PAWS UP!");
 });
 
 module.exports = server;
