@@ -78,9 +78,9 @@ function getByShelterId(id) {
         return db
         .select('applications.id', 'animals.name as animal_name', 'users.email', 'application_status.application_status')
         .from('applications')
-        .innerJoin('animals', 'applications.animal_id', 'animals.id')
-        .innerJoin('users', 'applications.user_id', 'users.id')
-        .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+        .leftJoin('animals', 'applications.animal_id', 'animals.id')
+        .leftJoin('users', 'applications.user_id', 'users.id')
+        .leftJoin('application_status', 'applications.application_status_id', 'application_status.id')
         .where('applications.shelter_id', id)
     } else {
         return null
