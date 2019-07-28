@@ -413,8 +413,8 @@ function updateAnimal (req, res, next) {
     Animals.update(req.params.id, animal)
         .then (updated => {
             console.log('animals update ', updated)
-            res.status(200).json({updated})
-
+            //res.status(200).json({updated})
+            next();
         })
         .catch(error => {
             res.status(500).json({message: "Error updating animal", error: error.toString()})
@@ -460,7 +460,6 @@ router.post('/', addAnimal, (req, res) => {
         req.body.description ) {
             AnimalMeta.add(animal_meta)
             .then( id => {
-
                 res.status(201).json( req.body.animal_id )
             })
             .catch( error => {
