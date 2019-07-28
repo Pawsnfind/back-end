@@ -5,6 +5,7 @@ module.exports={
     getUsers,
     getUserById,
     getBy,
+    getByIdSimple,
     getUserByUsername,
     getUserByEmail,
     getUserBySubId,
@@ -51,7 +52,11 @@ function getUserMetaByMetaId(metaId) {
 
 /************* END OF CREATING USER RECORD WITH META ************/
 
-
+function getByIdSimple(id) {
+    return db('users')
+    .where({ id })
+    .first()
+}
 
 
 function getUsers() {

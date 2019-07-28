@@ -1,5 +1,7 @@
 const db = require('../../data/dbConfig.js')
 module.exports = {
+   getById,
+   getByUserId,
    getUsersByShelterId,
     getByRoleId,
     getByShelterRoleId,
@@ -7,6 +9,17 @@ module.exports = {
     deleteShelterUsers,
  }
 
+ function getByUserId(id) {
+    return db('shelter_users')
+    .where('user_id', id)
+    .first()
+ }
+
+ function getById(id) {
+    return db('shelter_users')
+    .where( { id })
+    .first()
+ }
  
  function getUsersByShelterId(id) {
     return db
@@ -37,15 +50,12 @@ module.exports = {
  function addShelterUsers(user) {
     return db('shelter_users')
     .insert(user, 'id')
-    .then( ([id]) => getByShelterRoleId(id))
+    .then( ([id]) => getById(id))
  }
  
 
- function deleteShelterUsers(shelterId,roleId) {
+ function deleteShelterUsers(id) {
     return db('shelter_users')
-    .where({
-        'shelter_id':shelterId,
-        'role_id':roleId
-    })
-    .del();
+    .where({ id })
+    .del()
  }

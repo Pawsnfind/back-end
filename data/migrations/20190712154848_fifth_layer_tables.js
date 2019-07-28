@@ -79,6 +79,7 @@ exports.up = function(knex, Promise) {
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
     tbl.integer('user_id')
+        .unique()
         .notNullable()
         .unsigned()
     tbl.timestamp('created_at', { precision: 6 })

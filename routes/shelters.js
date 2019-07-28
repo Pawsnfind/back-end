@@ -5,21 +5,102 @@ const ShelterContacts = require('../models/shelter_contacts/shelter_contacts.js'
 const ShelterLocation = require('../models/shelter_locations/shelter_locations.js')
 const ShelterUsers = require('../models/shelter_users/shelter_users.js')
 const ShelterFollows = require('../models/shelter_follows/shelter_follows.js')
+const UserMeta = require('../models/users_meta/users_meta.js')
+const Users = require('../models/users/users.js')
 
 
-//adding shelter by shelter manager
-router.post('/', (req, res) => {
-    const shelter = {shelter : req.body.shelter, EIN : req.body.EIN}
-    Shelters.addShelter(shelter)
-    .then( shelterId => {
-        res.status(201).json(shelterId.data[0])
-        //const shelterUser = {role_id : 1, shelter_id : shelterId, }
-        //ShelterUsers.addShelterUsers()
+
+/***  CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META ***/
+router.put('/:userId', validateUserId, validateNoAssociation, addShelter, addShelterUser, (req, res) => {
+    let change = {shelter_user_id: req.shelterUser.id}
+    UserMeta.updateUserMetaByUserId(req.params.userId, change)
+    .then( updateCount => {
+        if(updateCount > 0) {
+            res.status(200).json({message: `step 1 of onboarding success`})
+        }
+        else {
+            ShelterUsers.deleteShelterUsers(req.shelterUser.id)
+            Shelters.deleteShelter(req.shelter.id),
+            res.status(400).json({ message: "Error from step 1 of onboarding", error: error.toString() })
+
+        }
     })
-    .catch ( error => {
-        res.status(500).json({ message: "Error adding", error: error.toString() })
+    .catch( error => {
+        
+        ShelterUsers.deleteShelterUsers(req.shelterUser.id)
+        Shelters.deleteShelter(req.shelter.id),
+        res.status(500).json({ message: "Error adding shelter, add shelter user, and update user", error: error.toString() })
     })
 })
+
+
+function addShelter(req, res, next) {
+    const shelter = {shelter : req.body.shelter, EIN : req.body.EIN}
+    Shelters.addShelter(shelter)
+    .then( newShelter => {
+        if(newShelter) {
+            req.shelter = newShelter
+            next();
+        } else {
+            res.status(400).json({ message: "Error adding shelter", error: error.toString() })
+        }
+    })
+    .catch ( error => {
+        res.status(500).json({ message: "Error adding shelter", error: error.toString() })
+    })
+}
+
+function addShelterUser(req, res, next) {
+    const shelterUser = {role_id: 1, shelter_id: req.shelter.id, user_id: req.params.userId}
+        ShelterUsers.addShelterUsers(shelterUser)
+        .then( newShelterUser => {
+            if(newShelterUser) {
+                req.shelterUser = newShelterUser
+                console.log(req.shelterUser)
+                next();
+            } else {
+                Shelters.deleteShelter(req.shelter.id)
+                res.status(400).json({ message: "Error adding shelter and shelter User", error: error.toString() })
+            }
+            
+        })
+        .catch( error =>{
+            Shelters.deleteShelter(req.shelter.id)
+            res.status(500).json({ message: "Error adding shelter and shelter user", error: error.toString() })
+        
+        })
+}
+
+function validateUserId(req, res, next) {
+    Users.getByIdSimple(req.params.userId)
+    .then( user => {
+        if (user) {
+            next();
+        } else {
+            res.status(404).json({ message: "Error finding user", error: error.toString() })
+        }
+    })
+    .catch (error => {
+        res.status(500).json({ message: "Error happened valid user id", error: error.toString() })
+    })
+}
+
+function validateNoAssociation(req, res, next) {
+    ShelterUsers.getByUserId(req.params.userId)
+    .then(shelterUser => {
+        if(!shelterUser) {
+            next();
+        } else {
+            res.status(400).json({ message: "User already associate with another shelter", error: error.toString() })
+        }
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error happened validate No association", error: error.toString() })
+    })
+}
+
+/******** END OF CREATING SHELTER with ADDING SHELTER USER AND UPDATING USER META  *********/
+
 
 
 //get route to get the shelter name including the shelter contact, shelter location and 
