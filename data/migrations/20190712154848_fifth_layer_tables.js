@@ -81,8 +81,6 @@ exports.up = function(knex, Promise) {
     tbl.integer('user_id')
         .notNullable()
         .unsigned()
-    tbl.string('username')
-        .notNullable()
     tbl.timestamp('created_at', { precision: 6 })
         .defaultTo(knex.fn.now(6));
   })

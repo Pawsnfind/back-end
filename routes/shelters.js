@@ -7,6 +7,21 @@ const ShelterUsers = require('../models/shelter_users/shelter_users.js')
 const ShelterFollows = require('../models/shelter_follows/shelter_follows.js')
 
 
+//adding shelter by shelter manager
+router.post('/', (req, res) => {
+    const shelter = {shelter : req.body.shelter, EIN : req.body.EIN}
+    Shelters.addShelter(shelter)
+    .then( shelterId => {
+        res.status(201).json(shelterId.data[0])
+        //const shelterUser = {role_id : 1, shelter_id : shelterId, }
+        //ShelterUsers.addShelterUsers()
+    })
+    .catch ( error => {
+        res.status(500).json({ message: "Error adding", error: error.toString() })
+    })
+})
+
+
 //get route to get the shelter name including the shelter contact, shelter location and 
 //the contact for that location, shelter followers
 router.get('/:id', validateShelterId, (req, res) => {
@@ -95,6 +110,16 @@ router.get('/:id/users', validateShelterId, (req, res) => {
         .catch(error => {
             res.status(500).json({ message: 'could not get the user in the shelter', error: error.toString() })
         })
+})
+
+router.post('/:id/user', validateShelterId, (req, res) => {
+    ShelterUsers.addShelterUsers(user)
+    .then(user => {
+        res.status(200).json(user)
+    })
+    .catch(error => {
+        res.status(500).json({message: "Error adding shelter user", error: error.toString()})
+    })
 })
 
 //get the match for a shelter users who follows the shelter 

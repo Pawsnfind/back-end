@@ -81,11 +81,11 @@ function getShelterFollows(id) {
 
 }
 
-//add a new shelter
+//add a new shelter with promises of adding shelter user and update user
 function addShelter(shelter) {
     return db('shelters')
         .insert(shelter, 'id')
-        .then(([id]) => getById(id))
+       // .then(([id]) => getById(id))
 }
 
 //update shelter table
