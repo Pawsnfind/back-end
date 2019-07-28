@@ -22,10 +22,10 @@ function getById(id) {
     let query = db
     .select('applications.id', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', 'applications.user_id', 'application_meta.*') 
     .from('applications')
-    .innerJoin('animals', 'applications.animal_id', 'animals.id')
-    .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
-    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
-    .innerJoin('application_meta', 'applications.id', 'application_meta.application_id')
+    .leftJoin('animals', 'applications.animal_id', 'animals.id')
+    .leftJoin('shelters', 'applications.shelter_id', 'shelters.id')
+    .leftJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .leftJoin('application_meta', 'applications.id', 'application_meta.application_id')
 
     if(id) {
         query.where('applications.id', id).first()
