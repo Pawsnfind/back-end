@@ -5,7 +5,7 @@ const request = require("request");
 router.get('/validate/:ein', checkEIN, (req, res) => {
      request.get(
         {
-          url: `https://www.melissa.com/v2/lookups/npo/ein?ein=${req.params.ein}&fmt=json`,
+          url: `https://www.melissa.com/v2/lookups/npo/ein?id=${process.env.melissa_key}&ein=${req.params.ein}&fmt=json`,
           header: { "Content-type": "application/json" }
         },
         async (err, httpResponse, body) => {
