@@ -105,7 +105,8 @@ router.post("/animal/:id", validateAnimalId, async (req, res) => {
             };
             pictures.add(newPic).then(response => {
               if (response) res.status(200).json(body);
-              else res.status(400).json({ error: "Error uploading image" });
+              else 
+              res.status(400).json({ error: "Error uploading image" });
             });
           }
         }
