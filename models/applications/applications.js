@@ -65,7 +65,7 @@ function getApplicationNotes(application_id) {
 
 function getByUserId(id) {
     return db
-    .select('applications.id', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status')
+    .select('applications.id', 'applications.created_at', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status')
     .from('applications')
     .innerJoin('animals', 'applications.animal_id', 'animals.id')
     .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
