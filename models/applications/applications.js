@@ -20,7 +20,7 @@ function getAll() {
 // get by application id
 function getById(id) {
     let query = db
-    .select('applications.id', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', 'applications.application_status_id', 'applications.user_id', 'application_meta.*') 
+    .select('applications.id', 'applications.created_at', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', 'applications.application_status_id', 'applications.user_id', 'application_meta.*') 
     .from('applications')
     .leftJoin('animals', 'applications.animal_id', 'animals.id')
     .leftJoin('shelters', 'applications.shelter_id', 'shelters.id')
