@@ -60,6 +60,7 @@ function getShelterLocation(id) {
     return db
         .select('shelter_locations.id','shelter_locations.nickname', 'shelter_locations.street_address',
             'shelter_locations.city', 'states.id as state_id', 'states.state', 'shelter_locations.zipcode','shelter_contacts.name', 'shelter_locations.shelter_contact_id')
+        .orderBy('shelter_locations.id')   
         .from('shelter_locations')
         .innerJoin('states', 'shelter_locations.state_id', 'states.id')
         .innerJoin('shelter_contacts', 'shelter_locations.shelter_contact_id', 'shelter_contacts.id')
