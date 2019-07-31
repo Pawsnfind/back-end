@@ -1,28 +1,22 @@
 const router = require("express").Router();
 const shelter = require('../models/shelters/shelters');
-const request = require("request");
+
+const axios = require('axios')
 
 router.get('/validate/:ein', checkEIN, (req, res) => {
-     request.get(
-        {
-          url: `https://www.melissa.com/v2/lookups/npo/ein?id=${process.env.melissa_key}&ein=${req.params.ein}&fmt=json`,
-          header: { "Content-type": "application/json" }
-        },
-        async (err, httpResponse, body) => {
-          if (err || httpResponse.statusCode === 400 || httpResponse === 500) {
-            res.status(400).json(body);
-            return;
-          } 
-          else 
-          {
-            body = JSON.parse(body);
-            if (body.length === 0)
-                res.status(400).json({error: 'Invalid EIN'});
-            else
-                res.status(200).json(body);
-          }
-        }
-      );
+
+  const url = `https://projects.propublica.org/nonprofits/api/v2/organizations/${req.params.ein}.json`;
+  axios
+    .get(url)
+     .then( response => {
+      if (!response.data.organization)
+          res.status(400).json({error: 'Invalid EIN'});
+      else
+          res.status(200).json(response.data.organization);
+     })
+     .catch(err => {
+      res.status(400).json({error: 'Invalid EIN'});
+     })
 })
 
 function checkEIN(req, res, next){

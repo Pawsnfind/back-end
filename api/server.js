@@ -12,6 +12,7 @@ const subscriptionRouter = require("../routes/subscriptions.js");
 const userRouter = require("../routes/users.js");
 const authRouter = require('../routes/auth.js');
 const einRouter = require('../routes/ein.js');
+const dashboardRouter = require("../routes/dashboard.js")
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
 const iAnimalStatusRouter = require("../routes/internal/animal_status.js");
@@ -37,6 +38,7 @@ server.use("/api/subscriptions", subscriptionRouter);
 server.use("/api/users", userRouter);
 server.use("/api/auth", authRouter);
 server.use("/api/ein", einRouter);
+server.use('/api/dashboard', dashboardRouter)
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);
 server.use("/api/internal/paws/animal_status", iAnimalStatusRouter);
