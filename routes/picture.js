@@ -103,7 +103,7 @@ router.post("/", async (req, res) => {
               img_url: body.url
             };
  
-              res.status(200).json(newPic);
+              res.status(200).json(body);
         
           }
         }
