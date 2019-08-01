@@ -28,12 +28,12 @@ const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 const iOptionsRouter = require("../routes/internal/all_options.js")
 
-server.use(cors());
+
 
 
 server.use(helmet());
 server.use(express.json());
-
+server.use(cors());
 
 server.use("/api/animals", animalRouter);
 server.use("/api/applications", applicationRouter);
