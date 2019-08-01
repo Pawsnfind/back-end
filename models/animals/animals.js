@@ -17,7 +17,7 @@ module.exports = {
 
 
 function getNextId(){
-    return db.raw("select curval('animals_id_seq')");
+    return db.raw("select currval('animals_id_seq')");
 }
 
 //get full record for animal, including all ids
