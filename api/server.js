@@ -33,7 +33,7 @@ server.use(express.json());
 
 server.use(cors(
 {
-    origin: ['*'],
+    origin: ['https://staging2-pawsnfind.netlify.com'],
     credentials: true
 }));
 
