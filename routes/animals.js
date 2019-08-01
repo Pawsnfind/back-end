@@ -7,6 +7,16 @@ const Shelter = require('../models/shelters/shelters.js')
 const Pictures = require('../models/pictures/pictures.js')
 
 
+router.get('/nextid', (req, res) => {
+    Animals.getNextId()
+    .then( nextID => {
+        res.status(200).json({id: nextID})
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting next ID", error: error.toString()})
+    })
+})
+
 // gets all animals
 router.get('/', (req, res) => {
     Animals.getAll()
