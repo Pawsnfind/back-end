@@ -363,6 +363,16 @@
 
 ```
 
+---
+
+### Options Table
+
+`/api/internal/paws/options`  
+
+| Method | Endpoint                | Access Control      | Description                                        |
+| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
+| GET    | `/`                     | Developers          | Returns all options                                |
+
 #### Actions
 
 `getAll()` -> Returns all items

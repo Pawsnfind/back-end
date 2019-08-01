@@ -460,7 +460,6 @@ router.post('/', addAnimal, (req, res) => {
         req.body.description ) {
             AnimalMeta.add(animal_meta)
             .then( id => {
-
                 res.status(201).json( req.body.animal_id )
             })
             .catch( error => {

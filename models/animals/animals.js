@@ -20,13 +20,17 @@ module.exports = {
 //get full record for animal, including all ids
 function getById(id) {
     let query = db
-    .select('animals.id', 'animals.name', 'species.id as species_id', 'species.species', 'shelters.id as shelter_id', 'shelters.shelter', 'animal_status.id as animal_status_id', 'animal_status.animal_status', 'shelter_locations.id as shelter_location_id', 'shelter_locations.nickname', 'pictures.img_id', 'pictures.img_url')
+
+    .select('animals.id', 'animals.name', 'species.id as species_id', 'species.species', 'shelters.id as shelter_id', 'shelters.shelter', 
+    'animal_status.id as animal_status_id', 'animal_status.animal_status', 'shelter_locations.id as shelter_location_id', 
+    'shelter_locations.nickname', 'pictures.img_id', 'pictures.img_url')
+
     .from('animals')
-    .innerJoin('species', 'animals.species_id' , 'species.id')
-    .innerJoin('shelters', 'animals.shelter_id', 'shelters.id')
-    .innerJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
-    .innerJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
-    .innerJoin('pictures', 'animals.profile_img_id', 'pictures.id')
+    .leftJoin('species', 'animals.species_id' , 'species.id')
+    .leftJoin('shelters', 'animals.shelter_id', 'shelters.id')
+    .leftJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
+    .leftJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
 
     if(id) {
         query.where('animals.id', id).first();
@@ -114,10 +118,10 @@ function getAnimalsByShelterId(id) {
     return db
     .select('animals.id', 'animals.name', 'species.species', 'animal_status.animal_status', 'shelter_locations.nickname', 'pictures.img_url')
     .from('animals')
-    .innerJoin('species', 'animals.species_id' , 'species.id')
-    .innerJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
-    .innerJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
-    .innerJoin('pictures', 'animals.profile_img_id', 'pictures.id')
+    .leftJoin('species', 'animals.species_id' , 'species.id')
+    .leftJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
+    .leftJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
     .where('animals.shelter_id', id)
 }
 
