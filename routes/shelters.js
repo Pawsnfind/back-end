@@ -209,7 +209,6 @@ router.post('/:id/location', validateShelterId, (req, res) => {
                     city: req.body.city,
                     state_id: req.body.state_id,
                     zipcode: req.body.zipcode,
-                    phone_number: req.body.phone_number,
                     shelter_contact_id: req.body.shelter_contact_id
                 }
 
@@ -219,7 +218,6 @@ router.post('/:id/location', validateShelterId, (req, res) => {
                     shelterLoc.city &&
                     shelterLoc.state_id &&
                     shelterLoc.zipcode &&
-                    shelterLoc.phone_number &&
                     shelterLoc.shelter_contact_id) {
 
                     ShelterLocation.addShelterLocations(shelterLoc)
