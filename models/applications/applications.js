@@ -20,7 +20,7 @@ function getAll() {
 // get by application id
 function getById(id) {
     let query = db
-    .select('applications.id', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', 'applications.user_id', 'application_meta.*') 
+    .select('applications.id', 'applications.created_at', 'applications.animal_id', 'animals.name as animal_name', 'applications.shelter_id', 'shelters.shelter', 'application_status.application_status', 'applications.application_status_id', 'applications.user_id', 'application_meta.id as application_meta_id', 'application_meta.*') 
     .from('applications')
     .innerJoin('animals', 'applications.animal_id', 'animals.id')
     .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
@@ -52,7 +52,7 @@ function getById(id) {
 function getApplicationNotes(application_id) {
     if(application_id) {
         return db
-        .select('application_admin.notes', 'users.username as by', 'application_admin.created_at')
+        .select('application_admin.notes', 'application_admin.shelter_user_id', 'users.username as by', 'application_admin.created_at')
         .from('application_admin')
         .innerJoin('shelter_users', 'application_admin.shelter_user_id', 'shelter_users.id')
         .innerJoin('users', 'shelter_users.user_id', 'users.id')

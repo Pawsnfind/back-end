@@ -29,7 +29,7 @@ function getDashboard(id) {
 
         return {
             shelter_info : shelter,
-            animal_Count : animalCount,
+            animal_count : animalCount,
             donation_30 : donation30,
             application_30 : application30,
             follower_count : followerCount,
@@ -75,7 +75,7 @@ function getDonationsByMonth(id) {
     .groupBy('month')
     .groupBy('year')
     .where('donations.shelter_id', id)
-    .orderBy(['year', {column : 'month', order: 'desc'}])
+    .orderBy([{column: 'year', order: 'desc'} , {column : 'month', order: 'desc'}])
 }
 
 //get total donations for the last 30 days
@@ -93,7 +93,7 @@ function getDonations30Days(id) {
 function getApplication30Days(id) {
     return db
     .select('shelter_id')
-    .count('* as number of applications')
+    .count('*')
     .from('applications')
     .groupBy('shelter_id')
     .where('shelter_id', id)
@@ -105,12 +105,12 @@ function getApplicationsByMonth(id) {
 
     return db
     .select(db.raw("extract(month from created_at) as month"), db.raw("extract(year from created_at) as year"))
-    .count('* as number of applications')
+    .count('* as total')
     .from('applications')
     .groupBy('month')   
     .groupBy('year') 
     .where('applications.shelter_id', id)
-    .orderBy(['year',{column : 'month', order: 'desc'}]) 
+    .orderBy([{column: 'year', order: 'desc'} , {column : 'month', order: 'desc'}]) 
 }
 
 //get follower counts
@@ -129,7 +129,7 @@ function getRecentApplications(id) {
     .leftJoin('application_status', 'applications.application_status_id', 'application_status.id')
     .leftJoin('users', 'applications.user_id', 'users.id')
     .where('applications.shelter_id', id)
-    .orderBy('applications.created_at','desc')
+    .orderBy('applications.id','desc')
     .limit(5)
 }
 
