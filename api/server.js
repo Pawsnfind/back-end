@@ -35,12 +35,13 @@ server.use(cors());
 server.use(helmet());
 server.use(express.json());
  
-
- server.all('/', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+server.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
- });
+});
+
 server.use("/api/animals", animalRouter);
 server.use("/api/applications", applicationRouter);
 server.use("/api/donations", donationRouter);
