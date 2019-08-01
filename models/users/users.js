@@ -5,6 +5,7 @@ module.exports={
     getUsers,
     getUserById,
     getBy,
+    getByIdSimple,
     getUserByUsername,
     getUserByEmail,
     getUserBySubId,
@@ -13,6 +14,50 @@ module.exports={
     updateUser,
     removeUser,
 }
+
+
+/******** CREATE USER RECORD with USER META *********/
+
+async function createUser(user) {
+    let query  = await db('users')
+    .insert(user, 'id')
+    .then(([id]) => getUserById(id))
+
+    const promises = [addUserMeta({user_id : query.id})]
+
+    return Promise.all(promises).then( results => {
+        const [meta] = results
+        user = query;
+
+        if(user) {
+            user.meta = meta
+            return user
+        } else {
+            return null;
+        }
+    })
+}
+
+function addUserMeta(userMeta) {
+    return db('user_meta')
+    .insert(userMeta, 'id')
+    .then(([id]) => id ? getUserMetaByMetaId(id) : null)
+}
+
+function getUserMetaByMetaId(metaId) {
+    return db('user_meta')
+    .where('id', metaId)
+    .first()
+}
+
+/************* END OF CREATING USER RECORD WITH META ************/
+
+function getByIdSimple(id) {
+    return db('users')
+    .where({ id })
+    .first()
+}
+
 
 function getUsers() {
     return db 
@@ -141,7 +186,7 @@ function getUserBySubId(sub_id) {
     .where( 'users.sub_id', sub_id )
     .first()
 }
-
+/*
 function createUser(user) {
     return db('users')
     .insert(user)
@@ -150,6 +195,7 @@ function createUser(user) {
 
     // .then( ([id]) => getUserById(id) )
 }
+*/
 
 function updateUser(id, user) {
     return db('users')

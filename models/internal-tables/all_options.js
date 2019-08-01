@@ -79,5 +79,8 @@ function getShelterLocations(id) {
 function getShelterContacts(id) {
     return db('shelter_contacts')
     .where('shelter_id', id)
+
 }
+
+
 

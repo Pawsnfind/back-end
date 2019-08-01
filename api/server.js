@@ -10,7 +10,11 @@ const donationRouter = require("../routes/donations.js");
 const shelterRouter = require("../routes/shelters.js");
 const subscriptionRouter = require("../routes/subscriptions.js");
 const userRouter = require("../routes/users.js");
+const authRouter = require('../routes/auth.js');
+const einRouter = require('../routes/ein.js');
+const dashboardRouter = require("../routes/dashboard.js")
 const pictureRouter = require("../routes/picture");
+
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
 const iAnimalStatusRouter = require("../routes/internal/animal_status.js");
@@ -24,9 +28,8 @@ const iStatesRouter = require("../routes/internal/states.js");
 const iSubscriptionsRouter = require("../routes/internal/subscriptions.js");
 const iOptionsRouter = require("../routes/internal/all_options.js")
 
- 
-
 server.use(cors());
+
 
 server.use(helmet());
 server.use(express.json());
@@ -38,6 +41,11 @@ server.use("/api/donations", donationRouter);
 server.use("/api/shelters", shelterRouter);
 server.use("/api/subscriptions", subscriptionRouter);
 server.use("/api/users", userRouter);
+
+server.use("/api/auth", authRouter);
+server.use("/api/ein", einRouter);
+server.use('/api/dashboard', dashboardRouter)
+
 server.use("/api/pictures", pictureRouter);
 
 //internal routes

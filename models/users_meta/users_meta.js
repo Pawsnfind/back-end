@@ -10,6 +10,7 @@ module.exports={
     getUserMetaByCity,
     createUserMeta,
     updateUserMeta,
+    updateUserMetaByUserId,
     deleteUserMeta,
 }
 
@@ -99,6 +100,12 @@ function updateUserMeta(id, user_meta) {
     return db('user_meta')
     .where({ id })
     .update(user_meta)
+}
+
+function updateUserMetaByUserId(id, change) {
+    return db('user_meta')
+    .where('user_id', id)
+    .update(change)
 }
 
 function deleteUserMeta(id){

@@ -6,16 +6,16 @@ exports.seed = async function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('shelter_users').insert([
-        {role_id: 1, shelter_id:1, username: 'abcabc', user_id: 1},
-        {role_id: 1, shelter_id:2, username: 'trialtrial', user_id: 2},
-        {role_id: 1, shelter_id:3, username: '123123', user_id: 3},
-        {role_id: 1, shelter_id:4, username: 'test12test12', user_id: 4},
-        {role_id: 1, shelter_id:5, username: 'hung', user_id: 5},
-        {role_id: 1, shelter_id:6, username: 'lenna', user_id: 6},
-        {role_id: 1, shelter_id:7, username: 'chris', user_id: 7},
-        {role_id: 1, shelter_id:8, username: 'sarah', user_id: 8},
-        {role_id: 1, shelter_id:9, username: 'james', user_id: 9},
-        {role_id: 1, shelter_id:10, username: 'aruna', user_id: 10}
+        {role_id: 1, shelter_id:1, user_id: 1},
+        {role_id: 1, shelter_id:2, user_id: 2},
+        {role_id: 1, shelter_id:3, user_id: 3},
+        {role_id: 1, shelter_id:4, user_id: 4},
+        {role_id: 1, shelter_id:5, user_id: 5},
+        {role_id: 1, shelter_id:6, user_id: 6},
+        {role_id: 1, shelter_id:7, user_id: 7},
+        {role_id: 1, shelter_id:8, user_id: 8},
+        {role_id: 1, shelter_id:9, user_id: 9},
+        {role_id: 1, shelter_id:10, user_id: 10}
       ]);
     });
 };

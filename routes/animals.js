@@ -166,7 +166,6 @@ router.delete('/pictures/:id', (req, res) => {
 //update picture by id
 router.put('/pictures/:id', (req, res) => {
 
-
     const pic = {
         id: req.params.id,
         animal_id: req.body.animal_id,
@@ -415,6 +414,7 @@ function updateAnimal (req, res, next) {
             console.log('animals update ', updated)
             //res.status(200).json({updated})
             next();
+
         })
         .catch(error => {
             res.status(500).json({message: "Error updating animal", error: error.toString()})

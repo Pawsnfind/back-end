@@ -107,13 +107,10 @@ router.post('/:id/note', validateApplicationId, (req, res) => {
 
 //update notes for an application
 router.put('/note/:id', validateNoteId, (req, res) => {
-
-
     const application_admin = {
         notes: req.body.notes,
 
     }
-
     if (application_admin.notes) {
 
         AppAdmin.update(req.params.id, application_admin)
@@ -128,8 +125,6 @@ router.put('/note/:id', validateNoteId, (req, res) => {
         res.status(400).json({ message: 'Please enter all the required columns' })
 
     }
-
-
 })
 
 //delete notes for an application
@@ -197,8 +192,6 @@ router.post('/', addApplication, (req, res) => {
         ref_relationship_2: req.body.ref_relationship_2,
         is_declaration: req.body.is_declaration
     }
-
-
 
     AppMeta.add(application_meta)
         .then(id => {

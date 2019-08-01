@@ -3,16 +3,90 @@ module.exports = {
     getAllShelters,
     searchShelter,
     getById,
+    getByIdSimple,
+    getByEIN,
     addShelter,
     updateShelter,
     deleteShelter,
 }
 
+
+function addShelter(shelter) {
+    return db('shelters')
+    .insert(shelter, "id")
+    .then( ([id]) => getByIdSimple(id))
+}
+
+function getByIdSimple(id) {
+    return db('shelters')
+    .where({ id })
+    .first()
+}
+
+/******** CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META  *********/
+/*
+function addShelter(newShelterInfo) {
+    let newShelter = {shelter : newShelterInfo.shelter, EIN : newShelterInfo.EIN}
+    let query =  db('shelters')
+        .insert(newShelter, 'id')
+        .then(([id]) => getById(id))
+
+    const promises = [query, addShelterUser({role_id : 1, shelter_id : query.id, user_id : newShelterInfo.user_id })]
+
+    return Promise.all(promises).then(results => {
+        const [shelter, shelterUser] = results;
+
+        if(shelter) {
+            shelter.shelterUser = shelterUser;
+            return shelter
+        } else {
+            return null
+        }
+    })
+}
+
+function addShelterUser(shelterUser) {
+    let newShelterUser = {role_id : shelterUser.role_id, shelter_id: shelterUser.shelter_id}
+    let query = db('shelter_users')
+    .insert(newShelterUser, "id")
+    .then(([id]) => getShelterUserById(id))
+
+    const promises = [query, updateUserMeta(shelterUser.user_id, {shelter_user_id : query.id})]
+   
+    return Promise.all(promises).then(results => {
+        const [shelter_user, update_count] = results;
+
+        if(shelter_user) {
+            return shelter_user
+        } else {
+            return null
+        }
+    })
+}
+
+function updateUserMeta(userId, change) {
+    
+    return db('user_meta')
+    .where('user_id', userId )
+    .update(change)
+
+}
+
+function getShelterUserById(id) {
+    return db('shelter_users')
+    .where({ id })
+    .first()
+}
+*/
+/******** END OF CREATING SHELTER with ADDING SHELTER USER AND UPDATING USER META  *********/
+
+
+
+
 //get all the info from shelters table
 function getAllShelters() {
     return db('shelters')
 }
-
 
 //search the shelter table
 function searchShelter(filter) {
@@ -20,15 +94,12 @@ function searchShelter(filter) {
         .where(filter)
 }
 
-
 //get shelter name, location and contact
-
 function getById(id) {
     let query = db
         .select('shelters.id','shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
         .from('shelters')
         .innerJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
-
 
     if (id) {
         query.where('shelters.id', id).first()
@@ -52,9 +123,16 @@ function getById(id) {
     }
 }
 
+// get shelter by EIN
+function getByEIN(ein){
+    return db
+    .select('EIN')
+    .from('shelters')
+    .where('EIN', ein)
+    .first();
+}
+
 //get shelter location and the contact for that location
-
-
 function getShelterLocation(id) {
     return db
         .select('shelter_locations.nickname', 'shelter_locations.street_address',
@@ -77,12 +155,6 @@ function getShelterFollows(id) {
 
 }
 
-//add a new shelter
-function addShelter(shelter) {
-    return db('shelters')
-        .insert(shelter, 'id')
-        .then(([id]) => getById(id))
-}
 
 //update shelter table
 function updateShelter(id, change) {

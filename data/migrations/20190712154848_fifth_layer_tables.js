@@ -79,10 +79,9 @@ exports.up = function(knex, Promise) {
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
     tbl.integer('user_id')
+        .unique()
         .notNullable()
         .unsigned()
-    tbl.string('username')
-        .notNullable()
     tbl.timestamp('created_at', { precision: 6 })
         .defaultTo(knex.fn.now(6));
   })
@@ -119,6 +118,8 @@ exports.up = function(knex, Promise) {
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
     tbl.integer('profile_img_id')
+    tbl.timestamp('created_at', { precision: 6 })
+        .defaultTo(knex.fn.now(6));
   })
 };
 

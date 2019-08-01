@@ -20,9 +20,11 @@ module.exports = {
 //get full record for animal, including all ids
 function getById(id) {
     let query = db
+
     .select('animals.id', 'animals.name', 'species.id as species_id', 'species.species', 'shelters.id as shelter_id', 'shelters.shelter', 
     'animal_status.id as animal_status_id', 'animal_status.animal_status', 'shelter_locations.id as shelter_location_id', 
     'shelter_locations.nickname', 'pictures.img_id', 'pictures.img_url')
+
     .from('animals')
     .leftJoin('species', 'animals.species_id' , 'species.id')
     .leftJoin('shelters', 'animals.shelter_id', 'shelters.id')
