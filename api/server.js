@@ -35,7 +35,7 @@ server.use(helmet());
 server.use(express.json());
  
 const corsOptions = {
-  origin: 'https://yourdomain.com'
+  origin: 'https://staging2-pawsnfind.netlify.com'
 }
 
 server.use(cors(corsOptions));
