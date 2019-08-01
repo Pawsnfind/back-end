@@ -15,7 +15,9 @@ module.exports = {
 }
 
 
-
+function getNextId(){
+    return db.raw("select nextval('animals_id_seq')");
+}
 
 //get full record for animal, including all ids
 function getById(id) {
