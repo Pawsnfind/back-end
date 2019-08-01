@@ -98,7 +98,7 @@ router.post("/", async (req, res) => {
           } else {
             body = JSON.parse(body);
             const newPic = {
-              animal_id: req.params.id,
+          
               img_id: body.image_id,
               img_url: body.url
             };
