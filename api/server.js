@@ -33,8 +33,13 @@ const iOptionsRouter = require("../routes/internal/all_options.js")
 
 server.use(helmet());
 server.use(express.json());
-server.use(cors());
-server.options('*', cors()); 
+ 
+const corsOptions = {
+  origin: 'https://yourdomain.com'
+}
+
+server.use(cors(corsOptions));
+ 
 server.use("/api/animals", animalRouter);
 server.use("/api/applications", applicationRouter);
 server.use("/api/donations", donationRouter);
