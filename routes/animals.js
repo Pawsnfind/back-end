@@ -17,6 +17,24 @@ router.get('/nextid', (req, res) => {
     })
 })
 
+//find shelter and animal match by ids
+router.get('/:animalId/match/shelter/:shelterId', (req, res) => {
+    Animals.findAnimalShelterMatch(req.params.animalId, req.params.shelterId)
+    .then( match => {
+        if(match) {
+            res.status(200).json(match)
+        }
+        else {
+            res.status(404).json({message: "no match found"})
+        }
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting next ID", error: error.toString()})
+    })
+})
+
+
+
 // gets all animals
 router.get('/', (req, res) => {
     Animals.getAll()
@@ -230,6 +248,8 @@ router.get('/:id/admin', validateAnimalId, (req, res) => {
         res.status(500).json({message: `Error getting notes of animal with id ${req.params.id}`})
     })
 })
+
+
 
 
 //get specific admin note of a specific animal using animal id and admin id

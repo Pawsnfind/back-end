@@ -12,7 +12,8 @@ module.exports = {
     remove,
     update,
     add, 
-    findMatch
+    findMatch, //for animal and animal_meta
+    findAnimalShelterMatch
 }
 
 
@@ -162,6 +163,15 @@ function findMatch(animalId, metaId) {
     .where({ 
         animal_id: animalId,
         id: metaId  
+    })
+    .first()
+}
+
+function findAnimalShelterMatch(animalId, shelterId) {
+    return db('animals')
+    .where({
+        shelter_id : shelterId,
+        id : animalId
     })
     .first()
 }
