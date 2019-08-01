@@ -36,7 +36,11 @@ server.use(helmet());
 server.use(express.json());
  
 
- 
+ server.all('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+ });
 server.use("/api/animals", animalRouter);
 server.use("/api/applications", applicationRouter);
 server.use("/api/donations", donationRouter);
