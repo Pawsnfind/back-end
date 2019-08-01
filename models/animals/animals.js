@@ -17,7 +17,7 @@ module.exports = {
 
 
 function getNextId(){
-    return db.raw("select currval(pg_get_serial_sequence('animals', 'id'))");
+    return db.raw("SELECT last_value FROM animals_id_seq");
 }
 
 //get full record for animal, including all ids
