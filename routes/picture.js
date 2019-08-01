@@ -74,6 +74,43 @@ router.delete("/image/:id", validateImageAPI_Id, async (req, res) => {
     }
   );
 });
+router.post("/", async (req, res) => {
+  const form = new formidable.IncomingForm().parse(
+    req,
+    async (err, fields, files) => {
+      if (err) {
+        console.error("Error", err);
+        throw err;
+      }
+      const formData = {
+        api_key: process.env.image_api_key,
+        image: fs.createReadStream(files.image.path)
+      };
+      await request.post(
+        {
+          url: process.env.upload_url,
+          formData,
+          header: { "Content-type": "multipart/form-data" }
+        },
+        async (err, httpResponse, body) => {
+          if (err || httpResponse === 400 || httpResponse === 500) {
+            res.status(400).json({ error: "Error uploading image " + err });
+          } else {
+            body = JSON.parse(body);
+            const newPic = {
+              animal_id: req.params.id,
+              img_id: body.image_id,
+              img_url: body.url
+            };
+ 
+              res.status(200).json(newPic);
+        
+          }
+        }
+      );
+    }
+  );
+});
 
 router.post("/animal/:id", validateAnimalId, async (req, res) => {
   const form = new formidable.IncomingForm().parse(
@@ -115,43 +152,7 @@ router.post("/animal/:id", validateAnimalId, async (req, res) => {
   );
 });
 
-router.post("/animal", async (req, res) => {
-  const form = new formidable.IncomingForm().parse(
-    req,
-    async (err, fields, files) => {
-      if (err) {
-        console.error("Error", err);
-        throw err;
-      }
-      const formData = {
-        api_key: process.env.image_api_key,
-        image: fs.createReadStream(files.image.path)
-      };
-      await request.post(
-        {
-          url: process.env.upload_url,
-          formData,
-          header: { "Content-type": "multipart/form-data" }
-        },
-        async (err, httpResponse, body) => {
-          if (err || httpResponse === 400 || httpResponse === 500) {
-            res.status(400).json({ error: "Error uploading image " + err });
-          } else {
-            body = JSON.parse(body);
-            const newPic = {
-              animal_id: req.params.id,
-              img_id: body.image_id,
-              img_url: body.url
-            };
- 
-              res.status(200).json(newPic);
-        
-          }
-        }
-      );
-    }
-  );
-});
+
 
 function validateAnimalId(req, res, next) {
   if (req.params.id) {
