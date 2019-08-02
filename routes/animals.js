@@ -453,26 +453,27 @@ function updateAnimal (req, res, next) {
 
 //Post animal
 //After going through middleware, it will check if all required fields are given and add the animal info to the animal meta table
-router.post('/', addAnimal, (req, res) => {
+router.post('/', addAnimal, postPicture, (req, res) => {
     const animal_meta = {
-        animal_id : req.body.animal_id,
-        breed_id : req.body.breed_id,
-        is_mixed : req.body.is_mixed,
-        age_id : req.body.age_id,
-        health : req.body.health,
-        size_id : req.body.size_id,
-        color : req.body.color,
-        coat_length_id : req.body.coat_length_id,
-        is_male : req.body.is_male,
-        is_house_trained : req.body.is_house_trained,
-        is_neutered_spayed : req.body.is_neutered_spayed,
-        is_good_with_kids : req.body.is_good_with_kids,
-        is_good_with_dogs : req.body.is_good_with_dogs,
-        is_good_with_cats : req.body.is_good_with_cats,
-        is_vaccinated : req.body.is_vaccinated,
-        description : req.body.description
+        animal_id: req.body.animal_id,
+        breed_id: req.body.breed_id,
+        is_mixed: req.body.is_mixed,
+        age_id: req.body.age_id,
+        health: req.body.health,
+        size_id: req.body.size_id,
+        color: req.body.color,
+        coat_length_id: req.body.coat_length_id,
+        is_male: req.body.is_male,
+        is_house_trained: req.body.is_house_trained,
+        is_neutered_spayed: req.body.is_neutered_spayed,
+        is_good_with_kids: req.body.is_good_with_kids,
+        is_good_with_dogs: req.body.is_good_with_dogs,
+        is_good_with_cats: req.body.is_good_with_cats,
+        is_vaccinated: req.body.is_vaccinated,
+        description: req.body.description
     }
-    if  (req.body.animal_id &&
+
+    if (req.body.animal_id &&
         req.body.breed_id &&
         req.body.is_mixed != null &&
         req.body.age_id &&
@@ -487,25 +488,54 @@ router.post('/', addAnimal, (req, res) => {
         req.body.is_good_with_dogs != null &&
         req.body.is_good_with_cats != null &&
         req.body.is_vaccinated != null &&
-        req.body.description ) {
-            AnimalMeta.add(animal_meta)
-            .then( id => {
-                res.status(201).json( req.body.animal_id )
+        req.body.description) {
+        AnimalMeta.add(animal_meta)
+            .then(id => {
+                res.status(201).json(req.body.animal_id)
             })
-            .catch( error => {
+            .catch(error => {
                 Animals.remove(req.body.animal_id)
-                .then( count => {
-                    res.status(200).json({ message: `${count} record has been deleted`})
-                })
-                .catch ( error => {
-                    res.status(500).json({ message: "Error deleting animal", error: error.toString()})
-                })
-                res.status(500).json({ message: "Error adding animal", error: error.toString()})
+                    .then(count => {
+                        res.status(200).json({ message: `${count} record has been deleted` })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: "Error deleting animal", error: error.toString() })
+                    })
+                res.status(500).json({ message: "Error adding animal", error: error.toString() })
             })
-        } else {
-            res.status(400).json({message: "please enter all required animal meta field"})
-        }
+    } else {
+        res.status(400).json({ message: "please enter all required animal meta field" })
+    }
 })
+
+function postPicture(req, res, next) {
+    const pic = {
+        animal_id: req.body.animal_id,
+        img_url: req.body.image_url,
+        img_id: req.body.profile_img_id
+    }
+    if (pic.animal_id && pic.img_url && pic.img_id) {
+        Pictures.add(pic)
+            .then(pic => {
+                if (pic)
+                    next();
+            })
+            .catch(error => {
+                Animals.remove(req.body.animal_id)
+                    .then(count => {
+                        res.status(200).json({ message: `${count} record has been deleted` })
+                    })
+                    .catch(error => {
+                        res.status(500).json({ message: "Error deleting animal", error: error.toString() })
+                    })
+                res.status(500).json({ message: "Error adding picture", error: error.toString() })
+            })
+    } 
+    else{
+        res.status(400).json({ message: "please enter all required for picture" })
+    }
+
+}
 
 //middleware to add animal
 //It will check if all required fields are given and if it is will add the animal to the Animals table
