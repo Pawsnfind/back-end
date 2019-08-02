@@ -258,7 +258,6 @@ router.put('/location/:locationId',  (req, res) => {
                 city: req.body.city,
                 state_id: req.body.state_id,
                 zipcode: req.body.zipcode,
-                phone_number: req.body.phone_number,
                 shelter_contact_id: req.body.shelter_contact_id
             }
         
@@ -268,7 +267,6 @@ router.put('/location/:locationId',  (req, res) => {
                 shelterLoc.city &&
                 shelterLoc.state_id &&
                 shelterLoc.zipcode &&
-                shelterLoc.phone_number &&
                 shelterLoc.shelter_contact_id) {
         
                 ShelterLocation.updateShelterLocations(req.params.locationId, shelterLoc)
