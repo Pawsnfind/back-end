@@ -1,4 +1,8 @@
 const router = require("express").Router();
+
+const jswt = require('jsonwebtoken'); // for generating new token from api
+const secrets = require('../config/secrets.js')
+
 const Shelter = require("../models/shelters/shelters.js")
 const Shelters = require('../models/shelters/shelters.js')
 const ShelterContacts = require('../models/shelter_contacts/shelter_contacts.js')
@@ -469,7 +473,11 @@ function addShelter(req, res, next) {
     Shelters.addShelter(shelter)
     .then( newShelter => {
         if(newShelter) {
+            const user = {id : req.params.userId, shelter_id : newShelter.id}
+            const token = generateToken(user)
+
             req.shelter = newShelter
+            req.shelter.token = token
             next();
         } else {
             res.status(400).json({ message: "Error adding shelter", error: error.toString() })
@@ -531,7 +539,17 @@ function validateNoAssociation(req, res, next) {
 
 /******** END OF SHELTER ONBOARDING STEP 1  *********/
 
-
+//initial token setting to limited payload due to lack of addition info passed down on the onboarding process
+function generateToken(user) {
+    const payload = {
+        user_id: user.id,
+        shelter_id: user.shelter_id,
+    }
+    const options = {
+        expiresIn: '1d'
+    }
+    return jswt.sign(payload, secrets.jwtSecret, options)
+}
 
 
 
