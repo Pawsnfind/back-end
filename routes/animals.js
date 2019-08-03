@@ -29,7 +29,7 @@ router.get('/:animalId/match/shelter/:shelterId', (req, res) => {
         }
     })
     .catch( error => {
-        res.status(500).json({ message: "Error getting next ID", error: error.toString()})
+        res.status(500).json({ message: "Error getting a match", error: error.toString()})
     })
 })
 

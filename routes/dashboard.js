@@ -1,17 +1,23 @@
 const router = require('express').Router();
 
 const Dashboard = require('../models/dashboard/dashboard.js');
+const verifyToken = require('../middleware/verifyToken.js');
+
 
 //get dashboard aggregated data
+//router.get('/:id', verifyToken, (req, res) => {
 router.get('/:id', (req, res) => {
-    Dashboard.getDashboard(req.params.id)
-    .then( count => {
-        res.status(200).json(count)
-    })
-    .catch( error => {
-        res.status(500).json({ message: "Error getting dashboard data", error: error.toString() })
-
-    })
+    //if(req.creds.shelter_id === req.params.id) {
+        Dashboard.getDashboard(req.params.id)
+        .then( count => {
+            res.status(200).json(count)
+        })
+        .catch( error => {
+            res.status(400).json({ message: "Error getting dashboard data", error: error.toString() })
+        })
+    //} else {
+    //    res.status(500).json({message: "You don't have permission to view this page"})
+    //}  
 })
 
 

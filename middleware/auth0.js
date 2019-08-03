@@ -43,7 +43,8 @@ function checkUser (req, res, next) {
                     nickname: decoded.nickname,
                     picture: decoded.picture,
                     shelter_id: user.shelter_id,
-                    shelter_user_id: user.shelter_user_id
+                    shelter_user_id: user.shelter_user_id,
+                    sub_id: decoded.sub
                 }
                 req.body.user = response;
                 next();
@@ -60,7 +61,8 @@ function checkUser (req, res, next) {
                 nickname: decoded.nickname,
                 picture: decoded.picture,
                 shelter_id: user.shelter_id,
-                shelter_user_id: user.shelter_user_id
+                shelter_user_id: user.shelter_user_id,
+                sub_id: decoded.sub
             }
             req.body.user = response;
             next();
