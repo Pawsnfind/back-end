@@ -1,17 +1,21 @@
 const router = require('express').Router();
 
 const Dashboard = require('../models/dashboard/dashboard.js');
+const verifyToken = require('../middleware/verifyToken.js');
+
 
 //get dashboard aggregated data
-router.get('/:id', (req, res) => {
-    Dashboard.getDashboard(req.params.id)
-    .then( count => {
-        res.status(200).json(count)
-    })
-    .catch( error => {
-        res.status(500).json({ message: "Error getting dashboard data", error: error.toString() })
 
-    })
+router.get('/:id', (req, res) => {
+
+        Dashboard.getDashboard(req.params.id)
+        .then( count => {
+            res.status(200).json(count)
+        })
+        .catch( error => {
+            res.status(400).json({ message: "Error getting dashboard data", error: error.toString() })
+        })
+ 
 })
 
 
