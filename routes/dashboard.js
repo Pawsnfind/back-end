@@ -5,9 +5,9 @@ const verifyToken = require('../middleware/verifyToken.js');
 
 
 //get dashboard aggregated data
-//router.get('/:id', verifyToken, (req, res) => {
+
 router.get('/:id', (req, res) => {
-    //if(req.creds.shelter_id === req.params.id) {
+
         Dashboard.getDashboard(req.params.id)
         .then( count => {
             res.status(200).json(count)
@@ -15,9 +15,7 @@ router.get('/:id', (req, res) => {
         .catch( error => {
             res.status(400).json({ message: "Error getting dashboard data", error: error.toString() })
         })
-    //} else {
-    //    res.status(500).json({message: "You don't have permission to view this page"})
-    //}  
+ 
 })
 
 
