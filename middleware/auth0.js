@@ -23,7 +23,7 @@ function checkUser (req, res, next) {
     const decoded = jwtDecode(req.headers.authorization);
 
     Users.getUserBySubId(decoded.sub)
-    .then(async user => {
+    .then(user => {
         //create user record and user meta if user does not exist
         if (!user)
         {
