@@ -68,6 +68,9 @@ function checkUser (req, res, next) {
             next();
         }
     })
+        .catch(error => {
+        res.status(500).json({message : "issue with getUserById... issue with connecting to backend"})
+    })
 }
 
 module.exports={ checkAuth, checkUser};
