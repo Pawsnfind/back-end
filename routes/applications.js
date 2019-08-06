@@ -95,6 +95,7 @@ router.post('/:id/note', validateApplicationId, (req, res) => {
                 res.status(200).json(note)
             })
             .catch(error => {
+                console.log(error);
                 res.status(500).json({ message: "Error adding notes", error: error.toString() })
             })
     }
@@ -157,6 +158,7 @@ router.put('/:id/status', validateApplicationId, (req, res) => {
                 res.status(200).json(updated)
             })
             .catch(error => {
+            console.log("Middleware", error);
                 res.status(500).json({ message: "Error updating application status", error: error.toString() })
             })
     }
