@@ -50,7 +50,8 @@ function checkUser (req, res, next) {
                 next();
             })
             .catch(err => {
-               res.status(400).json({message: decoded.sub}); 
+                 console.log(decoded.sub);
+               res.status(400).json({error: err.message}); 
              })
         }
         //if user exist, return response
