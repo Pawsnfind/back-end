@@ -459,7 +459,8 @@ router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, 
         }
     })
     .catch( error => {
-        
+        console.log("last step of add shelter", error)
+
         ShelterUsers.deleteShelterUsers(req.shelterUser.id)
         Shelters.deleteShelter(req.shelter.id),
         res.status(500).json({ message: "Error adding shelter, add shelter user, and update user", error: error.toString() })
@@ -482,6 +483,7 @@ function addShelter(req, res, next) {
         }
     })
     .catch ( error => {
+        console.log("add shelter", error)
         res.status(500).json({ message: "Error adding shelter", error: error.toString() })
     })
 }
@@ -502,6 +504,8 @@ function addShelterUser(req, res, next) {
         })
         .catch( error =>{
             Shelters.deleteShelter(req.shelter.id)
+                    console.log("add shelter user", error)
+
             res.status(500).json({ message: "Error adding shelter and shelter user", error: error.toString() })
         
         })
