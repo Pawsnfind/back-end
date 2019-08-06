@@ -49,6 +49,9 @@ function checkUser (req, res, next) {
                 req.body.user = response;
                 next();
             })
+            .catch(err => {
+               res.status(400).json({message: "WTF James" }); 
+             })
         }
         //if user exist, return response
         else{
