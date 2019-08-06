@@ -39,7 +39,6 @@ exports.up = function(knex, Promise) {
             tbl.increments();
             tbl.string('email', 256)
                 .notNullable()
-                .unique();
             tbl.string('sub_id', 256)
                 .notNullable()
                 .unique()
