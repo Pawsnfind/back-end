@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const stripe = require("stripe")(process.env.stripe_secret);
+const shelter = require('../models/shelters/shelters.js');
 
 const bodyParser = require("body-parser").text();
 
@@ -9,10 +10,25 @@ function getToken(req, res, next){
     next();
 }
 
-router.post("/charge", getToken, bodyParser, async (req, res) => {
+function getAccountID(req, res, next){
+    shelter.getAccountID(req.data.shelter_id)
+    .then(result => {
+        if (result)
+        {
+            req.account_id = result.account_id;
+            next();
+        }
+        else
+            res.status(400).json({error: 'Error retrieving account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error retrieving account id'});
+    })
+}
+
+router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
     const amount = req.data;
-   
-    const shelter_account_id = await Shelter.getAccountID(req.data.selter_id);
+
     console.log(amount)
     try {
        await stripe.charges.create({
@@ -21,7 +37,7 @@ router.post("/charge", getToken, bodyParser, async (req, res) => {
         description: "An example charge",
         source: req.body,
         transfer_data: {
-            destination: shelter_account_id,
+            destination: req.account_id,
           },
       }).then(result => {
         console.log(result);
