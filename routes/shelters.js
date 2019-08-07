@@ -521,6 +521,7 @@ function validateUserId(req, res, next) {
         }
     })
     .catch (error => {
+        console.log("validate user", error)
         res.status(500).json({ message: "Error happened valid user id", error: error.toString() })
     })
 }
@@ -535,6 +536,7 @@ function validateNoAssociation(req, res, next) {
         }
     })
     .catch( error => {
+        console.log("validate association", error)
         res.status(500).json({ message: "Error happened validate No association", error: error.toString() })
     })
 }
