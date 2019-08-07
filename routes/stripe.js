@@ -27,12 +27,11 @@ function getAccountID(req, res, next){
 }
 
 router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
-    const amount = req.data;
+ 
 
-    console.log(amount)
-    try {
+     try {
        await stripe.charges.create({
-        amount: amount,
+        amount: req.data.amount,
         currency: "usd",
         description: "An example charge",
         source: req.body,
