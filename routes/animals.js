@@ -534,7 +534,6 @@ function postPicture(req, res, next) {
     else{
         res.status(400).json({ message: "please enter all required for picture" })
     }
-
 }
 
 //middleware to add animal
@@ -647,4 +646,5 @@ function validateShelterId (req, res, next) {
             res.status(500).json({message: "Error getting valid shelter id", error: error.toString() })
         })
 }
+
 module.exports = router;

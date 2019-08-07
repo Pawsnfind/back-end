@@ -13,7 +13,6 @@ const checkAuth = jwt({
         jwksRequestsPerMinute: 5,
         jwksUri: process.env.jwksUri
     }),
- 
     algorithms: ['RS256']
 });
 
@@ -67,6 +66,9 @@ function checkUser (req, res, next) {
             req.body.user = response;
             next();
         }
+    })
+    .catch(error => {
+        res.status(500).json({message : "issue with getUserById... issue with connecting to backend"})
     })
 }
 

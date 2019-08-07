@@ -455,7 +455,6 @@ router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, 
             ShelterUsers.deleteShelterUsers(req.shelterUser.id)
             Shelters.deleteShelter(req.shelter.id),
             res.status(400).json({ message: "Error from step 1 of onboarding", error: error.toString() })
-
         }
     })
     .catch( error => {
@@ -473,7 +472,6 @@ function addShelter(req, res, next) {
         if(newShelter) {
             const user = {id : req.params.userId, shelter_id : newShelter.id}
             const token = generateToken(user)
-
             req.shelter = newShelter
             req.shelter.token = token
             next();
@@ -497,13 +495,11 @@ function addShelterUser(req, res, next) {
             } else {
                 Shelters.deleteShelter(req.shelter.id)
                 res.status(400).json({ message: "Error adding shelter and shelter User", error: error.toString() })
-            }
-            
+            } 
         })
         .catch( error =>{
             Shelters.deleteShelter(req.shelter.id)
             res.status(500).json({ message: "Error adding shelter and shelter user", error: error.toString() })
-        
         })
 }
 //middleware for validate user id

@@ -12,7 +12,8 @@ const subscriptionRouter = require("../routes/subscriptions.js");
 const userRouter = require("../routes/users.js");
 const authRouter = require('../routes/auth.js');
 const einRouter = require('../routes/ein.js');
-const dashboardRouter = require("../routes/dashboard.js")
+const dashboardRouter = require("../routes/dashboard.js");
+const searchRouter = require('../routes/search.js');
 const pictureRouter = require("../routes/picture");
 
 //internal routes
@@ -47,7 +48,7 @@ server.use("/api/users", userRouter);
 server.use("/api/auth", authRouter);
 server.use("/api/ein", einRouter);
 server.use('/api/dashboard', dashboardRouter)
-
+server.use('/api/search', searchRouter);
 server.use("/api/pictures", pictureRouter);
 
 //internal routes
