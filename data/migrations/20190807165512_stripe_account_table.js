@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
             .notNullable()
             .unsigned()
             .references('id')
-            .inTable('applications')
+            .inTable('shelters')
             .onDelete('RESTRICT')
             .onUpdate('CASCADE')
         tbl.string('account_id')

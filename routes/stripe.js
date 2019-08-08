@@ -42,8 +42,6 @@ router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
         console.log(result);
          res.status(200).json(result);
       });
- 
-   
       
     } catch (err) {
       res.status(500).json({error: 'Error, could not donate'});
