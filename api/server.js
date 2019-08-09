@@ -14,6 +14,7 @@ const authRouter = require('../routes/auth.js');
 const einRouter = require('../routes/ein.js');
 const dashboardRouter = require("../routes/dashboard.js")
 const pictureRouter = require("../routes/picture");
+const searchRouter = require("../routes/search.js");
 
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
@@ -49,6 +50,7 @@ server.use("/api/ein", einRouter);
 server.use('/api/dashboard', dashboardRouter)
 
 server.use("/api/pictures", pictureRouter);
+server.use("/api/search", searchRouter);
 
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);

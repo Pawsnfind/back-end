@@ -6,9 +6,9 @@ module.exports = {
     getByIds,
     add, 
     remove, 
-    findMatch
+    findMatch,
+    getTotalFollows
 }
-
 
 function getByIds(animalId, userId) {
     return db('animal_follows')
@@ -25,9 +25,16 @@ function getByAnimalId(id) {
 
 }
 
+function getTotalFollows(id) {
+    return db('animal_follows')
+    .where('animal_id', id)
+    .count()
+}
+
 function add(follow) {
     return db('animal_follows')
-    .insert(follow)
+    .insert(follow, 'animal_id')
+    .then(([animal_id]) => getTotalFollows(animal_id))
 }
 
 function remove(animalId, userId) {

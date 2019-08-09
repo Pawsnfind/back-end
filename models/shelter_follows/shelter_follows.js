@@ -5,7 +5,8 @@ module.exports = {
     getFollowsByIds,
     addShelterFollows,
     deleteShelterFollows,
-    
+    getTotalFollows,
+    getFollowsMatchByIds
  }
  
  function getUsersFollowsByShelterId(id) {
@@ -17,7 +18,11 @@ module.exports = {
     .where('shelter_id',id)
  }
  
-
+ function getTotalFollows(id) {
+    return db('shelter_follows')
+    .where('shelter_id', id)
+    .count()
+ }
  
  function getByUserFollowId(id) {
     return db('shelter_follows')
@@ -37,13 +42,20 @@ function getFollowsByIds(shelterId,userId){
    .first()   
 }
  
+function getFollowsMatchByIds(shelterId, userId) {
+   return db('shelter_follows')
+   .where({
+      'shelter_id' : shelterId,
+      'user_id' : userId
+   })
+   .first()
+}
  
  function addShelterFollows(follow) {
     return db('shelter_follows')
-    .insert(follow, 'id')
-    .then( ([id]) => getByShelterUserId(id))
+    .insert(follow, 'shelter_id')
+    .then(([shelter_id]) => getTotalFollows(shelter_id))
  }
- 
 
  function deleteShelterFollows(shelterId,userId) {
     return db('shelter_follows')
