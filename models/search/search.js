@@ -23,7 +23,8 @@ function initialSearch(filter) {
 
 
 function advancedSearch(filter) {
-    return db
+   
+    const query = db
     .select('animals.*', 'shelter_locations.zipcode', 'pictures.img_url', 'animal_meta.is_male', 'breeds.breed','ages.age')
     .from('animals')
     .leftJoin('shelter_locations', 'animals.shelter_location_id', 'shelter_locations.id')
@@ -37,8 +38,13 @@ function advancedSearch(filter) {
     .whereIn('animal_meta.coat_length_id', filter.coat_length_id) 
     .whereIn('animal_meta.size_id', filter.size_id)
     .whereIn('animal_meta.age_id', filter.age_id) 
-    .whereIn('animal_meta.breed_id', filter.breed_id)   
     .whereIn('shelter_locations.zipcode', filter.zips)
+
+    if(filter.breed_id.length > 0) {
+      query.whereIn('animal_meta.breed_id', filter.breed_id)
+    } 
+
+    return query
 }
 
 
