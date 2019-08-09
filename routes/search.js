@@ -2,12 +2,18 @@ const router = require("express").Router();
 const Search = require('../models/search/search.js');
 const zipcode = require("zipcodes");
 
-/*
+
 router.get('/advancedSearch', getZips, (req, res) => {
-    //const searchObj = {species_id : req.body.species_id, animal_status_id : req.body.animal_status_id}
-    const searchObj = {species_id : req.body.species_id}
-    const searchArray = {animal_status_id : req.body.animal_status_id, shelter_id : req.body.shelter_id, breed_id : req.body.breed_id, zipcodes : req.body.zips}
-    Search.getBy(searchObj, searchArray)
+    const searchObj = {
+        is_male : req.body.is_male,
+        species_id : req.body.species_id,
+        breed_id : req.body.breed_id,
+        size_id : req.body.size_id,
+        age_id : req.body.age_id,
+        coat_length_id : req.body.coat_length_id,
+        zips : req.body.zips
+    }
+    Search.advancedSearch(searchObj)
     .then(animals => {
         console.log(req.body.zips)
         res.status(200).json(animals)
@@ -16,7 +22,7 @@ router.get('/advancedSearch', getZips, (req, res) => {
         res.status(500).json({message: "Error with search", error : error.toString()})
     })
 })
-*/
+
 
 router.get('/initialSearch', getZips, (req,res) => {
     const searchObj = {species_id : req.body.species_id, zips : req.body.zips}
