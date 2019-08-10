@@ -45,10 +45,10 @@ router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
   }
 });
 
-router.post("/account",  async (req, res) => {
+router.post("/account",  (req, res) => {
   const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
 
-  await stripe.accounts.create(
+   stripe.accounts.create(
     {
       type: "custom",
       country: "US",
@@ -58,9 +58,11 @@ router.post("/account",  async (req, res) => {
     function(err, account) {
        if (err){
          res.status(400).json({error: err});
+          return;
        }
        else{
          res.status(200).json(account);
+         return;
        }
     }
   );
