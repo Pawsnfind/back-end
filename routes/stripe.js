@@ -48,6 +48,7 @@ router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
 router.post("/account",  (req, res) => {
   const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
 
+  try{
    stripe.accounts.create(
     {
       type: "custom",
@@ -66,8 +67,10 @@ router.post("/account",  (req, res) => {
        }
     }
   );
-
+  }
+  catch(err){
     res.status(500).json({error: "Error creating account"});
+  }
 });
 
 module.exports = router;
