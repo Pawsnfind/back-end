@@ -45,8 +45,39 @@ router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
   }
 });
 
-router.post("/account",  (req, res) => {
-  const stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+async function createCustomer (req, res, next) {
+  const stripe = require("stripe")(process.env.stripe);
+
+  const ein = await shelter.getByEIN(req.params.id);
+  try{
+    stripe.customers.create({
+       address: {
+          line1: req.body.address1,
+          line2: req.body.address2,
+          city: req.body.city,
+          state: req.body.state,
+          postal_code: req.body.zip
+       },
+       email: req.body.email,
+       name: req.body.name,
+       phone: req.body.phone,
+       tax_exempt: "exempt",
+       tax_id_data: ein,
+    }, function(err, customer) {
+        if (err)
+          res.status(400).json({error: 'Error creating customer'})
+        else
+          req.customer = customer;
+          next();
+    });
+  }
+  catch(err){
+    res.status(500).json({error: "Error creating customer"});
+  }
+}
+
+function createAccount (req, res, next) {
+  const stripe = require("stripe")(process.env.stripe);
 
   try{
    stripe.accounts.create(
@@ -62,11 +93,66 @@ router.post("/account",  (req, res) => {
           return;
        }
        else{
-         res.status(200).json(account);
-         return;
+          req.body.account = account;
+          return;
        }
     }
   );
+  }
+  catch(err){
+    res.status(500).json({error: "Error creating account"});
+  }
+}
+
+function createBankAccount (req, res, next) {
+  const stripe = require("stripe")(process.env.stripe);
+
+  try{
+    stripe.customers.createSource(
+      req.customer.id,
+      {
+        source: req.body.bankToken,
+      },
+      function(err, bank_account) {
+        if (err){
+          res.status(400).json({error: err});
+           return;
+        }
+        else{
+           req.body.bank = bank;
+           return;
+        }      
+      }
+    
+  );
+  }
+  catch(err){
+    res.status(500).json({error: "Error creating account"});
+  }
+}
+
+ 
+
+router.post("/account", createCustomer, createBankAccount, createAccount, (req, res) => {
+  const stripe = require("stripe")(process.env.stripe);
+
+  try{
+
+    stripe.accounts.createExternalAccount(
+      req.body.account.id,
+      {
+        external_account: req.body.bank.id,
+      },
+      function(err, external_account) {
+          if (err){
+            res.status(400).json({error: err});
+             return;
+          }
+          else{
+             req.body.external = external_account;
+             return;
+          }     
+      });
   }
   catch(err){
     res.status(500).json({error: "Error creating account"});
