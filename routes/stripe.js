@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const stripe = require("stripe")(process.env.stripe_secret);
+
 const shelter = require("../models/shelters/shelters.js");
 
 const bodyParser = require("body-parser").text();
@@ -45,118 +45,141 @@ router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
   }
 });
 
-async function createCustomer (req, res, next) {
-  const stripe = require("stripe")(process.env.stripe);
+async function createCustomer(req, res, next) {
+  const key = process.env;
+  const stripe = require("stripe")(process.env.stripe_secret);
 
-  const ein = await shelter.getByEIN(req.params.id);
-  try{
-    stripe.customers.create({
-       address: {
+  const ein = await shelter.getByEIN(req.body.shelterID);
+  try {
+    stripe.customers.create(
+      {
+        address: {
           line1: req.body.address1,
           line2: req.body.address2,
           city: req.body.city,
           state: req.body.state,
           postal_code: req.body.zip
-       },
-       email: req.body.email,
-       name: req.body.name,
-       phone: req.body.phone,
-       tax_exempt: "exempt",
-       tax_id_data: ein,
-    }, function(err, customer) {
-        if (err)
-          res.status(400).json({error: 'Error creating customer'})
-        else
-          req.customer = customer;
-          next();
-    });
-  }
-  catch(err){
-    res.status(500).json({error: "Error creating customer"});
+        },
+        email: req.body.email,
+        name: req.body.name,
+        phone: req.body.phone,
+        tax_exempt: "exempt",
+        tax_id_data: ein
+      },
+      function(err, customer) {
+        if (err) 
+        res.status(400).json({ error: "Error creating customer" });
+        else 
+        req.customer = customer;
+        next();
+      }
+    );
+  } catch (err) {
+    res.status(500).json({ error: "Error creating customer" });
   }
 }
 
-function createAccount (req, res, next) {
-  const stripe = require("stripe")(process.env.stripe);
+function createAccount(req, res, next) {
+  const stripe = require("stripe")(process.env.stripe_secret);
 
-  try{
-   stripe.accounts.create(
-    {
-      type: "custom",
-      country: "US",
-      email: req.body.email,
-      requested_capabilities: ["card_payments"]
-    },
-    function(err, account) {
-       if (err){
-         res.status(400).json({error: err});
+  try {
+    stripe.accounts.create(
+      {
+        type: "custom",
+        country: "US",
+        email: req.body.email,
+        requested_capabilities: ["card_payments"]
+      },
+      function(err, account) {
+        if (err) {
+          res.status(400).json({ error: err });
           return;
-       }
-       else{
+        } else {
           req.body.account = account;
+          next();
           return;
-       }
-    }
-  );
-  }
-  catch(err){
-    res.status(500).json({error: "Error creating account"});
+        }
+      }
+    );
+  } catch (err) {
+    res.status(500).json({ error: "Error creating account" });
   }
 }
 
-function createBankAccount (req, res, next) {
-  const stripe = require("stripe")(process.env.stripe);
+function createBankAccount(req, res, next) {
+  const stripe = require("stripe")(process.env.stripe_secret);
 
-  try{
+  try {
     stripe.customers.createSource(
       req.customer.id,
       {
-        source: req.body.bankToken,
+        source: req.body.bankToken
       },
       function(err, bank_account) {
-        if (err){
-          res.status(400).json({error: err});
-           return;
+        if (err) {
+          res.status(400).json({ error: err });
+          return;
+        } else {
+          req.body.bank = bank_account;
+          next();
+          return;
         }
-        else{
-           req.body.bank = bank;
-           return;
-        }      
       }
-    
-  );
-  }
-  catch(err){
-    res.status(500).json({error: "Error creating account"});
+    );
+  } catch (err) {
+    res.status(500).json({ error: "Error creating account" });
   }
 }
 
- 
-
 router.post("/account", createCustomer, createBankAccount, createAccount, (req, res) => {
-  const stripe = require("stripe")(process.env.stripe);
+    const stripe = require("stripe")(process.env.stripe_secret);
 
-  try{
 
-    stripe.accounts.createExternalAccount(
-      req.body.account.id,
-      {
-        external_account: req.body.bank.id,
-      },
-      function(err, external_account) {
-          if (err){
-            res.status(400).json({error: err});
-             return;
-          }
-          else{
-             req.body.external = external_account;
-             return;
-          }     
-      });
-  }
-  catch(err){
-    res.status(500).json({error: "Error creating account"});
-  }
-});
+    stripe.tokens.create({
+      bank_account: {
+        country: 'US',
+        currency: 'usd',
+        routing_number: req.body.routing_number,
+        account_number: req.body.account_number,
+        account_holder_name: req.body.name,
+        account_holder_type: 'individual'
+      }
+    }, async function(err, token) {
+      try {
+        await stripe.accounts.createExternalAccount(
+          req.body.account.id,{
+            external_account: token.id
+          },
+          async function(err, external_account) {
+            if (err) 
+            {
+              res.status(400).json({ error: err });
+              return;
+            } 
+            else 
+            {
+  
+              await shelter.addAccountID({shelter_id: req.body.shelterID, account_id: req.body.account.id})
+              .then(result => {
+                  if (result)
+                      res.status(200).json({success: result});
+                  else
+                      res.status(400).json({error: 'Error adding account id'});
+              })
+              .catch(err => {
+                  res.status(500).json({error: 'Error adding account id'});
+              })
+           
+              return;
+            }
+          })
+      }
+      catch(err){
+        res.status(500).json({error: "Error linking bank account"})
+      }
+    });
+
+  })
+
 
 module.exports = router;
