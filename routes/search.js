@@ -24,7 +24,7 @@ router.get('/advancedSearch', getZips, (req, res) => {
 })
 
 
-router.get('/initialSearch', getZips, (req,res) => {
+router.post('/initialSearch', getZips, (req,res) => {
     const searchObj = {species_id : req.body.species_id, zips : req.body.zips}
     Search.initialSearch(searchObj)
     .then(animals => {
