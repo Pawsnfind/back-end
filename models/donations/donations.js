@@ -7,6 +7,17 @@ module.exports = {
     getAllDonations,
     addDonation,
     updateDonation,
+    getDonationDashboardData
+}
+
+function getDonationDashboardData(id) {
+    const donationQuery = db('donations').where('shelter_id', id).orderBy('created_at', 'desc')
+    const totalDonationQuery = db('donations').where('shelter_id', id).sum({"total": "amount"})
+    const recentDonationQuery = db('donations').where('shelter_id', id).sum({"total" : 'amount'})
+    .where(db.raw("created_at > current_date - interval '30' day"))
+    const numberDonationQuery = db('donations').where('shelter_id', id)
+
+    return recentDonationQuery
 }
 
 function getAllDonations() {
@@ -14,7 +25,6 @@ function getAllDonations() {
 }
 
 function getDonationbyId (id) {
-    
         return db
         .select('donations.id', 'donations.amount', 'donations.created_at', 'shelters.shelter', 'users.username')
         .from('donations')
@@ -22,7 +32,6 @@ function getDonationbyId (id) {
         .leftJoin('users', 'donations.user_id', 'users.id')
         .where({ 'donations.id' : id })
         .first();
- 
 }
 
 function getDonationsByUser(id) {
@@ -32,7 +41,6 @@ function getDonationsByUser(id) {
     .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
     .leftJoin('users', 'donations.user_id', 'users.id')
     .where({ 'donations.user_id' : id })
- 
 }
 
 function getDonationsByShelter(id) {
@@ -42,7 +50,6 @@ function getDonationsByShelter(id) {
     .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
     .leftJoin('users', 'donations.user_id', 'users.id')
     .where({ 'donations.shelter_id' : id })
-    
 }
 
 function addDonation(donation) {

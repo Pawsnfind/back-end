@@ -11,10 +11,11 @@ module.exports = {
  
  function getUsersFollowsByShelterId(id) {
     return db
-    .select('shelter_follows.shelter_id', 'shelter_follows.user_id', 'user_meta.name', 'shelters.shelter')
+    .select('shelter_follows.shelter_id', 'shelter_follows.user_id', 'users.username', 'users.email', 'user_meta.zip', 'shelters.shelter')
     .from('shelter_follows')
-    .innerJoin('user_meta','shelter_follows.user_id','user_meta.user_id')
-    .innerJoin('shelters', 'shelter_follows.shelter_id', 'shelters.id')
+    .leftJoin('users', 'shelter_follows.user_id', 'users.id')
+    .leftJoin('user_meta','shelter_follows.user_id','user_meta.user_id')
+    .leftJoin('shelters', 'shelter_follows.shelter_id', 'shelters.id')
     .where('shelter_id',id)
  }
  
