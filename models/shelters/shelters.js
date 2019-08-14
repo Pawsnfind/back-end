@@ -9,7 +9,8 @@ module.exports = {
     updateShelter,
     deleteShelter,
     getAccountID,
-    addAccountID
+    addAccountID,
+    deleteAccount
 }
 
 
@@ -195,4 +196,10 @@ function getAccountID(id){
 function addAccountID(account){
     return db('stripe_accounts')
     .insert(account);
+}
+
+function deleteAccount(id){
+    return db('stripe_accounts')
+    .where({shelter_id :id})
+    .del();
 }

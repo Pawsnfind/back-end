@@ -2,7 +2,8 @@ const router = require("express").Router();
 
 const shelter = require("../models/shelters/shelters.js");
 
-const bodyParser = require("body-parser").text();
+const bodyParser = require("body-parser");
+const axios = require("axios");
 
 function getToken(req, res, next) {
   req.data = req.body.data;
@@ -24,57 +25,60 @@ function getAccountID(req, res, next) {
     });
 }
 
-router.post("/donate", getToken, getAccountID, bodyParser, async (req, res) => {
-  try {
-    await stripe.charges
-      .create({
-        amount: req.data.amount,
-        currency: "usd",
-        description: "An example charge",
-        source: req.body,
-        transfer_data: {
-          destination: req.account_id
-        }
-      })
-      .then(result => {
-        console.log(result);
-        res.status(200).json(result);
-      });
-  } catch (err) {
-    res.status(500).json({ error: "Error, could not donate" });
+router.post(
+  "/donate",
+  getToken,
+  getAccountID,
+  bodyParser.text(),
+  async (req, res) => {
+    try {
+      await stripe.charges
+        .create({
+          amount: req.data.amount,
+          currency: "usd",
+          description: "An example charge",
+          source: req.body,
+          transfer_data: {
+            destination: req.account_id
+          }
+        })
+        .then(result => {
+          console.log(result);
+          res.status(200).json(result);
+        });
+    } catch (err) {
+      res.status(500).json({ error: "Error, could not donate" });
+    }
   }
-});
+);
 
 async function createCustomer(req, res, next) {
   const key = process.env;
   const stripe = require("stripe")(process.env.stripe_secret);
 
   const shelterObj = await shelter.getById(req.body.shelterID);
-  
+
   try {
     stripe.customers.create(
       {
         address: {
-          line1: shelterObj.location[0].street_address,
-         
-          city: shelterObj.location[0].city,
-          state: shelterObj.location[0].state,
-          postal_code: shelterObj.location[0].zipcode
+          line1: req.body.address1,
+          line2: req.body.address2,
+          city: req.body.city,
+          state: req.body.state,
+          postal_code: req.body.zip
         },
         email: shelterObj.email,
         name: shelterObj.name,
         phone: shelterObj.phone,
-        tax_exempt: 'exempt',
-     
+        tax_exempt: "exempt"
       },
       function(err, customer) {
-        if (err){
-        res.status(400).json({ error: "Error creating customer" });
+        if (err) {
+          res.status(400).json({ error: "Error creating customer" });
           return;
-        }
-        else 
-        req.customer = customer;
-       
+        } else req.customer = customer;
+
         next();
       }
     );
@@ -86,8 +90,8 @@ async function createCustomer(req, res, next) {
 async function createAccount(req, res, next) {
   const stripe = require("stripe")(process.env.stripe_secret);
   const shelterObj = await shelter.getById(req.body.shelterID);
-  const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
- 
+  const ip = req.headers["x-real-ip"] || req.connection.remoteAddress;
+
   try {
     stripe.accounts.create(
       {
@@ -95,18 +99,18 @@ async function createAccount(req, res, next) {
         country: "US",
         email: shelterObj.email,
         requested_capabilities: ["card_payments"],
-        business_type: 'company',
-        business_profile:{
-          mcc: '8398',
-          product_description: 'Animal rescue'
+        business_type: "company",
+        business_profile: {
+          mcc: 8398,
+          product_description: "Animal rescue"
         },
         company: {
           address: {
-            line1: shelterObj.location[0].street_address,
-         
-            city: shelterObj.location[0].city,
-            state: shelterObj.location[0].state,
-            postal_code: shelterObj.location[0].zipcode
+            line1: req.body.address1,
+            line2: req.body.address2,
+            city: req.body.city,
+            state: req.body.state,
+            postal_code: req.body.zip
           },
           name: shelterObj.name,
           phone: shelterObj.phone,
@@ -114,9 +118,8 @@ async function createAccount(req, res, next) {
         },
         tos_acceptance: {
           date: Math.floor(new Date() / 1000),
-          ip: ip,
+          ip: ip
         }
-   
       },
       function(err, account) {
         if (err) {
@@ -161,7 +164,34 @@ function createBankAccount(req, res, next) {
 
 async function createPerson(req, res, next) {
   const stripe = require("stripe")(process.env.stripe_secret);
-  const shelterObj = await shelter.getById(req.body.shelterID);
+
+  await stripe.files.create(
+    {
+      purpose: "identity_document",
+      file: {
+        data: req.body.frontImage,
+
+        type: "application/octet-stream"
+      }
+    },
+    function(err, file) {
+      frontImage = file;
+    }
+  );
+
+  await stripe.files.create(
+    {
+      purpose: "identity_document",
+      file: {
+        data: req.body.backImage,
+
+        type: "application/octet-stream"
+      }
+    },
+    function(err, file) {
+      backImage = file;
+    }
+  );
   try {
     stripe.accounts.createPerson(
       req.body.account.id,
@@ -178,18 +208,23 @@ async function createPerson(req, res, next) {
         email: req.body.email,
         phone: req.body.phone,
         ssn_last_4: req.body.ssn_last_4,
-        relationship:{
+        relationship: {
           account_opener: true,
           owner: true,
           percent_ownership: 100,
-          title: 'Owner'
+          title: "Owner"
         },
         dob: {
           day: req.body.dob_day,
           month: req.body.dob_month,
           year: req.body.dob_year
+        },
+        verification: {
+          document: {
+            front: req.body.frontImage,
+            back: req.body.backImage
+          }
         }
-
       },
       function(err, bank_account) {
         if (err) {
@@ -207,56 +242,87 @@ async function createPerson(req, res, next) {
   }
 }
 
-router.post("/account", createCustomer, createBankAccount, createAccount, createPerson, async (req, res) => {
+async function checkShelterAccount(req, res, next) {
+  await shelter
+    .getAccountID(req.body.shelterID)
+    .then(async result => {
+      if (result) {
+        await shelter
+          .deleteAccount(req.body.shelterID)
+          .then(result => {
+            next();
+          })
+          .catch(err => {
+            next();
+          });
+      }
+      else
+        next();
+    })
+    .catch(err => {
+      next();
+    });
+}
+router.post(
+  "/account",
+  createCustomer,
+  createBankAccount,
+  createAccount,
+  createPerson,
+  checkShelterAccount,
+  async (req, res) => {
     const stripe = require("stripe")(process.env.stripe_secret);
 
     const shelterObj = await shelter.getById(req.body.shelterID);
 
-    stripe.tokens.create({
-      bank_account: {
-        country: 'US',
-        currency: 'usd',
-        routing_number: req.body.routing_number,
-        account_number: req.body.account_number,
-        account_holder_name: shelterObj.name,
-        account_holder_type: 'individual',
-   
-      }
-    }, async function(err, token) {
-      try {
-        await stripe.accounts.createExternalAccount(
-          req.body.account.id,{
-            external_account: token.id
-          },
-          async function(err, external_account) {
-            if (err) 
+    stripe.tokens.create(
+      {
+        bank_account: {
+          country: "US",
+          currency: "usd",
+          routing_number: req.body.routing_number,
+          account_number: req.body.account_number,
+          account_holder_name: shelterObj.name,
+          account_holder_type: "individual"
+        }
+      },
+      async function(err, token) {
+        try {
+          await stripe.accounts.createExternalAccount(
+            req.body.account.id,
             {
-              res.status(400).json({ error: err });
-              return;
-            } 
-            else 
-            {
-  
-              await shelter.addAccountID({shelter_id: req.body.shelterID, account_id: req.body.account.id})
-              .then(result => {
-                  if (result)
-                      res.status(200).json({success: result});
-                  else
-                      res.status(400).json({error: 'Error adding account id'});
-              })
-              .catch(err => {
-                  res.status(500).json({error: 'Error adding account id'});
-              })
-           
-              return;
-            }
-          })
-      }
-      catch(err){
-        res.status(500).json({error: "Error linking bank account"})
-      }
-    });
+              external_account: token.id
+            },
+            async function(err, external_account) {
+              if (err) {
+                res.status(400).json({ error: err });
+                 
+              } else {
+                await shelter
+                  .addAccountID({
+                    shelter_id: req.body.shelterID,
+                    account_id: req.body.account.id
+                  })
+                  .then(result => {
+                    if (result) 
+                    res.status(200).json({ success: result.rowCount });
+                    else
+                      res.status(400).json({ error: "Error adding account id" });
+                  })
+                  .catch(err => {
+                    res.status(500).json({ error: "Error adding account id" });
+                  });
 
-  })
+               
+              }
+            }
+          );
+        } catch (err) {
+          res.status(500).json({ error: "Error linking bank account" });
+        }
+      }
+    );
+  }
+);
 
 module.exports = router;
