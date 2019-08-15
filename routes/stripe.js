@@ -165,33 +165,6 @@ function createBankAccount(req, res, next) {
 async function createPerson(req, res, next) {
   const stripe = require("stripe")(process.env.stripe_secret);
 
-  await stripe.files.create(
-    {
-      purpose: "identity_document",
-      file: {
-        data: req.body.frontImage,
-
-        type: "application/octet-stream"
-      }
-    },
-    function(err, file) {
-      frontImage = file;
-    }
-  );
-
-  await stripe.files.create(
-    {
-      purpose: "identity_document",
-      file: {
-        data: req.body.backImage,
-
-        type: "application/octet-stream"
-      }
-    },
-    function(err, file) {
-      backImage = file;
-    }
-  );
   try {
     stripe.accounts.createPerson(
       req.body.account.id,
