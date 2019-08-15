@@ -1,7 +1,6 @@
 # back-end 
 deployed on [Heroku](https://prod-pawsnfind.herokuapp.com/)
 ****
----
 [Animal Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEANIMALS.md)       
 ---
 [Donation/ Subscription Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEDONATIONS.md)   
