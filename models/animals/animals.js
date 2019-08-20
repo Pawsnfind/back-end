@@ -120,7 +120,7 @@ function boolToString(bool) {
 
 function getAnimalsByShelterId(id) {
     return db
-    .select('animals.id', 'animals.name', 'species.species', 'animal_status.animal_status', 'shelter_locations.nickname', 'pictures.img_url')
+    .select('animals.id', 'animals.name', 'species.species', 'animals.animal_status_id', 'animal_status.animal_status', 'shelter_locations.nickname', 'pictures.img_url')
     .from('animals')
     .leftJoin('species', 'animals.species_id' , 'species.id')
     .leftJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
