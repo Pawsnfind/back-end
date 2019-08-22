@@ -468,6 +468,45 @@ function validateShelterId(req, res, next) {
     }
 }
 
+function checkAccountRecordExists(req, res, next){
+    Shelters.getAccountID(req.params.id)
+    .then(results => {
+        if (results)
+            res.status(400).json({error: 'Shelter already has stripe account'});
+        else
+            next();
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error checking if stipe account exitst'});
+    })
+}
+
+router.post('/:id/account', validateShelterId, checkAccountRecordExists, (req, res) => {
+    Shelter.addAccountID({shelter_id: req.params.id, account_id: req.body.account_id})
+    .then(result => {
+        if (result)
+            res.status(200).json({success: result});
+        else
+            res.status(400).json({error: 'Error adding account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error adding account id'});
+    })
+})
+
+router.get('/:id/account', validateShelterId, (req, res) => {
+    Shelter.getAccountID(req.params.id)
+    .then(result => {
+        if (result)
+            res.status(200).json({success: result});
+        else
+            res.status(400).json({error: 'Error adding account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error adding account id'});
+    })
+})
+
 /*** SHELTER ONBOARDING 1 : CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META MIDDLEWARE ***/
 router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, addShelterUser, (req, res) => {
     let change = {shelter_user_id: req.shelterUser.id}

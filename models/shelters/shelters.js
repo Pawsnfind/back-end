@@ -12,6 +12,7 @@ module.exports = {
     getAccountID,
     addAccountID,
     deleteAccount
+
 }
 
 
@@ -224,7 +225,6 @@ function deleteShelter(id) {
         .del();
 }
 
-//get stripe account by shelter id
 function getAccountID(id){
     return db('stripe_accounts')
         .where({ shelter_id :id })
