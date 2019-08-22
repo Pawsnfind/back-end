@@ -13,9 +13,22 @@ module.exports = {
     update,
     add, 
     findMatch, //for animal and animal_meta
-    findAnimalShelterMatch
+    findAnimalShelterMatch, 
+    getPublicAnimals
 }
 
+//get a number of animal displayed info for public page by random 
+function getPublicAnimals(num) {
+    return db
+    .select('animals.id','animals.name', 'pictures.img_url', 'animal_meta.is_male', 'breeds.breed','ages.age')
+    .from('animals')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
+    .leftJoin('animal_meta', 'animals.id', 'animal_meta.animal_id' )
+    .leftJoin('ages', 'animal_meta.age_id', 'ages.id')
+    .leftJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
+    .orderBy(db.raw("RANDOM()"))
+    .limit(num)
+}
 
 function getNextId(){
     return db.raw("SELECT last_value FROM animals_id_seq");

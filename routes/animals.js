@@ -263,6 +263,17 @@ router.get('/:animalId/admin/:adminId', (req, res) => {
     })
 })
 
+//get a number of animals displayed for public page
+router.get('/public/count/:num', (req, res) => {
+    Animals.getPublicAnimals(req.params.num)
+    .then(animals => {
+        res.status(200).json(animals)
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+    })
+})
+
 
 //Post animal admin notes
 router.post('/:id/admin', (req, res) => {
