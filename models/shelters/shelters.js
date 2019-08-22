@@ -2,14 +2,55 @@ const db = require('../../data/dbConfig.js')
 module.exports = {
     getAllShelters,
     searchShelter,
+    getPublicShelterById,
     getById,
     getByIdSimple,
     getByEIN,
     addShelter,
     updateShelter,
     deleteShelter,
+    getAccountID,
+    addAccountID,
+    deleteAccount
 }
 
+
+function getPublicShelterById(id) {
+    let query = db
+    .select('shelters.shelter', 'shelter_locations.street_address', 'shelter_locations.city', 'states.state', 'shelter_locations.zipcode', 'shelter_contacts.phone', 'shelter_contacts.email', 'shelter_contacts.name')
+    .from('shelters')
+    .leftJoin('shelter_locations', 'shelters.shelter_location_id', 'shelter_locations.id')
+    .leftJoin('states', 'shelter_locations.state_id', 'states.id')
+    .leftJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
+    .where('shelters.id', id)
+    .first()
+
+    if(id){
+        const promises = [query, getAnimalsByShelterId(id)]
+        return Promise.all(promises).then(results => {
+            const [shelter, animals] = results;
+            if(shelter) {
+                shelter.animals = animals;
+                return shelter
+            } else {
+                return null;
+            }
+        })
+    } else {
+        return null;
+    }
+}
+
+function getAnimalsByShelterId(id) {
+    return db
+    .select('animals.id','animals.name', 'pictures.img_url', 'animal_meta.is_male', 'breeds.breed','ages.age')
+    .from('animals')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
+    .leftJoin('animal_meta', 'animal_meta.animal_id', 'animals.id')
+    .leftJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
+    .leftJoin('ages', 'animal_meta.age_id', 'ages.id')
+    .where('animals.shelter_id', id)
+}
 
 function addShelter(shelter) {
     return db('shelters')
@@ -181,4 +222,22 @@ function deleteShelter(id) {
     return db('shelters')
         .where({ id })
         .del();
+}
+
+//get stripe account by shelter id
+function getAccountID(id){
+    return db('stripe_accounts')
+        .where({ shelter_id :id })
+        .first();
+}
+
+function addAccountID(account){
+    return db('stripe_accounts')
+    .insert(account);
+}
+
+function deleteAccount(id){
+    return db('stripe_accounts')
+    .where({shelter_id :id})
+    .del();
 }

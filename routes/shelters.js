@@ -60,10 +60,32 @@ router.post('/:id/mainLocation', validateShelterId, (req, res) => {
 /****** END OF SHELTER ONBOARDING STEP 3 ******/
 
 
-
-
-
-
+//get shelter displayed info for public page
+router.get('/public/:shelterId/:userId', (req, res) => {
+    Shelters.getPublicShelterById(req.params.shelterId)
+    .then(shelter => {
+        let shelterFollow = false;
+        ShelterFollows.getFollowsByIds(req.params.shelterId, req.params.userId)
+        .then(result => {
+            if(result) shelterFollow = true;
+                shelter.shelterFollow = shelterFollow
+                //res.status(200).json(shelter)
+                Shelter.getAccountID(req.params.shelterId)
+                .then( account => {
+                    let hasStripe = false;
+                    if(account) hasStripe = true;
+                    shelter.hasStripe = hasStripe;
+                    res.status(200).json(shelter)
+            })
+        })
+        .catch(error => {
+            res.status(500).json({err : error.toString()})
+        })
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting shelter", error: error.toString()})
+    })
+})
 
 //get route to get the shelter name including the shelter contact, shelter location and 
 //the contact for that location, shelter followers

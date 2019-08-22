@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const verifyToken = require('../middleware/verifyToken.js');
+
 const Users = require('../models/users/users.js');
 
 const UserMetas = require('../models/users_meta/users_meta');
@@ -58,6 +60,18 @@ router.get('/:id', validateUserId, (req, res) => {
         res.status(500).json({ message: "Error getting user", error: error.toString() })
     })
 })
+
+router.get('/strict/:id', verifyToken, (req, res) => {
+    Users.getUserById(req.params.id)
+    .then( user => {
+        res.status(200).json(user)
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting user", error: error.toString() })
+    })
+} )
+
+
 
 router.get('/username/:username', (req, res) => {
     Users.getUserByUsername(req.params.username)

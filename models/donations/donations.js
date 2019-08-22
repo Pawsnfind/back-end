@@ -11,14 +11,43 @@ module.exports = {
 }
 
 function getDonationDashboardData(id) {
-    const donationQuery = db('donations').where('shelter_id', id).orderBy('created_at', 'desc')
+    const donationQuery = db
+    .select('donations.*', 'users.username', 'users.email', db.raw("extract(month from donations.created_at) as month"), db.raw("extract(day from donations.created_at) as day"), db.raw("extract(year from donations.created_at) as year"))
+    .from('donations')
+    .leftJoin('users', 'donations.user_id', 'users.id')
+    .where('shelter_id', id)
+    .orderBy('created_at', 'desc')
+    .limit(20)
+
     const totalDonationQuery = db('donations').where('shelter_id', id).sum({"total": "amount"})
+    
     const recentDonationQuery = db('donations').where('shelter_id', id).sum({"total" : 'amount'})
     .where(db.raw("created_at > current_date - interval '30' day"))
-    const numberDonationQuery = db('donations').where('shelter_id', id)
 
-    return recentDonationQuery
+    const topDonationQuery = db
+    .select('users.username')
+    .from('donations')
+    .leftJoin('users', 'donations.user_id', 'users.id')
+    .sum({"total": 'donations.amount'})
+    .count('users.username as number_of_donations')
+    .groupBy('users.username')  
+    .orderBy('total', 'desc')
+    .where('donations.shelter_id', id)
+    .limit(4)
+
+    const promises = [donationQuery, totalDonationQuery, recentDonationQuery, topDonationQuery]
+
+    return Promise.all(promises).then(results => {
+        let [donations, totalDonations, recentDonations, topDonations] = results;
+        return{
+            donations : donations,
+            totalDonations : totalDonations,
+            recentDonations : recentDonations,
+            topDonations : topDonations
+        }
+    })
 }
+
 
 function getAllDonations() {
     return db('donations')

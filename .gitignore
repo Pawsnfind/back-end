@@ -61,3 +61,7 @@ typings/
 .next
 
 test/
+
+# token secret
+config/secrets.js
+
