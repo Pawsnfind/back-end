@@ -61,7 +61,7 @@ function getByIdSimple(id) {
 
 function getUsers() {
     return db 
-    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    .select('users.id', 'users.email', 'users.username' , 'users.created_at', 'user_meta.phone_number', 
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')
@@ -71,7 +71,7 @@ function getUsers() {
 
 function getUserById(user_id) {
     return db 
-    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    .select('users.id', 'users.email', 'users.username' , 'users.created_at', 'user_meta.phone_number', 
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')
@@ -83,7 +83,7 @@ function getUserById(user_id) {
 
 function getCompleteUserDataById(id) {
     let query = db
-    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    .select('users.id', 'users.email', 'users.username' , 'users.created_at', 'user_meta.phone_number', 
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')
@@ -153,7 +153,7 @@ function getBy(filter) {
 
 function getUserByUsername(username) {
     return db
-    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    .select('users.id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')
@@ -165,7 +165,7 @@ function getUserByUsername(username) {
 
 function getUserByEmail(email) {
     return db
-    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    .select('users.id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')
@@ -177,7 +177,7 @@ function getUserByEmail(email) {
 
 function getUserBySubId(sub_id) {
     return db
-    .select('users.id', 'users.sub_id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
+    .select('users.id', 'users.email','users.username' , 'users.created_at', 'user_meta.phone_number', 
     'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')

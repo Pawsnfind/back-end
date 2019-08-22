@@ -87,9 +87,6 @@ router.get('/public/:shelterId/:userId', (req, res) => {
     })
 })
 
-
-
-
 //get route to get the shelter name including the shelter contact, shelter location and 
 //the contact for that location, shelter followers
 router.get('/:id', validateShelterId, (req, res) => {
