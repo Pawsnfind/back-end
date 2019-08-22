@@ -1,34 +1,6 @@
-🚫 Note: All lines that start with 🚫 are instructions and should be deleted before this is posted to your portfolio. This is intended to be a guideline. Feel free to add your own flare to it.
 
-🚫 The numbers 1️⃣ through 3️⃣ next to each item represent the week that part of the docs needs to be comepleted by.  Make sure to delete the numbers by the end of Labs.
 
-🚫 Each student has a required minimum number of meaningful PRs each week per the rubric.  Contributing to docs does NOT count as a PR to meet your weekly requirements.
-
-# API Documentation
-
-#### 1️⃣ Backend delpoyed at [🚫name service here](🚫add URL here) <br>
-
-## 1️⃣ Getting started
-
-To get the server running locally:
-
-🚫 adjust these scripts to match your project
-
-- Clone this repo
-- **yarn install** to install all required dependencies
-- **yarn server** to start the local server
-- **yarn test** to start server using testing environment
-
-### Backend framework goes here
-
-🚫 Why did you choose this framework?
-
--    Point One
--    Point Two
--    Point Three
--    Point Four
-
-## 2️⃣ Endpoints
+## Endpoints
 
 
 
@@ -78,7 +50,7 @@ To get the server running locally:
 # Data Model
 
 
-#### 2️⃣ ANIMALS
+####  ANIMALS
 
 ---
 
@@ -144,7 +116,7 @@ To get the server running locally:
 }
 ```
 
-## 2️⃣ Actions
+##  Actions
 
 `getAll()` -> Returns all animals
 
@@ -206,7 +178,7 @@ To get the server running locally:
 
 
 
-## 3️⃣ Environment Variables
+## Environment Variables
 
 In order for the app to function correctly, the user must set up their own environment variables.
 
@@ -256,7 +228,3 @@ Remember that this project is licensed under the MIT license, and by submitting 
 
 These contribution guidelines have been adapted from [this good-Contributing.md-template](https://gist.github.com/PurpleBooth/b24679402957c63ec426).
 
-## Documentation
-
-See [Frontend Documentation](🚫link to your frontend readme here) for details on the fronend of our project.
-🚫 Add DS iOS and/or Andriod links here if applicable.
