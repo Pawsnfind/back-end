@@ -39,7 +39,7 @@ To get the server running locally:
 In order for the app to function correctly, the user must set up their own environment variables.
 
 create a .env file that includes the following:
-
+```
  * audience - provided in the Auth0 dashboard
  * DATABASE_URL - local host ip address
  * delete_url -  provided by image hosting service
@@ -48,7 +48,7 @@ create a .env file that includes the following:
  * jwksUri - provided in the Auth0 dashboard
  * upload_url - provided by image hosting service 
  * stripe_secret - provided in the Stripe dashboard  
-
+```
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
