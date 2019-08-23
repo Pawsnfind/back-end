@@ -21,17 +21,17 @@ To get the server running locally:
 ## Endpoints
 
 ****
-[Animal Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEANIMALS.md)       
+[Animal Routes](https://github.com/Pawsnfind/back-end/blob/master/READMEANIMALS.md)       
 ---
-[Donation](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEDONATIONS.md)   
+[Donation](https://github.com/Pawsnfind/back-end/blob/master/READMEDONATIONS.md)   
 ---
-[Internal Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEINTERNAL.md)  
+[Internal Routes](https://github.com/Pawsnfind/back-end/blob/master/READMEINTERNAL.md)  
 ---
-[User Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEUSERS.md)      
+[User Routes](https://github.com/Pawsnfind/back-end/blob/master/READMEUSERS.md)      
 ---
-[Shelter Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMESHELTERS.md)
+[Shelter Routes](https://github.com/Pawsnfind/back-end/blob/master/READMESHELTERS.md)
 ---
-[Application Routes](https://github.com/Pawsnfind/back-end/blob/api-dev/READMEAPPLICATIONS.md)
+[Application Routes](https://github.com/Pawsnfind/back-end/blob/master/READMEAPPLICATIONS.md)
 ---
 
 ## Environment Variables
