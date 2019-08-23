@@ -355,6 +355,22 @@ router.delete('/:userId/follows/animal/:animalId', getAnimalFollowMatch, (req, r
     })
 })
 
+//update user meta by USER ID with AUTH
+router.put('/meta/user/:id', verifyToken, validateUserId, (req, res) => {
+    const { phone_number, name, street_address, city, state_id, zip } = req.body
+    if(req.creds.user_id == req.params.id) {
+        UserMetas.updateUserMetaByUserId(req.params.id, req.body)
+        .then( changes => {
+            res.status(200).json(changes)
+        })
+        .catch( error => {
+            res.status(500).json({ message: "Error getting user", error: error.toString() })
+        })
+    } else {
+        res.status(400).json({message: 'invalid user id on record'})
+    }
+})
+
 //MIDDLEWARE for checking for no animal follows match
 function noAnimalFollowMatch(req, res, next) {
     AnimalFollow.getByIds(req.params.animalId, req.params.userId)

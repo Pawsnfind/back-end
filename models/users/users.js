@@ -9,7 +9,7 @@ module.exports={
     getUserByUsername,
     getUserByEmail,
     getUserBySubId,
-    getCompleteUserDataById,
+    getCompleteUserDataById,    
     createUser,
     updateUser,
     removeUser,
@@ -49,6 +49,8 @@ function getUserMetaByMetaId(metaId) {
     .where('id', metaId)
     .first()
 }
+
+
 
 /************* END OF CREATING USER RECORD WITH META ************/
 
