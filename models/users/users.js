@@ -72,10 +72,11 @@ function getUsers() {
 function getUserById(user_id) {
     return db 
     .select('users.id', 'users.email', 'users.username' , 'users.created_at', 'user_meta.phone_number', 
-    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id')
+    'user_meta.name', 'user_meta.street_address', 'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id', 'shelters.shelter')
     .from('users') 
     .leftJoin('user_meta', 'users.id', 'user_meta.user_id')
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
+    .leftJoin('shelters', 'shelter_users.shelter_id', 'shelters.id')
     .leftJoin('states', 'user_meta.state_id', 'states.id')
     .where( "users.id", user_id )
     .first()

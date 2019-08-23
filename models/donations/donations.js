@@ -65,7 +65,7 @@ function getDonationbyId (id) {
 
 function getDonationsByUser(id) {
     return db
-    .select('donations.id', 'donations.amount', 'donations.created_at', 'shelters.shelter', 'users.username')
+    .select('donations.id', 'donations.amount', 'shelters.shelter', 'users.username', db.raw("extract(month from donations.created_at) as month"), db.raw("extract(day from donations.created_at) as day"), db.raw("extract(year from donations.created_at) as year") )
     .from('donations')
     .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
     .leftJoin('users', 'donations.user_id', 'users.id')

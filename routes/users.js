@@ -62,13 +62,18 @@ router.get('/:id', validateUserId, (req, res) => {
 })
 
 router.get('/strict/:id', verifyToken, (req, res) => {
-    Users.getUserById(req.params.id)
-    .then( user => {
-        res.status(200).json(user)
-    })
-    .catch( error => {
-        res.status(500).json({ message: "Error getting user", error: error.toString() })
-    })
+    if(req.creds.user_id == req.params.id) {
+        Users.getUserById(req.params.id)
+        .then( user => {
+            res.status(200).json(user)
+        })
+        .catch( error => {
+            res.status(500).json({ message: "Error getting user", error: error.toString() })
+        })
+    } else {
+        res.status(400).json({message: 'invalid user id on record'})
+    }
+
 } )
 
 
@@ -267,6 +272,7 @@ router.post('/meta', (req, res) => {
     })
 })
 
+
 router.put('/meta/:id', validateUserMetaId, (req, res) => {
     const { id, user_id, shelter_user_id } = req.body
 
@@ -283,6 +289,25 @@ router.put('/meta/:id', validateUserMetaId, (req, res) => {
         res.status(500).json({ error: "Error updating user meta" })
     })
 })
+
+
+//update user meta by USER ID with AUTH
+router.put('/meta/user/:id', verifyToken, validateUserId, (req, res) => {
+        const { phone_number, name, street_address, city, state_id, zip } = req.body
+        if(req.creds.user_id == req.params.id) {
+            UserMetas.updateUserMetaByUserId(req.params.id, req.body)
+            .then( changes => {
+                res.status(200).json(changes)
+            })
+            .catch( error => {
+                res.status(500).json({ message: "Error getting user", error: error.toString() })
+            })
+        } else {
+            res.status(400).json({message: 'invalid user id on record'})
+        }
+})
+
+
 
 router.delete('/meta/:id', (req, res) => {
     UserMetas.deleteUserMeta(req.params.id)

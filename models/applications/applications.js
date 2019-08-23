@@ -67,11 +67,12 @@ function getApplicationNotes(application_id) {
 
 function getByUserId(id) {
     return db
-    .select('applications.id', 'applications.created_at', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status')
+    .select('applications.id', 'pictures.img_url', 'applications.animal_id','animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', db.raw("extract(month from applications.created_at) as month"), db.raw("extract(day from applications.created_at) as day"), db.raw("extract(year from applications.created_at) as year"))
     .from('applications')
-    .innerJoin('animals', 'applications.animal_id', 'animals.id')
-    .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
-    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .leftJoin('animals', 'applications.animal_id', 'animals.id')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
+    .leftJoin('shelters', 'applications.shelter_id', 'shelters.id')
+    .leftJoin('application_status', 'applications.application_status_id', 'application_status.id')
     .where('applications.user_id', id)
 }
 
