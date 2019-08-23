@@ -222,6 +222,46 @@ router.get('/:id/follows', validateShelterId, (req, res) => {
         })
 })
 
+router.post('/:id/follows', validateShelterId, (req, res) => {
+    const follow = {user_id : req.body.user_id, shelter_id: req.params.id}
+    if (follow.user_id && follow.shelter_id){
+            ShelterFollows.addShelterFollows(follow)
+            .then(newFollow => {
+                console.log(newFollow)
+                res.status(201).json(newFollow)
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Error adding follow', err: err.toString() })
+            })
+    } else {
+        res.status(400).json({ message: "please enter all required fields" })
+    }
+})
+
+router.delete('/:shelterId/:userId/follows', (req, res) => {
+    const shelterId = req.params.shelterId
+    const userId= req.params.userId
+
+    ShelterFollows.getFollowsByIds(shelterId, userId)
+    .then(result => {
+        if (result) {
+            ShelterFollows.deleteShelterFollows(shelterId, userId)
+            .then(result => {
+                res.status(201).json({message: `Successfully deleted shelter_id ${shelterId} with user_id ${userId}`, result})
+            })
+            .catch(err => {
+                res.status(500).json({message: 'Error deleting match', err: err.toString() })
+            })
+        } else {
+            res.status(400).json({message: "no match found"})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error deleting follows', err : err.toString()})
+    })
+} )
+
+
 //add a shelter location for a specific shelter
 router.post('/:id/location', validateShelterId, (req, res) => {
 
@@ -339,6 +379,8 @@ router.delete('/location/:locationId', (req, res) => {
             res.status(500).json({ message: 'shelter location : delete route: error', error: error.toString() })
         })
 })
+
+
 
 //add a shelter contact for a specific shelter
 router.post('/:id/contact', validateShelterId, (req, res) => {
