@@ -14,7 +14,7 @@ const authRouter = require('../routes/auth.js');
 const einRouter = require('../routes/ein.js');
 const dashboardRouter = require("../routes/dashboard.js")
 const pictureRouter = require("../routes/picture");
-
+const stripeRouter = require('../routes/stripe.js');
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
 const iAnimalStatusRouter = require("../routes/internal/animal_status.js");
@@ -49,7 +49,7 @@ server.use("/api/ein", einRouter);
 server.use('/api/dashboard', dashboardRouter)
 
 server.use("/api/pictures", pictureRouter);
-
+server.use("/api/stripe", stripeRouter);
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);
 server.use("/api/internal/paws/animal_status", iAnimalStatusRouter);
