@@ -457,7 +457,7 @@ router.put('/contact/:contactId', (req, res) => {
 
                     })
                     .catch(error => {
-                        res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
+                     //   res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
                     })
             }
             else {
