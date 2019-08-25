@@ -36,8 +36,8 @@ router.get("/image/:id", (req, res) => {
 router.get("/animal/:id", validateAnimalId, (req, res) => {
   pictures
     .getByAnimalId(req.params.id)
-    .then(picture => {
-      if (picture.length > 0) res.status(200).json(picture);
+    .then(pictures => {
+      if (pictures.length > 0) res.status(200).json(pictures);
       else res.status(404).json({ message: "No images found" });
     })
     .catch(error => {

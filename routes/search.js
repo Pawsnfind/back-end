@@ -3,7 +3,10 @@ const Search = require('../models/search/search.js');
 const zipcode = require("zipcodes");
 
 
-router.post('/advancedSearch',  getZips, (req, res) => {
+ 
+router.post('/advancedSearch', getAdvancedZips, (req, res) => {
+    // console.log(req.body)
+ 
     const searchObj = {
         is_male : req.body.is_male,
         species_id : req.body.species_id,
@@ -17,6 +20,7 @@ router.post('/advancedSearch',  getZips, (req, res) => {
     .then(animals => {
         console.log(req.body.zips)
         res.status(200).json(animals)
+
     })
     .catch( error => {
         res.status(500).json({message: "Error with search", error : error.toString()})
@@ -37,14 +41,37 @@ router.post('/initialSearch', getZips, (req,res) => {
 
 //still need to verify for valid zipcode
 function getZips( req, res, next) {
+    console.log(req.body)
     if(req.body.zipcode) {
        const zips = zipcode.radius(req.body.zipcode, req.body.radius)
-       //zips.slice(0,100)
+       console.log(zips)
+    //    zips.slice(0,100)
        req.body.zips = zips.slice(0,100) // limit to 100 zipcodes
        next();
     } else {
-       res.status(400).json({message: "please provide a zipcode", err : error.toString()})
+        res.status(400).json({message: "please provide a zipcode"})
     }
 }
+
+function getAdvancedZips( req, res, next) {
+    console.log(req.body)
+    if(req.body.zipcode) {
+        const radius = req.body.radius || 50
+       const zips = zipcode.radius(req.body.zipcode, radius)
+       console.log(zips)
+        if(zips.length) {
+            req.body.zips = zips.slice(0,100) // limit to 100 zipcodes
+        } else {
+            req.body.zips = [req.body.zipcode]
+        }
+       
+       next();
+    } else {
+        req.body.zips = []
+        next()
+    }
+}
+
+
 
 module.exports = router;
