@@ -17,6 +17,44 @@ router.get('/nextid', (req, res) => {
     })
 })
 
+//get a number of animals displayed for public page
+router.get('/public/count/:num', (req, res) => {
+    Animals.getPublicAnimals(req.params.num)
+    .then(animals => {
+        res.status(200).json(animals)
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+    })
+})
+
+//get animal displayed info for public page
+router.get('/public/:animalId/:userId', (req, res) => {
+    Animals.getPublicAnimalById(req.params.animalId)
+    .then( animal => { 
+        let animalFollow = false;
+        AnimalFollows.findMatch(req.params.animalId, req.params.userId)
+        .then( result => {
+            if(result) animalFollow = true;
+                animal.animalFollow = animalFollow
+            Shelter.getAccountID(animal.shelter_id)
+            .then( account => {
+                let hasStripe = false;
+                if(account) hasStripe = true;
+                animal.hasStripe = hasStripe;
+                res.status(200).json(animal)
+            })
+        })
+        .catch( error => {
+            res.status(500).json({err : error.toString()})
+        })
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting animal", error: error.toString()})
+    })
+})
+
+
 //find shelter and animal match by ids
 router.get('/:animalId/match/shelter/:shelterId', (req, res) => {
     Animals.findAnimalShelterMatch(req.params.animalId, req.params.shelterId)
