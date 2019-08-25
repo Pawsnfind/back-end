@@ -60,7 +60,32 @@ router.post('/:id/mainLocation', validateShelterId, (req, res) => {
 /****** END OF SHELTER ONBOARDING STEP 3 ******/
 
 
-
+//get shelter displayed info for public page
+router.get('/public/:shelterId/:userId', (req, res) => {
+    Shelters.getPublicShelterById(req.params.shelterId)
+    .then(shelter => {
+        let shelterFollow = false;
+        ShelterFollows.getFollowsByIds(req.params.shelterId, req.params.userId)
+        .then(result => {
+            if(result) shelterFollow = true;
+                shelter.shelterFollow = shelterFollow
+                //res.status(200).json(shelter)
+                Shelter.getAccountID(req.params.shelterId)
+                .then( account => {
+                    let hasStripe = false;
+                    if(account) hasStripe = true;
+                    shelter.hasStripe = hasStripe;
+                    res.status(200).json(shelter)
+            })
+        })
+        .catch(error => {
+            res.status(500).json({err : error.toString()})
+        })
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting shelter", error: error.toString()})
+    })
+})
 
 
 
@@ -197,6 +222,46 @@ router.get('/:id/follows', validateShelterId, (req, res) => {
         })
 })
 
+router.post('/:id/follows', validateShelterId, (req, res) => {
+    const follow = {user_id : req.body.user_id, shelter_id: req.params.id}
+    if (follow.user_id && follow.shelter_id){
+            ShelterFollows.addShelterFollows(follow)
+            .then(newFollow => {
+                console.log(newFollow)
+                res.status(201).json(newFollow)
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Error adding follow', err: err.toString() })
+            })
+    } else {
+        res.status(400).json({ message: "please enter all required fields" })
+    }
+})
+
+router.delete('/:shelterId/:userId/follows', (req, res) => {
+    const shelterId = req.params.shelterId
+    const userId= req.params.userId
+
+    ShelterFollows.getFollowsByIds(shelterId, userId)
+    .then(result => {
+        if (result) {
+            ShelterFollows.deleteShelterFollows(shelterId, userId)
+            .then(result => {
+                res.status(201).json({message: `Successfully deleted shelter_id ${shelterId} with user_id ${userId}`, result})
+            })
+            .catch(err => {
+                res.status(500).json({message: 'Error deleting match', err: err.toString() })
+            })
+        } else {
+            res.status(400).json({message: "no match found"})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error deleting follows', err : err.toString()})
+    })
+} )
+
+
 //add a shelter location for a specific shelter
 router.post('/:id/location', validateShelterId, (req, res) => {
 
@@ -314,6 +379,8 @@ router.delete('/location/:locationId', (req, res) => {
             res.status(500).json({ message: 'shelter location : delete route: error', error: error.toString() })
         })
 })
+
+
 
 //add a shelter contact for a specific shelter
 router.post('/:id/contact', validateShelterId, (req, res) => {
