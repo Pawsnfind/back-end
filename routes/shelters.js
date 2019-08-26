@@ -552,7 +552,7 @@ router.get('/:id/account', validateShelterId, (req, res) => {
 /*** SHELTER ONBOARDING 1 : CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META MIDDLEWARE ***/
 router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, addShelterUser, (req, res) => {
     let change = {shelter_user_id: req.shelterUser.id}
-    UserMeta.updateUserMetaByUserId(req.params.userId, change)
+    UserMeta.updateUserMetaByUserId_onboarding(req.params.userId, change)
     .then( updateCount => {
         if(updateCount > 0) {
             res.status(200).json({message: `step 1 of onboarding success`, shelterInfo: req.shelter})
