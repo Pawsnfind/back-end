@@ -560,6 +560,7 @@ router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, 
         else {
             ShelterUsers.deleteShelterUsers(req.shelterUser.id);
             Shelters.deleteShelter(req.shelter.id);
+            console.log("Error from step 1 of onboarding");
             res.status(400).json({ message: "Error from step 1 of onboarding"  });
 
         }
