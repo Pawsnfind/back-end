@@ -4,7 +4,6 @@ const zipcode = require("zipcodes");
 
 
 router.post('/advancedSearch', getAdvancedZips, (req, res) => {
-    // console.log(req.body)
     const searchObj = {
         is_male : req.body.is_male,
         species_id : req.body.species_id,
@@ -14,17 +13,25 @@ router.post('/advancedSearch', getAdvancedZips, (req, res) => {
         coat_length_id : req.body.coat_length_id,
         zips : req.body.zips
     }
+
     Search.advancedSearch(searchObj)
     .then(animals => {
-        console.log(req.body.zips)
-        res.status(200).json(animals)
-
+        const perPage = 20
+        const totalCount = Math.ceil(animals.length / perPage)
+        let currentPage = parseInt(req.body.page) || 1
+        const searchPageDetail = {
+            animals: animals.slice(perPage * (currentPage - 1), (perPage * (currentPage  - 1) + perPage)),
+            paginationDetails: {
+                totalCount: totalCount || 1,
+                currentPage: currentPage || 1,
+            }
+        }
+        res.status(200).json(searchPageDetail)
     })
     .catch( error => {
         res.status(500).json({message: "Error with search", error : error.toString()})
     })
 })
-
 
 router.post('/initialSearch', getZips, (req,res) => {
     const searchObj = {species_id : req.body.species_id, zips : req.body.zips}
@@ -38,10 +45,8 @@ router.post('/initialSearch', getZips, (req,res) => {
 })
 
 function getZips( req, res, next) {
-    console.log(req.body)
     if(req.body.zipcode) {
        const zips = zipcode.radius(req.body.zipcode, req.body.radius)
-       console.log(zips)
     //    zips.slice(0,100)
        req.body.zips = zips.slice(0,100) // limit to 100 zipcodes
        next();
@@ -51,24 +56,20 @@ function getZips( req, res, next) {
 }
 
 function getAdvancedZips( req, res, next) {
-    console.log(req.body)
     if(req.body.zipcode) {
-        const radius = req.body.radius || 50
-       const zips = zipcode.radius(req.body.zipcode, radius)
-       console.log(zips)
+        const radius = req.body.radius 
+        delete req.body["radius"]
+        const zips = zipcode.radius(req.body.zipcode, radius)
         if(zips.length) {
             req.body.zips = zips.slice(0,100) // limit to 100 zipcodes
         } else {
             req.body.zips = [req.body.zipcode]
         }
-       
        next();
     } else {
         req.body.zips = []
         next()
     }
 }
-
-
 
 module.exports = router;
