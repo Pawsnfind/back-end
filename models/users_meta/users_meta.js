@@ -120,9 +120,15 @@ function updateUserMetaByUserId(id, change) {
     return db('user_meta')
     .where('user_id', id)
     .update(change)
- /*   .then((count) => {
+    .then((count) => {
         return count > 0 ? getCompleteUserByUserId(id) : 0
-    })*/
+    })
+}
+
+function updateUserMetaByUserId_onboarding(id, change) {
+    return db('user_meta')
+    .where('user_id', id)
+    .update(change)
 }
 
 function deleteUserMeta(id){
