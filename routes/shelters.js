@@ -556,17 +556,17 @@ router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, 
             res.status(200).json({message: `step 1 of onboarding success`, shelterInfo: req.shelter})
         }
         else {
-            ShelterUsers.deleteShelterUsers(req.shelterUser.id)
-            Shelters.deleteShelter(req.shelter.id),
-            res.status(400).json({ message: "Error from step 1 of onboarding", error: error.toString() })
+            ShelterUsers.deleteShelterUsers(req.shelterUser.id);
+            Shelters.deleteShelter(req.shelter.id);
+            res.status(400).json({ message: "Error from step 1 of onboarding", error: error.toString() });
 
         }
     })
     .catch( error => {
         console.log("last step of add shelter", error)
 
-        ShelterUsers.deleteShelterUsers(req.shelterUser.id)
-        Shelters.deleteShelter(req.shelter.id),
+        ShelterUsers.deleteShelterUsers(req.shelterUser.id);
+        Shelters.deleteShelter(req.shelter.id);
         res.status(500).json({ message: "Error adding shelter, add shelter user, and update user", error: error.toString() })
     })
 })
