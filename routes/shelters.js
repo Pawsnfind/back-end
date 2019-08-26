@@ -219,6 +219,7 @@ router.get('/:id/follows', validateShelterId, (req, res) => {
         })
 })
 
+
 //add a shelter location for a specific shelter
 router.post('/:id/location', validateShelterId, (req, res) => {
 

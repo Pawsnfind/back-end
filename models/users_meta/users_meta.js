@@ -123,7 +123,6 @@ function updateUserMetaByUserId(id, change) {
     .then((count) => {
         return count > 0 ? getCompleteUserByUserId(id) : 0
     })
-
 }
 
 function deleteUserMeta(id){

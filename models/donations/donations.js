@@ -64,13 +64,49 @@ function getDonationbyId (id) {
 }
 
 function getDonationsByUser(id) {
-    return db
-    .select('donations.id', 'donations.amount', 'shelters.shelter', 'users.username', db.raw("extract(month from donations.created_at) as month"), db.raw("extract(day from donations.created_at) as day"), db.raw("extract(year from donations.created_at) as year") )
+    const query = db
+    .select('donations.id', 'donations.amount', 'shelters.shelter', 'users.username', db.raw("extract(month from donations.created_at) as month"), db.raw("extract(day from donations.created_at) as day"), db.raw("extract(year from donations.created_at) as year"))
     .from('donations')
     .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
     .leftJoin('users', 'donations.user_id', 'users.id')
     .where({ 'donations.user_id' : id })
+
+    const total = db
+    .select('user_id')
+    .count("user_id")
+    .sum({'total':'amount'})
+    .from('donations')
+    .groupBy('user_id')
+    .where('user_id', id)
+
+    const topDonationQuery = db
+    .select('shelters.shelter')
+    .from('donations')
+    .leftJoin('shelters', 'donations.shelter_id', 'shelters.id')
+    .sum({"total": 'donations.amount'})
+    .count('shelters.shelter as number_of_donations')
+    .groupBy('shelters.shelter')  
+    .orderBy('total', 'desc')
+    .where('donations.user_id', id)
+    .limit(4)
+
+    const promises = [query, total, topDonationQuery]
+
+    return Promise.all(promises).then(results => {
+        let [donations, total, top_donations] = results;
+        if(donations) {
+            return {
+                donations: donations,
+                total_donations: total,
+                top_donations: top_donations
+            }
+        } else {
+            return null;
+        }
+    })
 }
+
+
 
 function getDonationsByShelter(id) {
     return db

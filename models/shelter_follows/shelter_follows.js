@@ -1,7 +1,7 @@
 const db = require('../../data/dbConfig.js')
 module.exports = {
    getUsersFollowsByShelterId,
-   getByUserFollowId,
+   getFollowsByUserId,
     getFollowsByIds,
     addShelterFollows,
     deleteShelterFollows,
@@ -25,12 +25,21 @@ module.exports = {
     .count()
  }
  
- function getByUserFollowId(id) {
-    return db('shelter_follows')
-    .where('user_id',id)
+ //get a list of shelters a user is following by user id, for user dashboard shelter follow page
+ function getFollowsByUserId(id) {
+    const query = db
+    .select('shelters.id', 'shelters.shelter', 'shelter_locations.city', 'states.state', 'shelter_locations.zipcode', 'shelter_contacts.email', 'shelter_contacts.phone')
+    .from('shelter_follows')
+    .leftJoin('shelters','shelter_follows.shelter_id', 'shelters.id')
+    .innerJoin('shelter_locations', 'shelters.shelter_location_id', 'shelter_locations.id')
+    .leftJoin('states', 'shelter_locations.state_id', 'states.id')
+    .leftJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
+    .where('shelter_follows.user_id', id)
+
+   return query
+
  }
  
-
 function getFollowsByIds(shelterId,userId){
    return db
    .select('shelter_follows.shelter_id','shelter_follows.user_id','users.username')

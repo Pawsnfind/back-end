@@ -4,6 +4,7 @@ const knex = require('knex')
 module.exports = {
     getAll,
     getById,
+    getUserShelterAnimalInfo,
     getBy, //filter
     getByShelterId,
     getByUserId,
@@ -15,6 +16,39 @@ module.exports = {
 
 function getAll() {
     return db('applications');
+}
+
+//get prepopulated user, shelter, and animal info prior to the application process
+function getUserShelterAnimalInfo(userId, shelterId, animalId) {
+    let userQuery = db.select('email as userEmail', 'username').from('users').where('id', userId).first()
+    let shelterQuery = db
+    .select('shelter_contacts.email as shelterEmail', 'shelters.shelter')
+    .from('shelters')
+    .leftJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
+    .where('shelters.id', shelterId)
+    .first()
+    let animalQuery = db.select('name as animalName').from('animals').where('id', animalId).first()
+
+    const promises = [userQuery, shelterQuery, animalQuery];
+
+    if(userId && shelterId && animalId) {
+        return Promise.all(promises).then(results => {
+            let [user, shelter, animal] = results;
+            if(user && shelter && animal) {
+                let messageInfo = {};
+                messageInfo.user = user;
+                messageInfo.shelter = shelter;
+                messageInfo.animal = animal
+
+                return messageInfo
+            } else {
+                return null
+            }
+        })
+    } else {
+        return null;
+    }
+    
 }
 
 // get by application id

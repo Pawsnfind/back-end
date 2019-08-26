@@ -57,7 +57,7 @@ router.get('/user/:id', (req, res)=> {
 
     Donations.getDonationsByUser(id)
     .then(donation => {
-        if (donation.length){
+        if (donation){
             res.status(200).json(donation)
             } else { 
                 res.status(404).json({ message:'id cannot be found '})

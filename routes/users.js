@@ -324,6 +324,35 @@ router.delete('/meta/:id', (req, res) => {
     })
 })
 
+//get a list of shelters a user is following by user id
+router.get('/:id/follows/shelters', (req, res) => {
+    ShelterFollow.getFollowsByUserId(req.params.id)
+    .then( shelters => {
+        res.status(200).json(shelters)
+    })
+    .catch( error => {
+        res.status(500).json({err: error.toString()})
+
+    })
+})
+
+
+
+
+//get a list of animals a user is following by user id
+router.get('/:id/follows/animals', (req, res) => {
+    AnimalFollow.getAnimalFollows(req.params.id)
+    .then( animals => {
+        res.status(200).json(animals)
+    })
+    .catch( error => {
+        res.status(500).json({err: error.toString()})
+    })
+})
+
+
+
+
 //user follow shelter
 router.post('/:userId/follows/shelter/:shelterId', noShelterFollowMatch, (req, res) => {
     const newFollow = {shelter_id : req.params.shelterId, user_id : req.params.userId}
@@ -374,6 +403,17 @@ router.delete('/:userId/follows/animal/:animalId', getAnimalFollowMatch, (req, r
         } else {
             res.status(400).json({message : "no follow deleted"})
         }
+    })
+    .catch(error => {
+        res.status(500).json({err: error.toString()})
+    })
+})
+
+//user unfollow animal FOR USER DASHBOARD
+router.delete('/:userId/unfollows/animal/:animalId', getAnimalFollowMatch, (req, res) => {
+    AnimalFollow.dashRemoveFollow(req.params.animalId, req.params.userId)
+    .then(follows => {
+        res.status(200).json(follows)
     })
     .catch(error => {
         res.status(500).json({err: error.toString()})
