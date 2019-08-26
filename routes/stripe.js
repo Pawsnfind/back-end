@@ -47,6 +47,8 @@ router.post(
           res.status(200).json(result);
         });
     } catch (err) {
+      console.log(err);
+      console.log(req);
       res.status(500).json({ error: "Error, could not donate" });
     }
   }
