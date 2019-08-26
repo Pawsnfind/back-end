@@ -18,7 +18,10 @@ function getAccountID(req, res, next) {
       if (result) {
         req.account_id = result.account_id;
         next();
-      } else res.status(400).json({ error: "Error retrieving account id" });
+      } else {
+        console.log("No account ", result);
+        res.status(400).json({ error: "Error retrieving account id" });
+      }
     })
     .catch(err => {
       res.status(500).json({ error: "Error retrieving account id" });
