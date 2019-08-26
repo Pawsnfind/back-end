@@ -585,7 +585,8 @@ function addShelter(req, res, next) {
             req.shelter.token = token
             next();
         } else {
-            res.status(400).json({ message: "Error adding shelter", error })
+            console.log("Error adding shelter");
+            res.status(400).json({ message: "Error adding shelter" })
         }
     })
     .catch ( error => {
@@ -604,6 +605,7 @@ function addShelterUser(req, res, next) {
                 next();
             } else {
                 Shelters.deleteShelter(req.shelter.id)
+                console.log("Error adding shelter and shelter User");
                 res.status(400).json({ message: "Error adding shelter and shelter User"  })
             }
             
@@ -623,6 +625,7 @@ function validateUserId(req, res, next) {
         if (user) {
             next();
         } else {
+            console.log("Error finding user");
             res.status(404).json({ message: "Error finding user" })
         }
     })
@@ -638,6 +641,7 @@ function validateNoAssociation(req, res, next) {
         if(!shelterUser) {
             next();
         } else {
+            console.log("User already associate with another shelter");
             res.status(400).json({ message: "User already associate with another shelter"  })
         }
     })
