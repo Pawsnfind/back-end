@@ -3,7 +3,13 @@ const Search = require('../models/search/search.js');
 const zipcode = require("zipcodes");
 
 
+ 
 router.post('/advancedSearch', getAdvancedZips, (req, res) => {
+<<<<<<< HEAD
+=======
+    // console.log(req.body)
+ 
+>>>>>>> 6f5f4b1f03f591c54cf2ae66a50c241d424f00e1
     const searchObj = {
         is_male : req.body.is_male,
         species_id : req.body.species_id,
@@ -44,6 +50,7 @@ router.post('/initialSearch', getZips, (req,res) => {
     })
 })
 
+//still need to verify for valid zipcode
 function getZips( req, res, next) {
     if(req.body.zipcode) {
        const zips = zipcode.radius(req.body.zipcode, req.body.radius)

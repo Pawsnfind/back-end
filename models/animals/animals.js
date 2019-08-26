@@ -3,6 +3,8 @@ const db = require('../../data/dbConfig')
 module.exports = {
     getAll,
     getNextId,
+    getPublicAnimalById,
+    getPublicAnimals,
     getById,
     getBy,
     getAnimalsByShelterId,
@@ -33,6 +35,75 @@ function getPublicAnimals(num) {
 function getNextId(){
     return db.raw("SELECT last_value FROM animals_id_seq");
 }
+
+//get a number of animal displayed info for public page by random 
+function getPublicAnimals(num) {
+    return db
+    .select('animals.id','animals.name', 'pictures.img_url', 'animal_meta.is_male', 'breeds.breed','ages.age')
+    .from('animals')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
+    .leftJoin('animal_meta', 'animals.id', 'animal_meta.animal_id' )
+    .leftJoin('ages', 'animal_meta.age_id', 'ages.id')
+    .leftJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
+    .orderBy(db.raw("RANDOM()"))
+    .limit(num)
+}
+
+
+//get animal displayed info for public page by animal id
+function getPublicAnimalById(animalId) {
+    let query = db
+    .select('animals.id', 'animals.name', 'animal_status.animal_status', 'species.species', 
+    'animals.shelter_id', 'shelters.shelter', 'shelter_locations.street_address', 'shelter_locations.city', 'states.state', 'shelter_locations.zipcode', 'shelter_contacts.phone', 'shelter_contacts.email', 'shelter_contacts.name',
+    'breeds.breed', 'ages.age', 'size.size', 'coat_length.coat_length', 'animal_meta.is_male', 'animal_meta.color', 'animal_meta.is_vaccinated', 'animal_meta.is_neutered_spayed', 'animal_meta.is_house_trained',
+    'animal_meta.description', 'animal_meta.health', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_mixed') 
+    .from('animals')
+    .leftJoin('animal_status', 'animals.animal_status_id', 'animal_status.id')
+    .leftJoin('species', 'animals.species_id', 'species.id')
+    .leftJoin('shelters', 'animals.shelter_id', 'shelters.id')
+    .leftJoin('shelter_locations', 'shelters.shelter_location_id', 'shelter_locations.id')
+    .leftJoin('states', 'shelter_locations.state_id', 'states.id')
+    .leftJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
+    .leftJoin('animal_meta', 'animal_meta.animal_id', 'animals.id')
+    .leftJoin('breeds', 'animal_meta.breed_id', 'breeds.id')
+    .leftJoin('ages', 'animal_meta.age_id', 'ages.id')
+    .leftJoin('size', 'animal_meta.size_id', 'size.id')
+    .leftJoin('coat_length', 'animal_meta.coat_length_id', 'coat_length.id')
+    .where('animals.id', animalId)
+    .first()
+    
+    if(animalId){
+        const promises = [query, getAnimalPicturesById(animalId), getTotalFollowers(animalId)]
+        return Promise.all(promises).then(results => {
+            let[animal, pictures, followerCount] = results;
+            if(animal) {
+                animal.pictures = pictures;
+                animal.followerCount = followerCount; 
+                return animal
+            } else {
+                return null;
+            }
+        })
+    } else {
+        return null;
+    }
+}
+
+//get all photos of an animal by id
+function getAnimalPicturesById(id) {
+    return db
+    .select('img_url')
+    .from('pictures')
+    .where('animal_id', id)
+}
+
+//get total followers of an animal by id
+function getTotalFollowers(id) {
+    return db('animal_follows')
+    .where('animal_id', id)
+    .count()
+}
+
 
 //get full record for animal, including all ids
 function getById(id) {

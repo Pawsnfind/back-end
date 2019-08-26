@@ -113,8 +113,8 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/animal/:id", validateAnimalId, async (req, res) => {
-  const form = new formidable.IncomingForm().parse(
-    req,
+    const form = new formidable.IncomingForm().parse(
+  req,
     async (err, fields, files) => {
       if (err) {
         console.error("Error", err);
