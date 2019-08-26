@@ -13,6 +13,7 @@ module.exports={
     updateUserMeta,
     updateUserMetaByUserId,
     deleteUserMeta,
+    updateUserMetaByUserId_onboarding
 }
 
 function getUserMetaById(id) {
