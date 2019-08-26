@@ -36,7 +36,7 @@ router.get('/public/:animalId/:userId', (req, res) => {
         AnimalFollows.findMatch(req.params.animalId, req.params.userId)
         .then( result => {
             if(result) animalFollow = true;
-                animal.animalFollow = animalFollow
+            animal.animalFollow = animalFollow
             Shelter.getAccountID(animal.shelter_id)
             .then( account => {
                 let hasStripe = false;

@@ -54,7 +54,7 @@ function getPublicAnimals(num) {
 function getPublicAnimalById(animalId) {
     let query = db
     .select('animals.id', 'animals.name', 'animal_status.animal_status', 'species.species', 
-    'animals.shelter_id', 'shelters.shelter', 'shelter_locations.street_address', 'shelter_locations.city', 'states.state', 'shelter_locations.zipcode', 'shelter_contacts.phone', 'shelter_contacts.email', 'shelter_contacts.name',
+    'animals.shelter_id', 'shelters.shelter', 'shelter_locations.street_address', 'shelter_locations.city', 'states.state', 'shelter_locations.zipcode', 'shelter_contacts.phone', 'shelter_contacts.email',
     'breeds.breed', 'ages.age', 'size.size', 'coat_length.coat_length', 'animal_meta.is_male', 'animal_meta.color', 'animal_meta.is_vaccinated', 'animal_meta.is_neutered_spayed', 'animal_meta.is_house_trained',
     'animal_meta.description', 'animal_meta.health', 'animal_meta.is_good_with_kids', 'animal_meta.is_good_with_dogs', 'animal_meta.is_good_with_cats', 'animal_meta.is_mixed') 
     .from('animals')

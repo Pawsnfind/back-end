@@ -3,6 +3,7 @@ const db = require('../../data/dbConfig');
 module.exports={
     getUserMetaById,
     getUserMetaByUserId,
+    getCompleteUserByUserId,
     getUserMetaByStateId,
     getUserMetaByShelterUserId,
     getUserMetaByPhoneNumber,
@@ -32,6 +33,19 @@ function getUserMetaByUserId(user_id) {
     .from('user_meta')
     .leftJoin('states', 'user_meta.state_id', 'states.id' )
     .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
+    .where('user_meta.user_id', user_id)
+    .first()
+}
+
+function getCompleteUserByUserId(user_id) {
+    return db
+    .select('users.id', 'users.email', 'users.username', 'users.created_at', 'user_meta.phone_number', 'user_meta.name', 'user_meta.street_address', 
+    'user_meta.city', 'user_meta.zip', 'states.state', 'user_meta.shelter_user_id', 'shelter_users.role_id', 'shelter_users.shelter_id', 'shelters.shelter')
+    .from('user_meta')
+    .leftJoin('users', 'user_meta.user_id', 'users.id')
+    .leftJoin('states', 'user_meta.state_id', 'states.id' )
+    .leftJoin('shelter_users', 'user_meta.shelter_user_id', 'shelter_users.id')
+    .leftJoin('shelters', 'shelter_users.shelter_id', 'shelters.id')
     .where('user_meta.user_id', user_id)
     .first()
 }
@@ -106,6 +120,9 @@ function updateUserMetaByUserId(id, change) {
     return db('user_meta')
     .where('user_id', id)
     .update(change)
+    .then((count) => {
+        return count > 0 ? getCompleteUserByUserId(id) : 0
+    })
 }
 
 function deleteUserMeta(id){

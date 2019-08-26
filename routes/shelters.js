@@ -87,9 +87,6 @@ router.get('/public/:shelterId/:userId', (req, res) => {
     })
 })
 
-
-
-
 //get route to get the shelter name including the shelter contact, shelter location and 
 //the contact for that location, shelter followers
 router.get('/:id', validateShelterId, (req, res) => {
@@ -222,6 +219,7 @@ router.get('/:id/follows', validateShelterId, (req, res) => {
         })
 })
 
+ 
 router.post('/:id/follows', validateShelterId, (req, res) => {
     const follow = {user_id : req.body.user_id, shelter_id: req.params.id}
     if (follow.user_id && follow.shelter_id){
@@ -260,7 +258,7 @@ router.delete('/:shelterId/:userId/follows', (req, res) => {
         res.status(500).json({message: 'Error deleting follows', err : err.toString()})
     })
 } )
-
+ 
 
 //add a shelter location for a specific shelter
 router.post('/:id/location', validateShelterId, (req, res) => {

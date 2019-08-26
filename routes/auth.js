@@ -41,7 +41,7 @@ router.get('/shelter/:id', verifyToken, (req, res) => {
 
 function generateToken(user) {
     const payload = {
-        user_id: user.id,
+        user_id: user.user_id,
         shelter_id: user.shelter_id,
         sub_id: user.sub_id,
         newUser: user.newUser,

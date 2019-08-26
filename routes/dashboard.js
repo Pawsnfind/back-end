@@ -4,19 +4,37 @@ const Dashboard = require('../models/dashboard/dashboard.js');
 const verifyToken = require('../middleware/verifyToken.js');
 
 
-//get dashboard aggregated data
+
+//get user dashboard aggregated data
+
+router.get('/user/:id', (req, res) => {
+    Dashboard.getUserDashboard(req.params.id)
+    .then( results => {
+        if(results) {
+                    res.status(200).json(results)
+        } else {
+            res.status(400).json({message: "no application found"})
+        }
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting dashboard data", error: error.toString() })
+    })
+})
+
+
+
+//get shelter dashboard aggregated data
 
 router.get('/:id', (req, res) => {
-
         Dashboard.getDashboard(req.params.id)
         .then( count => {
             res.status(200).json(count)
         })
         .catch( error => {
-            res.status(400).json({ message: "Error getting dashboard data", error: error.toString() })
+            res.status(500).json({ message: "Error getting dashboard data", error: error.toString() })
         })
- 
 })
+
 
 
 //get dog count

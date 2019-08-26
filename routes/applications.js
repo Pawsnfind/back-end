@@ -15,6 +15,17 @@ router.get('/', (req, res) => {
         })
 })
 
+//get prepopulated user and shelter info prior to the application process
+router.get('/getMessageData/:userId/:shelterId/:animalId', (req, res) => {
+    App.getUserShelterAnimalInfo(req.params.userId, req.params.shelterId, req.params.animalId)
+    .then( results => {
+        res.status(200).json(results)
+    })
+    .catch(error => {
+        res.status(500).json({ message: "Error getting prePopulated data", error: error.toString() })
+    })
+})
+
 //get an application
 router.get('/:id', validateApplicationId, (req, res) => {
 

@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const verifyToken = require('../middleware/verifyToken.js');
+
 const Users = require('../models/users/users.js');
 
 const UserMetas = require('../models/users_meta/users_meta');
@@ -58,6 +60,23 @@ router.get('/:id', validateUserId, (req, res) => {
         res.status(500).json({ message: "Error getting user", error: error.toString() })
     })
 })
+
+router.get('/strict/:id', verifyToken, (req, res) => {
+    if(req.creds.user_id == req.params.id) {
+        Users.getUserById(req.params.id)
+        .then( user => {
+            res.status(200).json(user)
+        })
+        .catch( error => {
+            res.status(500).json({ message: "Error getting user", error: error.toString() })
+        })
+    } else {
+        res.status(400).json({message: 'invalid user id on record'})
+    }
+
+} )
+
+
 
 router.get('/username/:username', (req, res) => {
     Users.getUserByUsername(req.params.username)
@@ -253,6 +272,7 @@ router.post('/meta', (req, res) => {
     })
 })
 
+
 router.put('/meta/:id', validateUserMetaId, (req, res) => {
     const { id, user_id, shelter_user_id } = req.body
 
@@ -270,6 +290,25 @@ router.put('/meta/:id', validateUserMetaId, (req, res) => {
     })
 })
 
+
+//update user meta by USER ID with AUTH
+router.put('/meta/user/:id', verifyToken, validateUserId, (req, res) => {
+        const { phone_number, name, street_address, city, state_id, zip } = req.body
+        if(req.creds.user_id == req.params.id) {
+            UserMetas.updateUserMetaByUserId(req.params.id, req.body)
+            .then( changes => {
+                res.status(200).json(changes)
+            })
+            .catch( error => {
+                res.status(500).json({ message: "Error getting user", error: error.toString() })
+            })
+        } else {
+            res.status(400).json({message: 'invalid user id on record'})
+        }
+})
+
+
+
 router.delete('/meta/:id', (req, res) => {
     UserMetas.deleteUserMeta(req.params.id)
     .then( meta => {
@@ -284,6 +323,35 @@ router.delete('/meta/:id', (req, res) => {
         res.status(500).json({ error: "Error deleting user meta" })
     })
 })
+
+//get a list of shelters a user is following by user id
+router.get('/:id/follows/shelters', (req, res) => {
+    ShelterFollow.getFollowsByUserId(req.params.id)
+    .then( shelters => {
+        res.status(200).json(shelters)
+    })
+    .catch( error => {
+        res.status(500).json({err: error.toString()})
+
+    })
+})
+
+
+
+
+//get a list of animals a user is following by user id
+router.get('/:id/follows/animals', (req, res) => {
+    AnimalFollow.getAnimalFollows(req.params.id)
+    .then( animals => {
+        res.status(200).json(animals)
+    })
+    .catch( error => {
+        res.status(500).json({err: error.toString()})
+    })
+})
+
+
+
 
 //user follow shelter
 router.post('/:userId/follows/shelter/:shelterId', noShelterFollowMatch, (req, res) => {
@@ -335,6 +403,17 @@ router.delete('/:userId/follows/animal/:animalId', getAnimalFollowMatch, (req, r
         } else {
             res.status(400).json({message : "no follow deleted"})
         }
+    })
+    .catch(error => {
+        res.status(500).json({err: error.toString()})
+    })
+})
+
+//user unfollow animal FOR USER DASHBOARD
+router.delete('/:userId/unfollows/animal/:animalId', getAnimalFollowMatch, (req, res) => {
+    AnimalFollow.dashRemoveFollow(req.params.animalId, req.params.userId)
+    .then(follows => {
+        res.status(200).json(follows)
     })
     .catch(error => {
         res.status(500).json({err: error.toString()})
