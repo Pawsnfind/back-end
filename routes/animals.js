@@ -466,6 +466,23 @@ router.put('/:id/meta/:metaId', updateAnimal, (req, res) => {
     })
 })
 
+//add picture
+router.post('/pictures', (req, res) => {
+
+    const pic = {
+        animal_id: req.body.animal_id,
+        img_url: req.body.img_url,
+        img_id: req.body.img_id
+    }
+    Pictures.add(pic) 
+    .then(pic => {
+        res.status(200).json(pic)
+    })
+    .catch (error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+    })
+})
+
 //middleware for update animal
 //this will update the animals table first before getting to the Animal Meta table to update
 function updateAnimal (req, res, next) {
