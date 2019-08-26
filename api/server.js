@@ -15,7 +15,11 @@ const einRouter = require('../routes/ein.js');
 const dashboardRouter = require("../routes/dashboard.js")
 const pictureRouter = require("../routes/picture");
 const searchRouter = require("../routes/search.js");
+ 
 const sendgridRouter = require("../routes/sendgrid.js");
+ 
+const stripeRouter = require('../routes/stripe.js');
+ 
 
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
@@ -52,7 +56,11 @@ server.use('/api/dashboard', dashboardRouter)
 
 server.use("/api/pictures", pictureRouter);
 server.use("/api/search", searchRouter);
+ 
 server.use("/api/sendgrid", sendgridRouter);
+ 
+server.use("/api/stripe", stripeRouter);
+ 
 
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);

@@ -12,6 +12,8 @@ module.exports = {
     getAccountID,
     addAccountID,
     deleteAccount
+ 
+
 }
 
 
@@ -39,6 +41,7 @@ function getPublicShelterById(id) {
     } else {
         return null;
     }
+ 
 }
 
 function getAnimalsByShelterId(id) {
@@ -138,7 +141,7 @@ function searchShelter(filter) {
 //get shelter name, location and contact
 function getById(id) {
     let query = db
-        .select('shelters.id','shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
+        .select('shelters.id','shelters.EIN', 'shelters.shelter', 'shelter_contacts.name','shelter_contacts.email','shelter_contacts.phone')
         .from('shelters')
         .innerJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
 
@@ -224,7 +227,6 @@ function deleteShelter(id) {
         .del();
 }
 
-//get stripe account by shelter id
 function getAccountID(id){
     return db('stripe_accounts')
         .where({ shelter_id :id })
@@ -241,3 +243,4 @@ function deleteAccount(id){
     .where({shelter_id :id})
     .del();
 }
+ 
