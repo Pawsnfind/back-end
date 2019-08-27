@@ -52,9 +52,10 @@ router.post(
         })
         .then(result => {
           console.log(result);
-            console.log(req.data);
- 
-          Donations.addDonation({ req.data.user_id, req.data.shelter_id, (req.data.amount / 100) })
+            console.log("user :",req.data.user_id);
+         console.log("shelter :",req.data.shelter_id);
+          const amt = (req.data.amount / 100);
+          Donations.addDonation({ req.data.user_id, req.data.shelter_id, amt})
           res.status(200).json(result);
         });
     } catch (err) {
