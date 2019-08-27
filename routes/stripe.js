@@ -53,8 +53,7 @@ router.post(
           }
         })
         .then(result => {
-  
-          
+          console.log(user_id, shelter_id, amt);
           Donations.addDonation({ user_id, shelter_id, amt})
         .then(response => {
               console.log(response);
