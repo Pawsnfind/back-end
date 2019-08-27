@@ -35,6 +35,8 @@ router.post(
   getAccountID,
   bodyParser.text(),
   async (req, res) => {
+      const stripe = require("stripe")(process.env.stripe_secret);
+
     try {
       await stripe.charges
         .create({
