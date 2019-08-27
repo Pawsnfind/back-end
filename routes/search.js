@@ -5,11 +5,7 @@ const zipcode = require("zipcodes");
 
  
 router.post('/advancedSearch', getAdvancedZips, (req, res) => {
-<<<<<<< HEAD
-=======
-    // console.log(req.body)
  
->>>>>>> 6f5f4b1f03f591c54cf2ae66a50c241d424f00e1
     const searchObj = {
         is_male : req.body.is_male,
         species_id : req.body.species_id,
