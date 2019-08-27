@@ -53,10 +53,15 @@ router.post(
           }
         })
         .then(result => {
-          console.log(result);
-     
+  
+          
           Donations.addDonation({ user_id, shelter_id, amt})
-          res.status(200).json(result);
+        .then(response => {
+              console.log(response);
+              res.status(200).json(result);
+          }
+        
+      
         });
     } catch (err) {
       console.log(err);
