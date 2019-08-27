@@ -39,7 +39,7 @@ router.post(
       const stripe = require("stripe")(process.env.stripe_secret);
     const user_id = req.data.user_id;
     const shelter_id = req.data.shelter_id;
-    const amt = req.data.amount / 100;
+    const amount = req.data.amount / 100;
     try {
    
       await stripe.charges
@@ -53,8 +53,8 @@ router.post(
           }
         })
         .then(result => {
-          console.log(user_id, shelter_id, amt);
-          Donations.addDonation({ user_id, shelter_id, amt})
+          
+          Donations.addDonation({ user_id, shelter_id, amount})
         .then(response => {
               console.log(response);
               res.status(200).json(result);
