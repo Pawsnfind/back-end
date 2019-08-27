@@ -52,7 +52,8 @@ router.post(
         });
     } catch (err) {
       console.log(err);
-      console.log(req);
+      console.log(req.data);
+      console.log(req.body);
       res.status(500).json({ error: "Error, could not donate" });
     }
   }
