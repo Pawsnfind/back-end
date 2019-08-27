@@ -54,7 +54,7 @@ router.post(
           console.log(result);
             console.log(req.data);
       console.log(req.body);
-          //Donations.addDonation({ user_id, req.data.shelter_id, (req.data.amount / 100) })
+          Donations.addDonation({ req.data.user_id, req.data.shelter_id, (req.data.amount / 100) })
           res.status(200).json(result);
         });
     } catch (err) {
