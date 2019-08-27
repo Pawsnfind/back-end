@@ -37,7 +37,9 @@ router.post(
   bodyParser.text(),
   async (req, res) => {
       const stripe = require("stripe")(process.env.stripe_secret);
-
+    const user_id = req.data.user_id;
+    const shelter_id = req.data.shelter_id;
+    const amt = req.data.amount / 100;
     try {
    
       await stripe.charges
@@ -52,10 +54,8 @@ router.post(
         })
         .then(result => {
           console.log(result);
-            console.log("user :",req.data.user_id);
-         console.log("shelter :",req.data.shelter_id);
-          const amt = (req.data.amount / 100);
-          Donations.addDonation({ req.data.user_id, req.data.shelter_id, amt})
+     
+          Donations.addDonation({ user_id, shelter_id, amt})
           res.status(200).json(result);
         });
     } catch (err) {
