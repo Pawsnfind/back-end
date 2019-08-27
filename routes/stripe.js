@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const shelter = require("../models/shelters/shelters.js");
+const Donations = require('../models/donations/donations.js')
 
 const bodyParser = require("body-parser");
 const axios = require("axios");
@@ -38,6 +39,7 @@ router.post(
       const stripe = require("stripe")(process.env.stripe_secret);
 
     try {
+   
       await stripe.charges
         .create({
           amount: req.data.amount,
@@ -50,6 +52,9 @@ router.post(
         })
         .then(result => {
           console.log(result);
+            console.log(req.data);
+      console.log(req.body);
+          //Donations.addDonation({ user_id, req.data.shelter_id, (req.data.amount / 100) })
           res.status(200).json(result);
         });
     } catch (err) {
