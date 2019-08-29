@@ -317,10 +317,10 @@ router.post(
   }
 );
 
-router.get("account", (req, res) => {
+router.get("/account/:shelter_id", (req, res) => {
 
   shelter
-  .getAccountID(req.data.shelter_id)
+  .getAccountID(req.params.shelter_id)
   .then(result => {
     if (result) 
         res.status(200).json({message: 'Has a stripe account'});
