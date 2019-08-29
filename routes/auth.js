@@ -7,9 +7,6 @@ const { checkAuth, checkUser } = require('../middleware/auth0');
 
 const router = express.Router();
 
-
-
-
 router.post('/', checkAuth, checkUser, (req, res) => {
 // if checkAuth fails, status 401
     if (req.body.user){

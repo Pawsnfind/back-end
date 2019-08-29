@@ -35,7 +35,11 @@ function advancedSearch(filter) {
 
     .whereIn('animals.animal_status_id', [1, 3])
 
+<<<<<<< HEAD
     // console.log(filter)
+=======
+    console.log(filter)
+>>>>>>> bda4612926985451c7c86d1120cfbfd80ada5056
     if(filter.species_id.length > 0) {
         query.whereIn('animals.species_id', filter.species_id)
     }

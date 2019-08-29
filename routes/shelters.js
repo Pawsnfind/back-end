@@ -219,6 +219,46 @@ router.get('/:id/follows', validateShelterId, (req, res) => {
         })
 })
 
+ 
+router.post('/:id/follows', validateShelterId, (req, res) => {
+    const follow = {user_id : req.body.user_id, shelter_id: req.params.id}
+    if (follow.user_id && follow.shelter_id){
+            ShelterFollows.addShelterFollows(follow)
+            .then(newFollow => {
+                console.log(newFollow)
+                res.status(201).json(newFollow)
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Error adding follow', err: err.toString() })
+            })
+    } else {
+        res.status(400).json({ message: "please enter all required fields" })
+    }
+})
+
+router.delete('/:shelterId/:userId/follows', (req, res) => {
+    const shelterId = req.params.shelterId
+    const userId= req.params.userId
+
+    ShelterFollows.getFollowsByIds(shelterId, userId)
+    .then(result => {
+        if (result) {
+            ShelterFollows.deleteShelterFollows(shelterId, userId)
+            .then(result => {
+                res.status(201).json({message: `Successfully deleted shelter_id ${shelterId} with user_id ${userId}`, result})
+            })
+            .catch(err => {
+                res.status(500).json({message: 'Error deleting match', err: err.toString() })
+            })
+        } else {
+            res.status(400).json({message: "no match found"})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error deleting follows', err : err.toString()})
+    })
+} )
+ 
 
 //add a shelter location for a specific shelter
 router.post('/:id/location', validateShelterId, (req, res) => {
@@ -337,6 +377,8 @@ router.delete('/location/:locationId', (req, res) => {
         })
 })
 
+
+
 //add a shelter contact for a specific shelter
 router.post('/:id/contact', validateShelterId, (req, res) => {
     const contact = {shelter_id: req.params.id, name: req.body.name, email: req.body.email, phone: req.body.phone}
@@ -412,7 +454,7 @@ router.put('/contact/:contactId', (req, res) => {
 
                     })
                     .catch(error => {
-                        res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
+                     //   res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
                     })
             }
             else {
@@ -464,6 +506,45 @@ function validateShelterId(req, res, next) {
         res.status(400).json({message: "No shelter id provided"})
     }
 }
+
+function checkAccountRecordExists(req, res, next){
+    Shelters.getAccountID(req.params.id)
+    .then(results => {
+        if (results)
+            res.status(400).json({error: 'Shelter already has stripe account'});
+        else
+            next();
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error checking if stipe account exitst'});
+    })
+}
+
+router.post('/:id/account', validateShelterId, checkAccountRecordExists, (req, res) => {
+    Shelter.addAccountID({shelter_id: req.params.id, account_id: req.body.account_id})
+    .then(result => {
+        if (result)
+            res.status(200).json({success: result});
+        else
+            res.status(400).json({error: 'Error adding account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error adding account id'});
+    })
+})
+
+router.get('/:id/account', validateShelterId, (req, res) => {
+    Shelter.getAccountID(req.params.id)
+    .then(result => {
+        if (result)
+            res.status(200).json({success: result});
+        else
+            res.status(400).json({error: 'Error adding account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error adding account id'});
+    })
+})
 
 /*** SHELTER ONBOARDING 1 : CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META MIDDLEWARE ***/
 router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, addShelterUser, (req, res) => {

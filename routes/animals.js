@@ -301,6 +301,17 @@ router.get('/:animalId/admin/:adminId', (req, res) => {
     })
 })
 
+//get a number of animals displayed for public page
+router.get('/public/count/:num', (req, res) => {
+    Animals.getPublicAnimals(req.params.num)
+    .then(animals => {
+        res.status(200).json(animals)
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting animals", error: error.toString()})
+    })
+})
+
 
 //Post animal admin notes
 router.post('/:id/admin', (req, res) => {
@@ -491,7 +502,7 @@ function updateAnimal (req, res, next) {
 
 //Post animal
 //After going through middleware, it will check if all required fields are given and add the animal info to the animal meta table
-router.post('/', addAnimal, postPicture, (req, res) => {
+router.post('/', addAnimal, handlePictures, (req, res) => {
     const animal_meta = {
         animal_id: req.body.animal_id,
         breed_id: req.body.breed_id,
@@ -546,6 +557,15 @@ router.post('/', addAnimal, postPicture, (req, res) => {
     }
 })
 
+function handlePictures(req, res, next) {
+    if (Array.from(req.body.images).length) {
+        // SL: Building in support for multiple images
+        postPictures(req, res, next)
+    } else {
+        postPicture(req, res, next)
+    }
+}
+
 function postPicture(req, res, next) {
     const pic = {
         animal_id: req.body.animal_id,
@@ -572,7 +592,37 @@ function postPicture(req, res, next) {
     else{
         res.status(400).json({ message: "please enter all required for picture" })
     }
+}
 
+function postPictures(req, res, next) {
+    console.log(req.body.images)
+    req.body.images.map(image => {
+        const pic = {
+            animal_id: req.body.animal_id,
+            img_url: image.image_url,
+            img_id: image.image_id
+        }
+        if (pic.animal_id && pic.img_url && pic.img_id) {
+            Pictures.add(pic)
+                .then(pic => {
+                    if (pic && pic.img_id == req.body.images[req.body.images.length -1].image_id) 
+                        next();
+                })
+                .catch(error => {
+                    Animals.remove(req.body.animal_id)
+                        .then(count => {
+                            res.status(200).json({ message: `${count} record has been deleted` })
+                        })
+                        .catch(error => {
+                            res.status(500).json({ message: "Error deleting animal", error: error.toString() })
+                        })
+                    res.status(500).json({ message: "Error adding picture", error: error.toString() })
+                })
+        }
+        else {
+            res.status(400).json({ message: "please enter all required for picture" })
+        }
+    })
 }
 
 //middleware to add animal
@@ -586,6 +636,7 @@ function addAnimal(req, res, next) {
         shelter_location_id : req.body.shelter_location_id,
         profile_img_id : req.body.profile_img_id
     }
+
     if(animal.name && 
         animal.shelter_id && 
         animal.species_id && 
@@ -603,6 +654,7 @@ function addAnimal(req, res, next) {
         } else {
             res.status(400).json({message: "add animal: please enter all required animal field"})
         }
+
 }
 
 //middleware to validate animal Id
