@@ -317,4 +317,20 @@ router.post(
   }
 );
 
+router.get("account", (req, res) => {
+
+  shelter
+  .getAccountID(req.data.shelter_id)
+  .then(result => {
+    if (result) 
+        res.status(200).json({message: 'Has a stripe account'});
+      else 
+        res.status(404).json({ message: "No stripe account" });
+  })
+  .catch(err => {
+    res.status(500).json({ error: "Error retrieving account id" });
+  });
+
+});
+
 module.exports = router;
