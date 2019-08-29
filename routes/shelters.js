@@ -60,7 +60,32 @@ router.post('/:id/mainLocation', validateShelterId, (req, res) => {
 /****** END OF SHELTER ONBOARDING STEP 3 ******/
 
 
-
+//get shelter displayed info for public page
+router.get('/public/:shelterId/:userId', (req, res) => {
+    Shelters.getPublicShelterById(req.params.shelterId)
+    .then(shelter => {
+        let shelterFollow = false;
+        ShelterFollows.getFollowsByIds(req.params.shelterId, req.params.userId)
+        .then(result => {
+            if(result) shelterFollow = true;
+                shelter.shelterFollow = shelterFollow
+                //res.status(200).json(shelter)
+                Shelter.getAccountID(req.params.shelterId)
+                .then( account => {
+                    let hasStripe = false;
+                    if(account) hasStripe = true;
+                    shelter.hasStripe = hasStripe;
+                    res.status(200).json(shelter)
+            })
+        })
+        .catch(error => {
+            res.status(500).json({err : error.toString()})
+        })
+    })
+    .catch( error => {
+        res.status(500).json({ message: "Error getting shelter", error: error.toString()})
+    })
+})
 
 
 
@@ -197,6 +222,46 @@ router.get('/:id/follows', validateShelterId, (req, res) => {
         })
 })
 
+router.post('/:id/follows', validateShelterId, (req, res) => {
+    const follow = {user_id : req.body.user_id, shelter_id: req.params.id}
+    if (follow.user_id && follow.shelter_id){
+            ShelterFollows.addShelterFollows(follow)
+            .then(newFollow => {
+                console.log(newFollow)
+                res.status(201).json(newFollow)
+            })
+            .catch(err => {
+                res.status(500).json({ message: 'Error adding follow', err: err.toString() })
+            })
+    } else {
+        res.status(400).json({ message: "please enter all required fields" })
+    }
+})
+
+router.delete('/:shelterId/:userId/follows', (req, res) => {
+    const shelterId = req.params.shelterId
+    const userId= req.params.userId
+
+    ShelterFollows.getFollowsByIds(shelterId, userId)
+    .then(result => {
+        if (result) {
+            ShelterFollows.deleteShelterFollows(shelterId, userId)
+            .then(result => {
+                res.status(201).json({message: `Successfully deleted shelter_id ${shelterId} with user_id ${userId}`, result})
+            })
+            .catch(err => {
+                res.status(500).json({message: 'Error deleting match', err: err.toString() })
+            })
+        } else {
+            res.status(400).json({message: "no match found"})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: 'Error deleting follows', err : err.toString()})
+    })
+} )
+
+
 //add a shelter location for a specific shelter
 router.post('/:id/location', validateShelterId, (req, res) => {
 
@@ -315,6 +380,8 @@ router.delete('/location/:locationId', (req, res) => {
         })
 })
 
+
+
 //add a shelter contact for a specific shelter
 router.post('/:id/contact', validateShelterId, (req, res) => {
     const contact = {shelter_id: req.params.id, name: req.body.name, email: req.body.email, phone: req.body.phone}
@@ -390,7 +457,7 @@ router.put('/contact/:contactId', (req, res) => {
 
                     })
                     .catch(error => {
-                        res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
+                     //   res.status(500).json({ message: "shelter contact update route: Error adding shelter contact", error: error.toString() })
                     })
             }
             else {
@@ -443,26 +510,66 @@ function validateShelterId(req, res, next) {
     }
 }
 
+function checkAccountRecordExists(req, res, next){
+    Shelters.getAccountID(req.params.id)
+    .then(results => {
+        if (results)
+            res.status(400).json({error: 'Shelter already has stripe account'});
+        else
+            next();
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error checking if stipe account exitst'});
+    })
+}
+
+router.post('/:id/account', validateShelterId, checkAccountRecordExists, (req, res) => {
+    Shelter.addAccountID({shelter_id: req.params.id, account_id: req.body.account_id})
+    .then(result => {
+        if (result)
+            res.status(200).json({success: result});
+        else
+            res.status(400).json({error: 'Error adding account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error adding account id'});
+    })
+})
+
+router.get('/:id/account', validateShelterId, (req, res) => {
+    Shelter.getAccountID(req.params.id)
+    .then(result => {
+        if (result)
+            res.status(200).json({success: result});
+        else
+            res.status(400).json({error: 'Error adding account id'});
+    })
+    .catch(err => {
+        res.status(500).json({error: 'Error adding account id'});
+    })
+})
+
 /*** SHELTER ONBOARDING 1 : CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META MIDDLEWARE ***/
 router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, addShelterUser, (req, res) => {
     let change = {shelter_user_id: req.shelterUser.id}
-    UserMeta.updateUserMetaByUserId(req.params.userId, change)
+    UserMeta.updateUserMetaByUserId_onboarding(req.params.userId, change)
     .then( updateCount => {
         if(updateCount > 0) {
             res.status(200).json({message: `step 1 of onboarding success`, shelterInfo: req.shelter})
         }
         else {
-            ShelterUsers.deleteShelterUsers(req.shelterUser.id)
-            Shelters.deleteShelter(req.shelter.id),
-            res.status(400).json({ message: "Error from step 1 of onboarding", error: error.toString() })
+            ShelterUsers.deleteShelterUsers(req.shelterUser.id);
+            Shelters.deleteShelter(req.shelter.id);
+            console.log("Error from step 1 of onboarding");
+            res.status(400).json({ message: "Error from step 1 of onboarding"  });
 
         }
     })
     .catch( error => {
         console.log("last step of add shelter", error)
 
-        ShelterUsers.deleteShelterUsers(req.shelterUser.id)
-        Shelters.deleteShelter(req.shelter.id),
+        ShelterUsers.deleteShelterUsers(req.shelterUser.id);
+        Shelters.deleteShelter(req.shelter.id);
         res.status(500).json({ message: "Error adding shelter, add shelter user, and update user", error: error.toString() })
     })
 })
@@ -479,7 +586,8 @@ function addShelter(req, res, next) {
             req.shelter.token = token
             next();
         } else {
-            res.status(400).json({ message: "Error adding shelter", error: error.toString() })
+            console.log("Error adding shelter");
+            res.status(400).json({ message: "Error adding shelter" })
         }
     })
     .catch ( error => {
@@ -498,7 +606,8 @@ function addShelterUser(req, res, next) {
                 next();
             } else {
                 Shelters.deleteShelter(req.shelter.id)
-                res.status(400).json({ message: "Error adding shelter and shelter User", error: error.toString() })
+                console.log("Error adding shelter and shelter User");
+                res.status(400).json({ message: "Error adding shelter and shelter User"  })
             }
             
         })
@@ -517,7 +626,8 @@ function validateUserId(req, res, next) {
         if (user) {
             next();
         } else {
-            res.status(404).json({ message: "Error finding user", error: error.toString() })
+            console.log("Error finding user");
+            res.status(404).json({ message: "Error finding user" })
         }
     })
     .catch (error => {
@@ -532,7 +642,8 @@ function validateNoAssociation(req, res, next) {
         if(!shelterUser) {
             next();
         } else {
-            res.status(400).json({ message: "User already associate with another shelter", error: error.toString() })
+            console.log("User already associate with another shelter");
+            res.status(400).json({ message: "User already associate with another shelter"  })
         }
     })
     .catch( error => {

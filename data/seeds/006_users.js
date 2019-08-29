@@ -5,10 +5,10 @@ exports.seed = async function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('users').insert([
-        {email: 'abc@abc.com', sub_id:'change_this_later', username: 'abcabc'},
-        {email: 'trial@trial.com', sub_id:'change_this_later1', username: 'trialtrial'},
-        {email: '123@123.com', sub_id:'change_this_later2', username: '123123'},
-        {email: 'test12@gmail.com', sub_id:'change_this_later3', username: 'test12test12'},
+        {email: 'abc@abc.com', sub_id:'change_this_later', username: 'abcLovesAnimal'},
+        {email: 'amazingLove@trial.com', sub_id:'change_this_later1', username: 'amazingAnimalLover'},
+        {email: 'Jubilee@123.com', sub_id:'change_this_later2', username: 'JubileeInTheWild'},
+        {email: 'Jane@gmail.com', sub_id:'change_this_later3', username: 'JaneInTheCity'},
         {email: 'hung@lambda.com', sub_id:'change_this_later4', username: 'hung'},
         {email: 'lenna@lambda.com', sub_id:'change_this_later5', username: 'lenna'},
         {email: 'chris@proton.com', sub_id:'change_this_later6', username: 'chris'},

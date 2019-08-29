@@ -14,6 +14,12 @@ const authRouter = require('../routes/auth.js');
 const einRouter = require('../routes/ein.js');
 const dashboardRouter = require("../routes/dashboard.js")
 const pictureRouter = require("../routes/picture");
+const searchRouter = require("../routes/search.js");
+ 
+const sendgridRouter = require("../routes/sendgrid.js");
+ 
+const stripeRouter = require('../routes/stripe.js');
+ 
 
 //internal routes
 const iAgeRouter = require("../routes/internal/ages.js");
@@ -31,11 +37,13 @@ const iOptionsRouter = require("../routes/internal/all_options.js")
 server.use(helmet());
 server.use(express.json()); 
 
-server.use(cors(
-{
-    origin: '*',
-    credentials: true
-}));
+server.use(cors());
+
+server.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 server.use("/api/animals", animalRouter);
 server.use("/api/applications", applicationRouter);
@@ -49,6 +57,12 @@ server.use("/api/ein", einRouter);
 server.use('/api/dashboard', dashboardRouter)
 
 server.use("/api/pictures", pictureRouter);
+server.use("/api/search", searchRouter);
+ 
+server.use("/api/sendgrid", sendgridRouter);
+ 
+server.use("/api/stripe", stripeRouter);
+ 
 
 //internal routes
 server.use("/api/internal/paws/ages", iAgeRouter);

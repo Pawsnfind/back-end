@@ -36,8 +36,8 @@ router.get("/image/:id", (req, res) => {
 router.get("/animal/:id", validateAnimalId, (req, res) => {
   pictures
     .getByAnimalId(req.params.id)
-    .then(picture => {
-      if (picture.length > 0) res.status(200).json(picture);
+    .then(pictures => {
+      if (pictures.length > 0) res.status(200).json(pictures);
       else res.status(404).json({ message: "No images found" });
     })
     .catch(error => {
@@ -113,8 +113,8 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/animal/:id", validateAnimalId, async (req, res) => {
-  const form = new formidable.IncomingForm().parse(
-    req,
+    const form = new formidable.IncomingForm().parse(
+  req,
     async (err, fields, files) => {
       if (err) {
         console.error("Error", err);

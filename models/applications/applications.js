@@ -4,6 +4,7 @@ const knex = require('knex')
 module.exports = {
     getAll,
     getById,
+    getUserShelterAnimalInfo,
     getBy, //filter
     getByShelterId,
     getByUserId,
@@ -15,6 +16,39 @@ module.exports = {
 
 function getAll() {
     return db('applications');
+}
+
+//get prepopulated user, shelter, and animal info prior to the application process
+function getUserShelterAnimalInfo(userId, shelterId, animalId) {
+    let userQuery = db.select('email as userEmail', 'username').from('users').where('id', userId).first()
+    let shelterQuery = db
+    .select('shelter_contacts.email as shelterEmail', 'shelters.shelter')
+    .from('shelters')
+    .leftJoin('shelter_contacts', 'shelters.shelter_contact_id', 'shelter_contacts.id')
+    .where('shelters.id', shelterId)
+    .first()
+    let animalQuery = db.select('name as animalName').from('animals').where('id', animalId).first()
+
+    const promises = [userQuery, shelterQuery, animalQuery];
+
+    if(userId && shelterId && animalId) {
+        return Promise.all(promises).then(results => {
+            let [user, shelter, animal] = results;
+            if(user && shelter && animal) {
+                let messageInfo = {};
+                messageInfo.user = user;
+                messageInfo.shelter = shelter;
+                messageInfo.animal = animal
+
+                return messageInfo
+            } else {
+                return null
+            }
+        })
+    } else {
+        return null;
+    }
+    
 }
 
 // get by application id
@@ -67,11 +101,12 @@ function getApplicationNotes(application_id) {
 
 function getByUserId(id) {
     return db
-    .select('applications.id', 'applications.created_at', 'animals.name as animal_name', 'shelters.shelter', 'application_status.application_status')
+    .select('applications.id', 'pictures.img_url', 'applications.animal_id','animals.name as animal_name', 'shelters.shelter', 'application_status.application_status', db.raw("extract(month from applications.created_at) as month"), db.raw("extract(day from applications.created_at) as day"), db.raw("extract(year from applications.created_at) as year"))
     .from('applications')
-    .innerJoin('animals', 'applications.animal_id', 'animals.id')
-    .innerJoin('shelters', 'applications.shelter_id', 'shelters.id')
-    .innerJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .leftJoin('animals', 'applications.animal_id', 'animals.id')
+    .leftJoin('pictures', 'animals.profile_img_id', 'pictures.img_id')
+    .leftJoin('shelters', 'applications.shelter_id', 'shelters.id')
+    .leftJoin('application_status', 'applications.application_status_id', 'application_status.id')
     .where('applications.user_id', id)
 }
 

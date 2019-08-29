@@ -2,6 +2,7 @@ const db = require('../../data/dbConfig')
 
 module.exports = {
     getDashboard,
+    getUserDashboard,
     getAnimalCount,
     getAnimals,
     getDonationsByMonth,
@@ -12,7 +13,64 @@ module.exports = {
     getApplication30Days
 }
 
-//get complete dashboard data by shelter id
+
+/////////get complete USER DASHBOARD data by user id//////////
+
+function getUserDashboard(id) {
+    const recentApplication60 = db
+    .select('applications.*', 'animals.name as animal_name', 'application_status.application_status', 'shelters.shelter', db.raw("extract(month from applications.created_at) as month"), db.raw("extract(day from applications.created_at) as day"), db.raw("extract(year from applications.created_at) as year"))
+    .from('applications')
+    .leftJoin('animals', 'applications.animal_id', 'animals.id')
+    .leftJoin('application_status', 'applications.application_status_id', 'application_status.id')
+    .leftJoin('shelters', 'applications.shelter_id', 'shelters.id')
+    .where('applications.user_id', id)
+    .where(db.raw("applications.created_at > current_date - interval '60' day"))
+    .orderBy('applications.id','desc')
+    .limit(5)
+
+    const monthlyDonation = db
+    .select(db.raw("extract(month from created_at) as month"), db.raw("extract(year from created_at) as year"))
+    .count('* as number of donations')
+    .sum({"total" : 'amount'})
+    .from('donations')
+    .groupBy('month')
+    .groupBy('year')
+    .where('donations.user_id', id)
+    .orderBy([{column: 'year', order: 'desc'} , {column : 'month', order: 'desc'}])
+
+    const animalFollowCount = db('animal_follows').count('* as totalAnimalFollows').where('user_id', id)
+    
+    const shelterFollowCount = db('shelter_follows').count('* as totalShelterFollows').where('user_id', id)
+
+    const applicationCount = db('applications').count('* as totalApplications').where('user_id', id)
+
+    const totalDonation = db('donations').sum({"total":"amount"}).where('donations.user_id', id)
+
+    const promises = [recentApplication60, monthlyDonation, animalFollowCount, shelterFollowCount, applicationCount, totalDonation]
+
+    return Promise.all(promises).then(results => {
+        let [recentApplication60, monthlyDonation, animalFollowCount, shelterFollowCount, applicationCount, totalDonation] = results;
+
+        return {
+            recentApplication : recentApplication60,
+            monthlyDonation : monthlyDonation,
+            animalFollows : animalFollowCount,
+            shelterFollows : shelterFollowCount,
+            applicationCount : applicationCount, 
+            totalDonation : totalDonation
+        }
+    })
+}
+
+
+
+
+///////// END OF GETTING USER DASHBOARD DATA //////////
+
+
+
+/////////get complete SHELTER DASHBOARD data by shelter id//////////
+
 //aggregate data, aggregate donation based on date, aggregate application based on month, most current applications, list of available animals
 
 function getDashboard(id) {
@@ -133,6 +191,6 @@ function getRecentApplications(id) {
     .limit(5)
 }
 
-
+///////// END OF GETTING SHELTER DASHBOARD DATA //////////
 
 
