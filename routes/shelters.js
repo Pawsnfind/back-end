@@ -330,7 +330,6 @@ router.delete('/location/:locationId', (req, res) => {
             }
             else {
                 res.status(404).json({ message: 'shelter location delete route: location id does not exist' })
-
             }
         })
         .catch(error => {
@@ -469,15 +468,15 @@ function validateShelterId(req, res, next) {
 /*** SHELTER ONBOARDING 1 : CREATE SHELTER with ADDING SHELTER USER AND UPDATING USER META MIDDLEWARE ***/
 router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, addShelterUser, (req, res) => {
     let change = {shelter_user_id: req.shelterUser.id}
-    UserMeta.updateUserMetaByUserId(req.params.userId, change)
+    UserMeta.updateUserMetaByUserId_onboarding(req.params.userId, change)
     .then( updateCount => {
         if(updateCount > 0) {
             res.status(200).json({message: `step 1 of onboarding success`, shelterInfo: req.shelter})
         }
         else {
             ShelterUsers.deleteShelterUsers(req.shelterUser.id)
-            Shelters.deleteShelter(req.shelter.id),
-            res.status(400).json({ message: "Error from step 1 of onboarding", error: error.toString() })
+            Shelters.deleteShelter(req.shelter.id)
+            res.status(400).json({ message: "Error from step 1 of onboarding"})
 
         }
     })
@@ -485,7 +484,7 @@ router.put('/users/:userId', validateUserId, validateNoAssociation, addShelter, 
         console.log("last step of add shelter", error)
 
         ShelterUsers.deleteShelterUsers(req.shelterUser.id)
-        Shelters.deleteShelter(req.shelter.id),
+        Shelters.deleteShelter(req.shelter.id)
         res.status(500).json({ message: "Error adding shelter, add shelter user, and update user", error: error.toString() })
     })
 })
@@ -502,7 +501,7 @@ function addShelter(req, res, next) {
             req.shelter.token = token
             next();
         } else {
-            res.status(400).json({ message: "Error adding shelter", error: error.toString() })
+            res.status(400).json({ message: "Error adding shelter"})
         }
     })
     .catch ( error => {
@@ -521,16 +520,13 @@ function addShelterUser(req, res, next) {
                 next();
             } else {
                 Shelters.deleteShelter(req.shelter.id)
-                res.status(400).json({ message: "Error adding shelter and shelter User", error: error.toString() })
+                res.status(400).json({ message: "Error adding shelter and shelter User"})
             }
-            
         })
         .catch( error =>{
             Shelters.deleteShelter(req.shelter.id)
-                    console.log("add shelter user", error)
-
+                console.log("add shelter user", error)
             res.status(500).json({ message: "Error adding shelter and shelter user", error: error.toString() })
-        
         })
 }
 //middleware for validate user id
@@ -540,7 +536,7 @@ function validateUserId(req, res, next) {
         if (user) {
             next();
         } else {
-            res.status(404).json({ message: "Error finding user", error: error.toString() })
+            res.status(404).json({ message: "Error finding user"})
         }
     })
     .catch (error => {
@@ -555,7 +551,7 @@ function validateNoAssociation(req, res, next) {
         if(!shelterUser) {
             next();
         } else {
-            res.status(400).json({ message: "User already associate with another shelter", error: error.toString() })
+            res.status(400).json({ message: "User already associate with another shelter"})
         }
     })
     .catch( error => {

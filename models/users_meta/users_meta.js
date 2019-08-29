@@ -12,6 +12,7 @@ module.exports={
     createUserMeta,
     updateUserMeta,
     updateUserMetaByUserId,
+    updateUserMetaByUserId_onboarding,
     deleteUserMeta,
 }
 
@@ -123,6 +124,12 @@ function updateUserMetaByUserId(id, change) {
     .then((count) => {
         return count > 0 ? getCompleteUserByUserId(id) : 0
     })
+}
+
+function updateUserMetaByUserId_onboarding(id, change) {
+    return db('user_meta')
+    .where('user_id', id)
+    .update(change)
 }
 
 function deleteUserMeta(id){
