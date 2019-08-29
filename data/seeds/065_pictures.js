@@ -6,12 +6,12 @@ exports.seed = async function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('pictures').insert([
-        {img_id: 1, img_url: 'https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwiRnOKHtKHjAhUCd98KHSd9AEUQjRx6BAgBEAU&url=https%3A%2F%2Fwww.azhumane.org%2Fadopt%2Ffind-a-pet%2Fadopt-a-cat%2F&psig=AOvVaw0DFCAaUOety9qlrWguyqig&ust=1562540733935627', animal_id: 1},
+        {img_id: 1, img_url: 'https://jngnposwzs-flywheel.netdna-ssl.com/wp-content/uploads/2019/08/CatofMth-Typhoon.jpg', animal_id: 1},
         {img_id: 2, img_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyGMzMi2ZQdBIHQkdLbIrolWVePbaFhN-zMBbwhqKag26SVN3lDw', animal_id: 2},
         {img_id: 3, img_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0nMNVVbLEFXWF2HsRQ3veNxJnR-htnJ5cxQyYTFuu6lzX2Qz-nA', animal_id: 3},
         {img_id: 4, img_url: 'https://epi.azureedge.net/website-images/images/a-year-in-the-life-dog/dog_7_600x400.jpg?sfvrsn=edc6d67b_2', animal_id: 4},
-        {img_id: 5, img_url: 'https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwiorNCntKHjAhVNhOAKHex3BDsQjRx6BAgBEAU&url=https%3A%2F%2Fwww.vulture.com%2F2019%2F03%2Fcaptain-marvels-cat-wrangler-dishes-on-goose-the-flerken.html&psig=AOvVaw0DFCAaUOety9qlrWguyqig&ust=1562540733935627', animal_id: 5},
-        {img_id: 6, img_url: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80', animal_id: 6},
+        {img_id: 5, img_url: 'https://www.petmd.com/sites/default/files/the-cat-which-sleeps-picture-id596060186.jpg', animal_id: 5},
+        {img_id: 6, img_url: 'https://www.catster.com/wp-content/uploads/2014/08/An-albino-cat.jpg', animal_id: 6},
         {img_id: 7, img_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbX3XnR5f3qVPdtliKan9KoyT6x4LYg6tzpYKJ_6vOXNTgRXKH', animal_id: 7},
         {img_id: 8, img_url: 'https://www.cachehumane.org/data/pics/2019-40609-1.jpg', animal_id: 8},
         {img_id: 9, img_url: 'https://humanepa.org/wp-content/uploads/sunny-1-767x1024.jpeg', animal_id: 9},
